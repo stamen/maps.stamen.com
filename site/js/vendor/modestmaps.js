@@ -1105,7 +1105,7 @@ var MM = com.modestmaps = {
             this.map.addCallback("drawn", this.onMapMove);
             // reset the hash
             this.lastHash = null;
-            this.onHashChange();
+            this.update();
 
             if (!this.isListening) {
                 this.startListening();
@@ -1127,6 +1127,7 @@ var MM = com.modestmaps = {
             }
             var hash = this.formatHash(map);
             if (this.lastHash != hash) {
+                // console.log("lastHash:", hash);
                 location.replace(hash);
                 this.lastHash = hash;
             }
