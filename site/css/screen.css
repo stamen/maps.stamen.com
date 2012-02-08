@@ -1,0 +1,105 @@
+a:link, a:visited, a:active {
+    color: inherit;
+    text-decoration: underline;
+}
+
+#header {
+    padding-top: 40px;
+    background: black;
+    margin-bottom: 0;
+}
+
+    #header .navbar-inner {
+        background: none;
+    }
+
+    #header .container {
+        position: relative;
+    }
+
+#stamen {
+    position: absolute;
+    right: -22px;
+    bottom: -25px;
+    font-size: 70px;
+    line-height: 100%;
+    font-weight: bold;
+}
+
+
+#hero {
+    background-color: #ccc;
+    position: relative;
+    height: 600px;
+}
+
+#hero h2 {
+    position: absolute;
+    margin: 0;
+}
+
+#controls {
+    font-weight: bold;
+}
+
+#controls a {
+    color: black;
+    background: white;
+    text-decoration: none;
+    padding-left: .4em;
+    padding-right: .4em;
+}
+
+#hero #map-main {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+#hero #maps-sub {
+    position: relative;
+    padding-top: 40px;
+    height: 0;
+}
+
+#hero #maps-sub .map {
+    position: relative;
+    margin: 0 0 40px auto;
+    width: 320px;
+    height: 230px;
+    background-color: #999;
+    /* border: 1px dotted black; */
+    box-shadow: inset rgba(0,0,0,.3) 8px 8px 16px;
+}
+
+#hero #maps-sub h3 {
+    position: absolute;
+    width: 100%;
+    left: 0;
+    bottom: 10px;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    z-index: 100;
+}
+
+h2 a,
+#hero #maps-sub h3 a {
+    color: #000;
+    background-color: #ff0;
+    padding: 2px 7px 3px 7px;
+    text-decoration: none;
+}
+
+#content {
+    margin-top: 2em;
+}
+
+#content div.tiles {
+    margin-bottom: 20px;
+}
+
+#content a.map {
+    display: inline-block;
+    height: 156px;
+}

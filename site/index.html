@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>tile.stamen.com</title>
+        <script type="text/javascript" src="js/vendor/modestmaps.min.js"></script>
+        <!-- <script type="text/javascript" src="http://htmapl.com/htmapl.js"></script> -->
+        <script type="text/javascript" src="js/maps.js"></script>
+        <style type="text/css">
+            @import url(css/bootstrap/bootstrap.css);
+            @import url(css/screen.css);
+        </style>
+    </head>
+    <body>
+        <div id="header" class="navbar">
+            <div class="navbar-inner">
+                <div class="container">
+                    <a id="tiles" class="brand" href="http://tile.stamen.com">tile.stamen.com</a>
+                    <ul class="nav">
+                        <li class="active"><a href="#toner">Toner</a></li>
+                        <li><a href="#terrain">Terrain</a></li>
+                        <li><a href="#watercolor">Watercolor</a></li>
+                    </ul>
+                    <a id="stamen" class="brand" href="http://stamen.com">stamen</a>
+                </div>
+            </div>
+        </div>
+
+        <div id="hero">
+            <div id="map-main" class="map" data-provider="toner">
+            </div>
+            <div id="maps-sub" class="container">
+                <h2>
+                    <a id="current-title">Toner</a>
+                    <span id="controls">
+                        <a id="zoom-in" href="#">+</a>
+                        <a id="zoom-out" href="#">&minus;</a>
+                    </span>
+                </h2>
+                <div id="map-sub1" class="map" data-provider="terrain"><h3><a href="#terrain">Terrain</a></h3></div>
+                <div id="map-sub2" class="map" data-provider="watercolor"><h3><a href="#watercolor">Watercolor</a></h3></div>
+            </div>
+        </div>
+
+        <div id="content" class="container content">
+            <p id="desc">Since 2002, Stamen has been exploring
+            <a href="http://stamen.com/cartography">cartography</a>
+            with our <a href="http://stamen.com/clients">clients</a> and in
+            <a href="http://stamen.com/research">research</a>. These three tile
+            sets are presented here for your enjoyment and use wherever you
+            display <a href="http://openstreetmap.org">OpenStreetMap</a>
+            data.</p>
+
+            <div id="tiles-toner" class="tiles row">
+                <div class="map span3" 
+                    data-provider="toner"
+                    data-center="37,-122"
+                    data-zoom="10"></div>
+                <div class="span6">
+                    <h3>Toner</h3>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris risus velit, rutrum fringilla tincidunt sit amet, vehicula sit amet augue. Maecenas sit amet nulla nulla, et porttitor augue. Vestibulum consequat nunc nec eros venenatis gravida. Pellentesque laoreet malesuada pretium. Donec tortor urna, tempus ac viverra a, adipiscing id ante. Pellentesque eleifend mi sed nulla tristique eget lacinia felis bibendum. Curabitur tortor libero, congue ut vehicula sit amet, pellentesque eu lacus.</p>
+                </div>
+                <div class="span2">
+                    <ul class="unstyled">
+                        <li><i class="icon-download"></i> <a href="https://github.com/Citytracking/toner">Fork on Github</a></li>
+                        <li><i class="icon-book"></i> <a href="http://content.stamen.com/dotspotting_toner_cartography_available_for_download">Read about it</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div id="tiles-terrain" class="tiles row">
+                <div class="map span3"
+                    data-provider="terrain"
+                    data-center="37,-122"
+                    data-zoom="10"></div>
+                <div class="span6">
+                    <h3>Terrain</h3>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris risus velit, rutrum fringilla tincidunt sit amet, vehicula sit amet augue. Maecenas sit amet nulla nulla, et porttitor augue. Vestibulum consequat nunc nec eros venenatis gravida. Pellentesque laoreet malesuada pretium. Donec tortor urna, tempus ac viverra a, adipiscing id ante. Pellentesque eleifend mi sed nulla tristique eget lacinia felis bibendum. Curabitur tortor libero, congue ut vehicula sit amet, pellentesque eu lacus.</p>
+                </div>
+                <div class="span2">
+                    <ul class="unstyled">
+                        <li><i class="icon-download"></i> <a href="https://github.com/Citytracking/Terrain">Fork on Github</a></li>
+                        <li><i class="icon-book"></i> <a href="http://mike.teczno.com/notes/osm-us-terrain-layer/foreground.html">Read about it</a></li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </body>
+
