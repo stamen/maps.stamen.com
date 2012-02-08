@@ -11,7 +11,7 @@ window.onload = function() {
     }
 
     var providerLabel = document.getElementById("current-provider"),
-        currentProvider = providerLabel.innerHTML,
+        currentProvider = "toner",
         mapsByProvider = {};
 
     // our main map
@@ -92,7 +92,7 @@ window.onload = function() {
 
     // and set up listening for the browser's location hash
     var hasher = new ProviderHash(main, currentProvider, function(provider) {
-        // console.log("provider:", currentProvider, "->", provider);
+        if (!provider) return false;
         if (provider != currentProvider) {
             var source = mapsByProvider[provider];
             var target = main;
@@ -109,6 +109,7 @@ window.onload = function() {
             mapsByProvider[currentProvider] = source;
             currentProvider = provider;
         }
+        return true;
     });
 
     /*
@@ -207,20 +208,26 @@ ProviderHash.prototype = {
 
     parseHash: function(hash) {
         var parts = hash.split("/");
-        // console.log("parseHash():", parts);
-        if (parts.length) {
-            this.providerName = parts.shift();
+        if (parts.length > 0) {
+            var provider = parts.shift();
             var parsed = parts.length
                 ? MM.Hash.prototype.parseHash.call(this, parts.join("/"))
                 : {center: this.map.getCenter(), zoom: this.map.getZoom()};
             if (parsed) {
-                // console.log("parsed hash:", this.providerName, parsed);
-                this.setProvider.call(this.map, this.providerName);
+                // console.log("parsed hash:", provider, parsed);
+                var didSetProvider = this.setProvider.call(this.map, provider);
+                if (didSetProvider) {
+                    this.providerName = provider;
+                    return parsed;
+                } else {
+                    return false;
+                }
             } else {
                 // console.log("parse error:", hash, parts, this.providerName);
             }
             return parsed;
         } else {
+            // console.warn("(zero length, unable to parse");
             return false;
         }
     },
