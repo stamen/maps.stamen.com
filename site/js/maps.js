@@ -1,24 +1,35 @@
+// for debugging purposes
 var maps = {};
 window.onload = function() {
 
     try {
 
+    // returns the map provider for a given TileStache layer name
     function getProvider(layer) {
         return new MM.TemplatedLayer("http://tile.stamen.com/" + layer + "/{Z}/{X}/{Y}.png");
     }
 
+    // our main map
     var main = maps.main = new MM.Map("map-main", getProvider("toner"), null, [new MM.DragHandler(), new MM.DoubleClickHandler()]);
 
+    // keep a reference to the sub-map wrapper to figure out
+    // positioning stuff
     var wrapper = maps.wrapper = document.getElementById("maps-sub"),
         subs = maps.sub = [],
+        // then grab all the sub-map element references
         subParents = wrapper.querySelectorAll(".map");
+    // create a map for each sub-map element
     for (var i = 0; i < subParents.length; i++) {
         var el = subParents[i],
+            // the provider is based on the data-provider HTML attribute
             provider = getProvider(el.getAttribute("data-provider")),
+            // FIXME: these maps are not interactive
             map = new MM.Map(el, provider, null, []);
         subs.push(map);
     }
 
+    // sync sub-maps to the main map's center using their
+    // relative positions on screen
     function updateSubMaps() {
         var mainWidth = main.dimensions.x,
             wrapperWidth = wrapper.offsetWidth,
@@ -33,16 +44,17 @@ window.onload = function() {
         }
     }
 
+    // zoom click handlers
     MM.addEvent(document.getElementById("zoom-in"), "click", function() {
         main.zoomIn();
         return false;
     });
-
     MM.addEvent(document.getElementById("zoom-out"), "click", function() {
         main.zoomOut();
         return false;
     });
 
+    // pan the sub-maps when the main map is panned
     main.addCallback("panned", function(_map, offset) {
         for (var i = 0; i < subs.length; i++) {
             var sub = subs[i];
@@ -50,16 +62,18 @@ window.onload = function() {
         }
     });
 
+    // and for all other map redraw events, re-sync them
     main.addCallback("zoomed", updateSubMaps);
     main.addCallback("extentset", updateSubMaps);
     main.addCallback("centered", updateSubMaps);
 
+    // set the initial map position
     main.setCenterZoom(new MM.Location(37.7749295, -122.4194155), 12);
+    // and set up listening for the browser's location hash
     new MM.Hash(main);
 
-    updateSubMaps();
-
-    var minis = document.querySelectorAll("#content a.map");
+    // create static mini-maps for each of these elements
+    var minis = document.querySelectorAll("#content .map");
     for (var i = 0; i < minis.length; i++) {
         var el = minis[i],
             provider = getProvider(el.getAttribute("data-provider")),
@@ -72,6 +86,7 @@ window.onload = function() {
         console.error(e);
     }
 
+    // parse a string into an MM.Location instance
     function parseCenter(str) {
         var parts = str.split(/,\s*/),
             lat = parseFloat(parts[0]),

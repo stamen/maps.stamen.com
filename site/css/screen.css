@@ -9,6 +9,14 @@ a:link, a:visited, a:active {
     margin-bottom: 0;
 }
 
+    #header h1 {
+        font-weight: 500;
+    }
+
+    #header h1 span {
+        color: yellow;
+    }
+
     #header .navbar-inner {
         background: none;
     }
@@ -99,7 +107,7 @@ h2 a,
     margin-bottom: 20px;
 }
 
-#content a.map {
+#content .map {
     display: inline-block;
     height: 156px;
 }
