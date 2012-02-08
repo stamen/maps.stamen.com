@@ -2,7 +2,7 @@
 <html>
     <head>
         <title>tile.stamen.com</title>
-        <script type="text/javascript" src="js/vendor/modestmaps.min.js"></script>
+        <script type="text/javascript" src="js/vendor/modestmaps.js"></script>
         <script type="text/javascript" src="js/maps.js"></script>
         <style type="text/css">
             @import url(css/bootstrap/bootstrap.css);
@@ -13,14 +13,14 @@
         <div id="header" class="navbar">
             <div class="navbar-inner">
                 <div class="container">
-                    <h1 id="tiles" class="brand">tile.stamen.com / <span id="current-tiles">toner</span></h1>
+                    <h1 id="tiles" class="brand">tile.stamen.com / <span id="current-provider">toner</span></h1>
                     <a id="stamen" class="brand" href="http://stamen.com">stamen</a>
                 </div>
             </div>
         </div>
 
         <div id="hero">
-            <div id="map-main" class="map" data-provider="toner">
+            <div id="map-main" class="map switch" data-provider="toner">
             </div>
             <div id="maps-sub" class="container">
                 <form id="search" action="#">
@@ -33,8 +33,10 @@
                     <a id="zoom-in" href="#">+</a>
                     <a id="zoom-out" href="#">&minus;</a>
                 </div>
-                <div id="map-sub1" class="map" data-provider="terrain"><h3><a href="#terrain">Terrain</a></h3></div>
-                <div id="map-sub2" class="map" data-provider="watercolor"><h3><a href="#watercolor">Watercolor</a></h3></div>
+                <div id="map-sub2" class="map switch" data-provider="terrain"><h3><a href="#terrain">Terrain</a></h3></div>
+                <!--
+                <div id="map-sub3" class="map switch" data-provider="watercolor"><h3><a href="#watercolor">Watercolor</a></h3></div>
+                -->
             </div>
         </div>
 

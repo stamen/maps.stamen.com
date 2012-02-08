@@ -6,11 +6,18 @@ window.onload = function() {
 
     // returns the map provider for a given TileStache layer name
     function getProvider(layer) {
-        return new MM.TemplatedLayer("http://tile.stamen.com/" + layer + "/{Z}/{X}/{Y}.png");
+        var domains = ["a.", "b.", "c.", "d.", ""];
+        return new MM.TemplatedLayer("http://{S}tile.stamen.com/" + layer + "/{Z}/{X}/{Y}.png", domains);
     }
 
+    var providerLabel = document.getElementById("current-provider"),
+        currentProvider = providerLabel.innerHTML,
+        mapsByProvider = {};
+
     // our main map
-    var main = maps.main = new MM.Map("map-main", getProvider("toner"), null, [new MM.DragHandler(), new MM.DoubleClickHandler()]);
+    var main = maps.main = new MM.Map("map-main", getProvider(currentProvider), null, [new MM.DragHandler(), new MM.DoubleClickHandler()]);
+
+    mapsByProvider[currentProvider] = main;
 
     // keep a reference to the sub-map wrapper to figure out
     // positioning stuff
@@ -22,9 +29,9 @@ window.onload = function() {
     for (var i = 0; i < subParents.length; i++) {
         var el = subParents[i],
             // the provider is based on the data-provider HTML attribute
-            provider = getProvider(el.getAttribute("data-provider")),
+            provider = el.getAttribute("data-provider"),
             // FIXME: these maps are not interactive
-            map = new MM.Map(el, provider, null, [new MM.DragHandler(), new MM.DoubleClickHandler()]);
+            map = new MM.Map(el, getProvider(provider), null, [new MM.DragHandler(), new MM.DoubleClickHandler()]);
         map.addCallback("panned", function(_map, offset) {
             if (!main.panning) {
                 _map.panning = true;
@@ -32,6 +39,7 @@ window.onload = function() {
                 _map.panning = false;
             }
         });
+        mapsByProvider[provider] = map;
         subs.push(map);
     }
 
@@ -81,8 +89,54 @@ window.onload = function() {
 
     // set the initial map position
     main.setCenterZoom(new MM.Location(37.7719, -122.3926), 12);
+
     // and set up listening for the browser's location hash
-    new MM.Hash(main);
+    var hasher = new ProviderHash(main, currentProvider, function(provider) {
+        // console.log("provider:", currentProvider, "->", provider);
+        if (provider != currentProvider) {
+            var source = mapsByProvider[provider];
+            var target = main;
+            source.setLayerAt(0, getProvider(currentProvider));
+            target.setLayerAt(0, getProvider(provider));
+
+            var link = source.parent.querySelector("h3 a");
+            link.innerHTML = currentProvider.substr(0, 1).toUpperCase() + currentProvider.substr(1);
+            link.href = "#" + currentProvider;
+
+            providerLabel.innerHTML = provider;
+
+            mapsByProvider[provider] = target;
+            mapsByProvider[currentProvider] = source;
+            currentProvider = provider;
+        }
+    });
+
+    /*
+    var searchForm = document.getElementById("search"),
+        searchInput = document.getElementById("search-location"),
+        searchButton = document.getElementById("search-submit");
+    MM.addEvent(searchForm, "submit", function(e) {
+
+        var oldSearchText = searchButton.getAttribute("value");
+        searchButton.setAttribute("value", "Searching...");
+        searchForm.setAttribute("class", "loading");
+        function revert() {
+            searchForm.removeAttribute("class", null);
+            searchButton.setAttribute("value", oldSearchText);
+        }
+
+        var query = searchInput.value;
+        MapQuest.geocode(query, function(results) {
+            console.log("search results:", results);
+            revert();
+        }, function(error) {
+            console.error("search error:", error);
+            revert();
+        });
+
+        return MM.cancelEvent(e);
+    });
+    */
 
     // create static mini-maps for each of these elements
     var minis = document.querySelectorAll("#content .map");
@@ -107,3 +161,74 @@ window.onload = function() {
         return new MM.Location(lat, lon);
     }
 };
+
+// quick and dirty MQ search API
+var MapQuest = {
+    // XXX: this is a Slow Tusnami key registered on the shawn@stamen.com
+    // MapQuest developer account
+    key: decodeURIComponent("Fmjtd%7Cluua216ynl%2Cbg%3Do5-h4rxg"),
+    geocode: function(query, success, error) {
+        var data;
+        if (typeof query === "string") {
+            data = {location: query};
+        } else {
+            data = query;
+        }
+        data.inFormat = "kvp";
+        data.thumbMaps = false;
+        data.key = MapQuest.key;
+        data.outFormat = "json";
+        return $.ajax("http://www.mapquestapi.com/geocoding/v1/address", {
+            dataType: "jsonp",
+            jsonp: "callback",
+            data: data,
+            success: function(response) {
+                var results = response.results;
+                if (results && results.length) {
+                    success.call(null, results);
+                } else {
+                    error.call(null, "No results");
+                }
+            },
+            error: error
+        });
+    }
+};
+
+var ProviderHash = function(map, providerName, setProvider) {
+    this.providerName = providerName;
+    this.setProvider = setProvider;
+    MM.Hash.call(this, map);
+};
+
+ProviderHash.prototype = {
+    providerName: null,
+    updating: false,
+
+    parseHash: function(hash) {
+        var parts = hash.split("/");
+        // console.log("parseHash():", parts);
+        if (parts.length) {
+            this.providerName = parts.shift();
+            var parsed = parts.length
+                ? MM.Hash.prototype.parseHash.call(this, parts.join("/"))
+                : {center: this.map.getCenter(), zoom: this.map.getZoom()};
+            if (parsed) {
+                // console.log("parsed hash:", this.providerName, parsed);
+                this.setProvider.call(this.map, this.providerName);
+            } else {
+                // console.log("parse error:", hash, parts, this.providerName);
+            }
+            return parsed;
+        } else {
+            return false;
+        }
+    },
+
+    formatHash: function(hash) {
+        var format = MM.Hash.prototype.formatHash.call(this, hash);
+        return "#" + this.providerName + "/" + format.substr(1);
+    }
+};
+
+MM.extend(ProviderHash, MM.Hash);
