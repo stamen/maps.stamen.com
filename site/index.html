@@ -23,13 +23,16 @@
             <div id="map-main" class="map" data-provider="toner">
             </div>
             <div id="maps-sub" class="container">
-                <h2>
-                    <a id="current-title">Toner</a>
-                    <span id="controls">
-                        <a id="zoom-in" href="#">+</a>
-                        <a id="zoom-out" href="#">&minus;</a>
-                    </span>
-                </h2>
+                <form id="search" action="#">
+                    <p>
+                    <input id="search-location" class="span3" type="text" placeholder="Type a location">
+                    <input id="search-submit" class="btn" type="submit" value="Find...">
+                    </p>
+                </form>
+                <div id="controls">
+                    <a id="zoom-in" href="#">+</a>
+                    <a id="zoom-out" href="#">&minus;</a>
+                </div>
                 <div id="map-sub1" class="map" data-provider="terrain"><h3><a href="#terrain">Terrain</a></h3></div>
                 <div id="map-sub2" class="map" data-provider="watercolor"><h3><a href="#watercolor">Watercolor</a></h3></div>
             </div>

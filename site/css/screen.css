@@ -47,6 +47,9 @@ a:link, a:visited, a:active {
 }
 
 #controls {
+    position: absolute;
+    font-size: 24px;
+    line-height: 100%;
     font-weight: bold;
 }
 
@@ -54,8 +57,7 @@ a:link, a:visited, a:active {
     color: black;
     background: white;
     text-decoration: none;
-    padding-left: .4em;
-    padding-right: .4em;
+    padding: 2px 10px 4px 10px;
 }
 
 #hero #map-main {
@@ -66,7 +68,7 @@ a:link, a:visited, a:active {
 
 #hero #maps-sub {
     position: relative;
-    padding-top: 40px;
+    padding-top: 20px;
     height: 0;
 }
 

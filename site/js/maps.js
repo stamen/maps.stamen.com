@@ -24,7 +24,14 @@ window.onload = function() {
             // the provider is based on the data-provider HTML attribute
             provider = getProvider(el.getAttribute("data-provider")),
             // FIXME: these maps are not interactive
-            map = new MM.Map(el, provider, null, []);
+            map = new MM.Map(el, provider, null, [new MM.DragHandler(), new MM.DoubleClickHandler()]);
+        map.addCallback("panned", function(_map, offset) {
+            if (!main.panning) {
+                _map.panning = true;
+                main.panBy(offset[0], offset[1]);
+                _map.panning = false;
+            }
+        });
         subs.push(map);
     }
 
@@ -56,10 +63,15 @@ window.onload = function() {
 
     // pan the sub-maps when the main map is panned
     main.addCallback("panned", function(_map, offset) {
+        if (main.panning) return;
+        main.panning = true;
         for (var i = 0; i < subs.length; i++) {
             var sub = subs[i];
-            sub.panBy(offset[0], offset[1]);
+            if (!sub.panning) {
+                sub.panBy(offset[0], offset[1]);
+            }
         }
+        main.panning = false;
     });
 
     // and for all other map redraw events, re-sync them
@@ -68,7 +80,7 @@ window.onload = function() {
     main.addCallback("centered", updateSubMaps);
 
     // set the initial map position
-    main.setCenterZoom(new MM.Location(37.7749295, -122.4194155), 12);
+    main.setCenterZoom(new MM.Location(37.7719, -122.3926), 12);
     // and set up listening for the browser's location hash
     new MM.Hash(main);
 
@@ -78,8 +90,9 @@ window.onload = function() {
         var el = minis[i],
             provider = getProvider(el.getAttribute("data-provider")),
             center = parseCenter(el.getAttribute("data-center")),
-            zoom = parseInt(el.getAttribute("data-zoom"));
-        new MM.Map(el, provider, null, []).setCenterZoom(center, zoom);
+            zoom = parseInt(el.getAttribute("data-zoom")),
+            map = new MM.Map(el, provider, null, []);
+        map.setCenterZoom(center, zoom);
     }
 
     } catch (e) {
