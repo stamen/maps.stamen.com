@@ -38,7 +38,7 @@ a:link, a:visited, a:active {
 #hero {
     background-color: #ccc;
     position: relative;
-    height: 600px;
+    height: 580px;
 }
 
 #hero h2 {
@@ -80,7 +80,7 @@ input.btn {
 
 #hero #maps-sub .map {
     position: relative;
-    margin: 0 0 40px auto;
+    margin: 0 0 20px auto;
     width: 320px;
     height: 230px;
     background-color: #999;
@@ -111,11 +111,16 @@ h2 a,
     margin-top: 2em;
 }
 
+#desc {
+    margin: 0 0 20px 0;
+}
+
 #content div.tiles {
     margin-bottom: 20px;
 }
 
 #content .map {
+    background-color: #ccc;
     display: inline-block;
     height: 156px;
 }

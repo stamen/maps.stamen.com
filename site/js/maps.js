@@ -92,10 +92,12 @@ window.onload = function() {
 
     // and set up listening for the browser's location hash
     var hasher = new ProviderHash(main, currentProvider, function(provider) {
-        if (!provider) return false;
+        if (!provider || !(provider in mapsByProvider)) {
+            return false;
+        }
         if (provider != currentProvider) {
-            var source = mapsByProvider[provider];
-            var target = main;
+            var source = mapsByProvider[provider],
+                target = main;
             source.setLayerAt(0, getProvider(currentProvider));
             target.setLayerAt(0, getProvider(provider));
 
@@ -112,15 +114,14 @@ window.onload = function() {
         return true;
     });
 
-    /*
     var searchForm = document.getElementById("search"),
         searchInput = document.getElementById("search-location"),
         searchButton = document.getElementById("search-submit");
     MM.addEvent(searchForm, "submit", function(e) {
 
         var oldSearchText = searchButton.getAttribute("value");
-        searchButton.setAttribute("value", "Searching...");
-        searchForm.setAttribute("class", "loading");
+        searchButton.setAttribute("value", "Finding...");
+        searchForm.setAttribute("class", "finding");
         function revert() {
             searchForm.removeAttribute("class", null);
             searchButton.setAttribute("value", oldSearchText);
@@ -128,7 +129,20 @@ window.onload = function() {
 
         var query = searchInput.value;
         MapQuest.geocode(query, function(results) {
-            console.log("search results:", results);
+            // console.log("search results:", results);
+            var result = results[0].locations[0],
+                loc = result.displayLatLng,
+                zoom = map.getZoom();
+            switch (result.geocodeQuality) {
+                case "CITY":
+                    zoom = 11;
+                    break;
+                case "STATE":
+                    zoom = 7;
+                    break;
+            }
+            main.setCenterZoom(new MM.Location(loc.lat, loc.lng), zoom);
+            // main.panBy(-(main.dimensions.x - wrapper.offsetWidth) / 2, 0);
             revert();
         }, function(error) {
             console.error("search error:", error);
@@ -137,7 +151,6 @@ window.onload = function() {
 
         return MM.cancelEvent(e);
     });
-    */
 
     // create static mini-maps for each of these elements
     var minis = document.querySelectorAll("#content .map");
@@ -179,9 +192,10 @@ var MapQuest = {
         data.thumbMaps = false;
         data.key = MapQuest.key;
         data.outFormat = "json";
-        return $.ajax("http://www.mapquestapi.com/geocoding/v1/address", {
-            dataType: "jsonp",
-            jsonp: "callback",
+        return reqwest({
+            url: "http://www.mapquestapi.com/geocoding/v1/address?callback=?",
+            type: "jsonp",
+            jsonpCallback: "callback",
             data: data,
             success: function(response) {
                 var results = response.results;
