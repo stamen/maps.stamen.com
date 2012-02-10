@@ -59,7 +59,7 @@
                     <h3>Toner</h3>
                     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris risus velit, rutrum fringilla tincidunt sit amet, vehicula sit amet augue. Maecenas sit amet nulla nulla, et porttitor augue. Vestibulum consequat nunc nec eros venenatis gravida. Pellentesque laoreet malesuada pretium. Donec tortor urna, tempus ac viverra a, adipiscing id ante. Pellentesque eleifend mi sed nulla tristique eget lacinia felis bibendum. Curabitur tortor libero, congue ut vehicula sit amet, pellentesque eu lacus.</p>
                 </div>
-                <div class="span2">
+                <div class="span3">
                     <ul>
                         <li><a href="https://github.com/Citytracking/toner">Fork on Github</a></li>
                         <li><a href="http://content.stamen.com/dotspotting_toner_cartography_available_for_download">Read about it</a></li>
@@ -76,7 +76,7 @@
                     <h3>Terrain</h3>
                     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris risus velit, rutrum fringilla tincidunt sit amet, vehicula sit amet augue. Maecenas sit amet nulla nulla, et porttitor augue. Vestibulum consequat nunc nec eros venenatis gravida. Pellentesque laoreet malesuada pretium. Donec tortor urna, tempus ac viverra a, adipiscing id ante. Pellentesque eleifend mi sed nulla tristique eget lacinia felis bibendum. Curabitur tortor libero, congue ut vehicula sit amet, pellentesque eu lacus.</p>
                 </div>
-                <div class="span2">
+                <div class="span3">
                     <ul>
                         <li><a href="https://github.com/Citytracking/Terrain">Fork on Github</a></li>
                         <li><a href="http://mike.teczno.com/notes/osm-us-terrain-layer/foreground.html">Read about it</a></li>
@@ -94,7 +94,7 @@
                     <h3>Watercolor</h3>
                     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris risus velit, rutrum fringilla tincidunt sit amet, vehicula sit amet augue. Maecenas sit amet nulla nulla, et porttitor augue. Vestibulum consequat nunc nec eros venenatis gravida. Pellentesque laoreet malesuada pretium. Donec tortor urna, tempus ac viverra a, adipiscing id ante. Pellentesque eleifend mi sed nulla tristique eget lacinia felis bibendum. Curabitur tortor libero, congue ut vehicula sit amet, pellentesque eu lacus.</p>
                 </div>
-                <div class="span2">
+                <div class="span3">
                     <ul>
                         <li><a href="#">Fork on Github</a></li>
                         <li><a href="#">Read about it</a></li>
@@ -102,6 +102,69 @@
                 </div>
             </div>
             -->
+
+            <div id="howto">
+                <h2>How to Use These Tiles Elsewhere</h2>
+
+                <div id="license" class="row">
+                    <h4 class="span2"><a
+                            href="http://creativecommons.org/licenses/by/3.0"><img
+                        src="http://i.creativecommons.org/l/by/3.0/88x31.png"
+                        alt="CC-BY License"></a></h4>
+                    <div class="span10">
+                        <p><em>Except otherwise noted, each of these map tile sets are &copy; Stamen Design, under a <a href="http://creativecommons.org/licenses/by/3.0">Creative Commons Attribution (CC BY 3.0)</a> license.</em></p>
+                        <p>We&rsquo;d love to see these tiles used around the web, so we&rsquo;ve included some brief instructions to help you use them in the mapping system of your choice.
+                        These tiles are available free of charge. If you use the tiles we host here, please use this attribution:</p>
+                    </div>
+                </div>
+                <div id="attribution" class="row">
+                    <h4 class="span2">Attribution:</h4>
+                    <div class="span10">
+                        <p>
+                            <span id="attr">Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://creativecommons.org/licenses/by-sa/3.0">CC BY SA</a>.</span>
+                            <small><a href="#" id="attr-show-html" onclick="with(document.getElementById('attr-html')){value=document.getElementById('attr').innerHTML;style.display='block';focus();select();}return false;">&lt;<span>COPY HTML</span>&gt;</a></small>
+                        </p>
+                        <textarea class="row span10" id="attr-html"></textarea>
+                        <p>If you roll your own tiles from a source you will still need to credit &ldquo;Map data by OpenStreetMap, under CC-BY-SA.&rdquo; And if you <em>do</em> post the tiles elsewhere, please tweet with <a href="http://twitter.com/stamen">@stamen</a>!</p>
+                    </div>
+                </div>
+
+                <div id="usage" class="row light">
+                    <div id="usage-openlayers" class="usage span3">
+                        <h4><a href="http://openlayers.org/">OpenLayers</a></h4>
+                        <p>Blah blah blah</p>
+                    </div>
+
+                    <div id="usage-leaflet" class="usage span3">
+                        <h4><a href="http://leaflet.cloudmade.com/">Leaflet</a></h4>
+                        <p>Blah blah blah</p>
+                    </div>
+
+                    <div id="usage-modestmaps" class="usage span3">
+                        <h4><a href="http://stamen.github.com/modestmaps-js/">ModestMaps</a></h4>
+                        <p>Blah blah blah</p>
+                    </div>
+
+                    <div id="usage-google" class="usage span3">
+                        <h4><a href="http://code.google.com/apis/maps/documentation/javascript/">Google Maps</a></h4>
+                        <p>Blah blah blah</p>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div id="footer" class="row">
+                <p id="credit" class="span8 light">These tiles are made available as part of the
+                <a href="http://citytracking.org">CityTracking</a> project,
+                funded by the <a href="http://www.knightfoundation.org/">Knight Foundation</a>,
+                in which Stamen is building web services and
+                <a href="http://github.com/Citytracking">open source tools</a>
+                to display public data in easy-to-understand, highly visual ways.</p>
+                <div class="span4">
+                    <a href="http://citytracking.org"><img src="http://citytracking.org/images/citytracking-logo3.png" alt="CityTracking"></a>
+                </div>
+            </div>
 
         </div>
     </body>

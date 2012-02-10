@@ -124,3 +124,22 @@ h2 a,
     display: inline-block;
     height: 156px;
 }
+
+#attr {
+    display: inline-block;
+    background-color: #ffc;
+    padding: 2px 8px 3px 8px;
+}
+
+#attr-html {
+    display: none;
+}
+
+#attr-show-html {
+    color: black !important;
+    text-decoration: none;
+}
+#attr-show-html span {
+    padding: 0 4px;
+    text-decoration: underline;
+}
