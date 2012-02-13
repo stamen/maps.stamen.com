@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>tile.stamen.com: ModestMaps</title>
+        <script type="text/javascript" src="../js/vendor/modestmaps.js"></script>
+        <script type="text/javascript" src="../js/tile.stamen.js"></script>
+        <script type="text/javascript">
+            function initialize() {
+                var layer = new MM.StamenTileLayer("toner");
+                var map = new MM.Map(document.getElementById("map"), layer);
+                map.setCenterZoom(new MM.Location(37.7, -122.4), 8);
+            }
+        </script>
+        <style type="text/css">
+            #map {
+                width: 800px;
+                height: 600px;
+            }
+        </style>
+    </head>
+    <body onload="initialize()">
+        <div id="map">
+        </div>
+    </body>
+</html>

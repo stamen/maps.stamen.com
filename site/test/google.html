@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>tile.stamen.com: Google Maps</title>
+        <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyB2rm0G-ZWIf8PTrv8Ni9h63YAwNT22tnQ&sensor=false"></script>
+        <script type="text/javascript" src="../js/tile.stamen.js"></script>
+        <script type="text/javascript">
+            function initialize() {
+                var options = {
+                  center: new google.maps.LatLng(37.7, -122.4),
+                  zoom: 8,
+                  mapTypeId: "Toner",
+                  mapTypeControlOptions: {
+                      mapTypeIds: ["Toner", "Terrain", "Watercolor"]
+                  }
+                };
+                var map = new google.maps.Map(document.getElementById("map"), options);
+                map.mapTypes.set("Toner", new google.maps.StamenMapType("toner"));
+                map.mapTypes.set("Terrain", new google.maps.StamenMapType("terrain"));
+                map.mapTypes.set("Watercolor", new google.maps.StamenMapType("watercolor"));
+            }
+        </script>
+        <style type="text/css">
+            #map {
+                width: 800px;
+                height: 600px;
+            }
+        </style>
+    </head>
+    <body onload="initialize()">
+        <div id="map">
+        </div>
+    </body>
+</html>

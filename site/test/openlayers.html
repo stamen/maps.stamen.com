@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>tile.stamen.com: OpenLayers</title>
+        <script type="text/javascript" src="http://www.openlayers.org/api/OpenLayers.js"></script>
+        <script type="text/javascript" src="../js/tile.stamen.js"></script>
+        <script type="text/javascript">
+            var map, layer;
+            function initialize() {
+                map = new OpenLayers.Map("map");
+                map.addLayer(layer = new OpenLayers.Layer.Stamen("toner"));
+                map.setCenter(new OpenLayers.LonLat(-13630355, 4546576), 10);
+            }
+        </script>
+        <style type="text/css">
+            #map {
+                width: 800px;
+                height: 600px;
+            }
+        </style>
+    </head>
+    <body onload="initialize()">
+        <div id="map">
+        </div>
+    </body>
+</html>
