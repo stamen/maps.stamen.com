@@ -7,7 +7,6 @@
         <script type="text/javascript" src="js/tile.stamen.js"></script>
         <script type="text/javascript" src="js/vendor/google-code-prettify/prettify.js"></script>
         <style type="text/css">
-            @import url(js/vendor/google-code-prettify/prettify.css);
             @import url(css/bootstrap/bootstrap.css);
             @import url(css/screen.css);
         </style>
@@ -158,55 +157,71 @@
 
                 <div id="usage">
                     <h3>JavaScript Libraries</h3>
-                    <div class="row light">
-                        <p>To use these tiles, just include
-                        <a href="http://tile.stamen.com/js/tile.stamen.js">our JavaScript</a>
-                        alongside your favorite mapping library:</p>
-                        <pre class="prettyprint">&lt;script type="text/javascript" src="http://tile.stamen.com/js/tile.stamen.js"&gt;&lt;/script&gt;</pre>
+                    <div id="usage-intro" class="row">
+                        <div class="span12">
+                            <p>To use these tiles, just include
+                            <a href="http://tile.stamen.com/js/tile.stamen.js">our JavaScript</a>
+                            alongside your favorite mapping library:</p>
+                            <pre class="prettyprint">&lt;script type="text/javascript" src="http://tile.stamen.com/js/tile.stamen.js"&gt;&lt;/script&gt;</pre>
+                            <p>Then, follow the instructions below for your preferred library:</p>
+                        </div>
                     </div>
 
-                    <div class="row light">
-
-                        <div id="usage-modestmaps" class="usage span12">
-                            <h4><a href="http://stamen.github.com/modestmaps-js/">ModestMaps</a></h4>
-                            <p>ModestMaps is a lightweight mapping library.</p>
-                            <pre class="prettyprint linenums">
+                    <div id="usage-modestmaps">
+                        <h4><a href="http://stamen.github.com/modestmaps-js/">ModestMaps</a></h4>
+                        <div class="row">
+                            <p class="span4">ModestMaps is a no-frills mapping library by Stamen and friends.
+                                <a href="test/modestmaps.html">View the example</a></p>
+                            <div class="span8">
+                                <pre class="prettyprint linenums">
 // replace "toner" here with "terrain" or "watercolor"
 var layer = new MM.StamenTileLayer("toner");
 var map = new MM.Map("element_id", layer);
-map.setCenterZoom(new MM.Location(37.7, -122.4), 12);
-                            </pre>
+map.setCenterZoom(new MM.Location(37.7, -122.4), 12);</pre>
+                            </div>
                         </div>
+                    </div>
 
-                        <div id="usage-leaflet" class="usage span12">
-                            <h4><a href="http://leaflet.cloudmade.com/">Leaflet</a></h4>
-                            <p>Blah blah blah</p>
-                            <pre class="prettyprint linenums">
+                    <div id="usage-leaflet">
+                        <h4><a href="http://leaflet.cloudmade.com/">Leaflet</a></h4>
+                        <div class="row">
+                            <p class="span4">Leaflet is a lightweight and easy-to-use library by <a href="http://cloudmade.com">Cloudmade</a>.
+                                <a href="test/leaflet.html">View the example</a></p>
+                            <div class="span8">
+                                <pre class="prettyprint linenums">
+// replace "toner" here with "terrain" or "watercolor"
+var layer = new L.StamenTileLayer("toner");
 var map = new L.Map("element_id", {
     center: new L.LatLng(37.7, -122.4),
     zoom: 12
 });
-// replace "toner" here with "terrain" or "watercolor"
-var layer = new L.StamenTileLayer("toner");
-map.addLayer(layer);
-                            </pre>
+map.addLayer(layer);</pre>
+                            </div>
                         </div>
+                    </div>
 
-                        <div id="usage-openlayers" class="usage span12">
-                            <h4><a href="http://openlayers.org/">OpenLayers</a></h4>
-                            <p>Blah blah blah</p>
-                            <pre class="prettyprint linenums">
-var map = new OpenLayers.Map("element_id");
+                    <div id="usage-openlayers">
+                        <h4><a href="http://openlayers.org/">OpenLayers</a></h4>
+                        <div class="row"> 
+                            <p class="span4">OpenLayers is a hefty and featureful mapping library for use with a variety of GIS applications.
+                                <a href="test/openlayers.html">View the example</a></p>
+                            <div class="span8">
+                                <pre class="prettyprint linenums">
 // replace "toner" here with "terrain" or "watercolor"
 var layer = new OpenLayers.Layer.Stamen("toner");
-map.addLayer(layer);
-                            </pre>
+var map = new OpenLayers.Map("element_id");
+map.addLayer(layer);</pre>
+                            </div>
                         </div>
+                    </div>
 
-                        <div id="usage-google" class="usage span12">
-                            <h4><a href="http://code.google.com/apis/maps/documentation/javascript/">Google Maps</a></h4>
-                            <p>Blah blah blah</p>
-                            <pre class="prettyprint linenums">
+                    <div id="usage-google">
+                        <h4><a href="http://code.google.com/apis/maps/documentation/javascript/">Google Maps</a></h4>
+                        <div class="row">
+                            <p class="span4">The Google Maps API is ubiquitous and feature-rich, but requires an <a href="#">API key</a> and may <a href="http://code.google.com/apis/maps/faq.html#usage_pricing">cost money</a> if your usage exceeds 25,000 map views per day.
+                                <a href="test/google.html">View the example</a></p>
+                            <div class="span8">
+                                <pre class="prettyprint linenums">
 // replace "toner" here with "terrain" or "watercolor"
 var layer = "toner";
 var map = new google.maps.Map(document.getElementById("element_id"), {
@@ -218,10 +233,11 @@ var map = new google.maps.Map(document.getElementById("element_id"), {
     }
 });
 
-map.mapTypes.set(layer, new google.maps.StamenMapType(layer));
-                            </pre>
+map.mapTypes.set(layer, new google.maps.StamenMapType(layer));</pre>
+                            </div>
                         </div>
                     </div>
+
                 </div>
 
             </div>

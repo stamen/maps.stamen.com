@@ -126,9 +126,6 @@ h2 a,
 }
 
 #content h4 {
-    text-transform: uppercase;
-    font-weight: normal;
-    letter-spacing: 1px;
 }
 
 #content h4.span2 {
@@ -140,7 +137,7 @@ h2 a,
 }
 
 #content div.tiles {
-    margin-bottom: 1em;
+    margin-bottom: 18px;
 }
 
 #content .map {
@@ -169,7 +166,11 @@ h2 a,
 }
 
 #usage {
-    margin-top: 1em;
+    margin-top: 18px;
+}
+
+#usage-intro {
+    margin-bottom: 18px;
 }
 
 #footer {
@@ -186,10 +187,11 @@ h2 a,
 .typ, .atn, .dec, .var { color: teal; }
 .pln { color: #48484c; }
 
-.prettyprint {
+pre.prettyprint {
   padding: 8px;
   background-color: #f7f7f9;
   border: 1px solid #e1e1e8;
+  margin-bottom: 9px;
 }
 .prettyprint.linenums {
   -webkit-box-shadow: inset 40px 0 0 #fbfbfc, inset 41px 0 0 #ececf0;
