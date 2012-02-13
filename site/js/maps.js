@@ -1,187 +1,184 @@
 // for debugging and tweaking from the console
 var MAPS = {};
-window.onload = function() {
-
-    try {
+(function() {
 
     // returns the map provider for a given TileStache layer name
     function getProvider(layer) {
-        var domains = ["a.", "b.", "c.", "d.", ""];
-        return new MM.TemplatedLayer("http://{S}tile.stamen.com/" + layer + "/{Z}/{X}/{Y}.png", domains);
+        return new MM.StamenTileLayer(layer);
     }
 
-    var providerLabel = document.getElementById("current-provider"),
-        currentProvider = "toner",
-        mapsByProvider = MAPS.byProvider = {};
+    function init() {
 
-    // our main map
-    var main = MAPS.main = new MM.Map("map-main", getProvider(currentProvider), null, [new MM.DragHandler(), new MM.DoubleClickHandler()]);
+        var providerLabel = document.getElementById("current-provider"),
+            currentProvider = "toner",
+            mapsByProvider = MAPS.byProvider = {};
 
-    mapsByProvider[currentProvider] = main;
+        // our main map
+        var main = MAPS.main = new MM.Map("map-main", getProvider(currentProvider), null, [new MM.DragHandler(), new MM.DoubleClickHandler()]);
 
-    // keep a reference to the sub-map wrapper to figure out
-    // positioning stuff
-    var wrapper = MAPS.wrapper = document.getElementById("maps-sub"),
-        subs = MAPS.sub = [],
-        // then grab all the sub-map element references
-        subParents = wrapper.querySelectorAll(".map");
-    // create a map for each sub-map element
-    for (var i = 0; i < subParents.length; i++) {
-        var el = subParents[i],
-            // the provider is based on the data-provider HTML attribute
-            provider = el.getAttribute("data-provider"),
-            // FIXME: these maps are not interactive
-            map = new MM.Map(el, getProvider(provider), null, [new MM.DragHandler(), new MM.DoubleClickHandler()]);
-        map.addCallback("panned", function(_map, offset) {
-            if (!main.panning) {
-                _map.panning = true;
-                main.panBy(offset[0], offset[1]);
-                _map.panning = false;
-            }
-        });
-        mapsByProvider[provider] = map;
-        subs.push(map);
-    }
+        mapsByProvider[currentProvider] = main;
 
-    // sync sub-maps to the main map's center using their
-    // relative positions on screen
-    function updateSubMaps() {
-        var mainWidth = main.dimensions.x,
-            wrapperWidth = wrapper.offsetWidth,
-            wrapperTop = wrapper.offsetTop,
-            offsetX = mainWidth - (mainWidth - wrapperWidth) / 2;
-        for (var i = 0; i < subs.length; i++) {
-            var sub = subs[i],
-                point = new MM.Point(0, 0);
-            point.x = offsetX - sub.dimensions.x / 2;
-            point.y = wrapperTop + sub.parent.offsetTop + sub.dimensions.y / 2;
-            sub.setCenterZoom(main.pointLocation(point), main.getZoom());
+        // keep a reference to the sub-map wrapper to figure out
+        // positioning stuff
+        var wrapper = MAPS.wrapper = document.getElementById("maps-sub"),
+            subs = MAPS.sub = [],
+            // then grab all the sub-map element references
+            subParents = wrapper.querySelectorAll(".map");
+        // create a map for each sub-map element
+        for (var i = 0; i < subParents.length; i++) {
+            var el = subParents[i],
+                // the provider is based on the data-provider HTML attribute
+                provider = el.getAttribute("data-provider"),
+                // FIXME: these maps are not interactive
+                map = new MM.Map(el, getProvider(provider), null, [new MM.DragHandler()]);
+            map.addCallback("panned", function(_map, offset) {
+                if (!main.panning) {
+                    _map.panning = true;
+                    main.panBy(offset[0], offset[1]);
+                    _map.panning = false;
+                }
+            });
+            mapsByProvider[provider] = map;
+            subs.push(map);
         }
-    }
 
-    // zoom click handlers
-    MM.addEvent(document.getElementById("zoom-in"), "click", function() {
-        main.zoomIn();
-        return false;
-    });
-    MM.addEvent(document.getElementById("zoom-out"), "click", function() {
-        main.zoomOut();
-        return false;
-    });
-
-    // pan the sub-maps when the main map is panned
-    main.addCallback("panned", function(_map, offset) {
-        if (main.panning) return;
-        main.panning = true;
-        for (var i = 0; i < subs.length; i++) {
-            var sub = subs[i];
-            if (!sub.panning) {
-                sub.panBy(offset[0], offset[1]);
+        // sync sub-maps to the main map's center using their
+        // relative positions on screen
+        function updateSubMaps() {
+            var mainWidth = main.dimensions.x,
+                wrapperWidth = wrapper.offsetWidth,
+                wrapperTop = wrapper.offsetTop,
+                offsetX = mainWidth - (mainWidth - wrapperWidth) / 2;
+            for (var i = 0; i < subs.length; i++) {
+                var sub = subs[i],
+                    point = new MM.Point(0, 0);
+                point.x = offsetX - sub.dimensions.x / 2;
+                point.y = wrapperTop + sub.parent.offsetTop + sub.dimensions.y / 2;
+                sub.setCenterZoom(main.pointLocation(point), main.getZoom());
             }
         }
-        main.panning = false;
-    });
 
-    // and for all other map redraw events, re-sync them
-    main.addCallback("zoomed", updateSubMaps);
-    main.addCallback("extentset", updateSubMaps);
-    main.addCallback("centered", updateSubMaps);
-
-    // set the initial map position
-    main.setCenterZoom(new MM.Location(37.7719, -122.3926), 12);
-
-    // and set up listening for the browser's location hash
-    var hasher = new ProviderHash(main, currentProvider, function(provider) {
-        if (!provider || !(provider in mapsByProvider)) {
+        // zoom click handlers
+        MM.addEvent(document.getElementById("zoom-in"), "click", function() {
+            main.zoomIn();
             return false;
-        }
-        // if the provider has changed...
-        if (provider != currentProvider) {
-            // grab the provider from the corresponding map
-            var source = mapsByProvider[provider],
-                target = main;
-            // swap layers
-            source.setLayerAt(0, getProvider(currentProvider));
-            target.setLayerAt(0, getProvider(provider));
-
-            // update the link in the clicked sub-map
-            var link = source.parent.querySelector("h3 a");
-            link.innerHTML = currentProvider.substr(0, 1).toUpperCase() + currentProvider.substr(1);
-            link.href = "#" + currentProvider;
-
-            // update the selected provider label text
-            providerLabel.innerHTML = provider;
-
-            // swap the map references in mapsByProvider
-            mapsByProvider[provider] = target;
-            mapsByProvider[currentProvider] = source;
-            // and, finally, update currentProvider
-            currentProvider = provider;
-        }
-        return true;
-    });
-
-    // set up form element references
-    var searchForm = document.getElementById("search"),
-        searchInput = document.getElementById("search-location"),
-        searchButton = document.getElementById("search-submit");
-    // listen for the submit event
-    MM.addEvent(searchForm, "submit", function(e) {
-        // remember the old search text
-        var oldSearchText = searchButton.getAttribute("value");
-        // put the button into its submitting state
-        searchButton.setAttribute("value", "Finding...");
-        searchButton.setAttribute("class", "btn disabled");
-        // set up a function to rever the form to its original state
-        // (which executes whether there was an error or not)
-        function revert() {
-            searchButton.setAttribute("class", "btn");
-            searchButton.setAttribute("value", oldSearchText);
-        }
-
-        var query = searchInput.value;
-        MapQuest.geocode(query, function(results) {
-            revert();
-            // console.log("search results:", results);
-            var result = results[0].locations[0],
-                loc = result.displayLatLng,
-                zoom = map.getZoom();
-            switch (result.geocodeQuality) {
-                case "CITY":
-                    zoom = 11;
-                    break;
-                case "STATE":
-                    zoom = 7;
-                    break;
-            }
-            main.setCenterZoom(new MM.Location(loc.lat, loc.lng), zoom);
-            // FIXME: offset the map so its center is
-            // to the left of the sub-maps?
-            // main.panBy(-(main.dimensions.x - wrapper.offsetWidth) / 2, 0);
-        }, function(error) {
-            revert();
-            console.error("search error:", error);
+        });
+        MM.addEvent(document.getElementById("zoom-out"), "click", function() {
+            main.zoomOut();
+            return false;
         });
 
-        // cancel the submit event
-        return MM.cancelEvent(e);
-    });
+        // pan the sub-maps when the main map is panned
+        main.addCallback("panned", function(_map, offset) {
+            if (main.panning) return;
+            main.panning = true;
+            for (var i = 0; i < subs.length; i++) {
+                var sub = subs[i];
+                if (!sub.panning) {
+                    sub.panBy(offset[0], offset[1]);
+                }
+            }
+            main.panning = false;
+        });
 
-    // create static mini-maps for each of these elements
-    var minis = document.querySelectorAll("#content .map");
-    MAPS.minis = [];
-    for (var i = 0; i < minis.length; i++) {
-        var el = minis[i],
-            provider = getProvider(el.getAttribute("data-provider")),
-            center = parseCenter(el.getAttribute("data-center")),
-            zoom = parseInt(el.getAttribute("data-zoom")),
-            map = new MM.Map(el, provider, null, []);
-        map.setCenterZoom(center, zoom);
-        MAPS.minis.push(map);
-    }
+        // and for all other map redraw events, re-sync them
+        main.addCallback("zoomed", updateSubMaps);
+        main.addCallback("extentset", updateSubMaps);
+        main.addCallback("centered", updateSubMaps);
 
-    } catch (e) {
-        console.error(e);
+        // set the initial map position
+        main.setCenterZoom(new MM.Location(37.7719, -122.3926), 12);
+
+        // and set up listening for the browser's location hash
+        var hasher = new ProviderHash(main, currentProvider, function(provider) {
+            if (!provider || !(provider in mapsByProvider)) {
+                return false;
+            }
+            // if the provider has changed...
+            if (provider != currentProvider) {
+                // grab the provider from the corresponding map
+                var source = mapsByProvider[provider],
+                    target = main;
+                // swap layers
+                source.setLayerAt(0, getProvider(currentProvider));
+                target.setLayerAt(0, getProvider(provider));
+
+                // update the link in the clicked sub-map
+                var link = source.parent.querySelector("h3 a");
+                link.innerHTML = currentProvider.substr(0, 1).toUpperCase() + currentProvider.substr(1);
+                link.href = "#" + currentProvider;
+
+                // update the selected provider label text
+                providerLabel.innerHTML = provider;
+
+                // swap the map references in mapsByProvider
+                mapsByProvider[provider] = target;
+                mapsByProvider[currentProvider] = source;
+                // and, finally, update currentProvider
+                currentProvider = provider;
+            }
+            return true;
+        });
+
+        // set up form element references
+        var searchForm = document.getElementById("search"),
+            searchInput = document.getElementById("search-location"),
+            searchButton = document.getElementById("search-submit");
+        // listen for the submit event
+        MM.addEvent(searchForm, "submit", function(e) {
+            // remember the old search text
+            var oldSearchText = searchButton.getAttribute("value");
+            // put the button into its submitting state
+            searchButton.setAttribute("value", "Finding...");
+            searchButton.setAttribute("class", "btn disabled");
+            // set up a function to rever the form to its original state
+            // (which executes whether there was an error or not)
+            function revert() {
+                searchButton.setAttribute("class", "btn");
+                searchButton.setAttribute("value", oldSearchText);
+            }
+
+            var query = searchInput.value;
+            MapQuest.geocode(query, function(results) {
+                revert();
+                // console.log("search results:", results);
+                // TODO: find the most relevant result?
+                var result = results[0].locations[0],
+                    loc = result.displayLatLng,
+                    zoom = map.getZoom();
+                switch (result.geocodeQuality) {
+                    case "CITY":
+                        zoom = 11;
+                        break;
+                    case "STATE":
+                        zoom = 7;
+                        break;
+                }
+                main.setCenterZoom(new MM.Location(loc.lat, loc.lng), zoom);
+                // FIXME: offset the map so its center is
+                // to the left of the sub-maps?
+                // main.panBy(-(main.dimensions.x - wrapper.offsetWidth) / 2, 0);
+            }, function(error) {
+                revert();
+                console.error("search error:", error);
+            });
+
+            // cancel the submit event
+            return MM.cancelEvent(e);
+        });
+
+        // create static mini-maps for each of these elements
+        var minis = document.querySelectorAll("#content .map");
+        MAPS.minis = [];
+        for (var i = 0; i < minis.length; i++) {
+            var el = minis[i],
+                provider = getProvider(el.getAttribute("data-provider")),
+                center = parseCenter(el.getAttribute("data-center")),
+                zoom = parseInt(el.getAttribute("data-zoom")),
+                map = new MM.Map(el, provider, null, []);
+            map.setCenterZoom(center, zoom);
+            MAPS.minis.push(map);
+        }
     }
 
     // parse a string into an MM.Location instance
@@ -191,106 +188,115 @@ window.onload = function() {
             lon = parseFloat(parts[1]);
         return new MM.Location(lat, lon);
     }
-};
 
-// quick and dirty MQ search API
-var MapQuest = {
-    // XXX: this is a Slow Tusnami key registered on the shawn@stamen.com
-    // MapQuest developer account
-    key: decodeURIComponent("Fmjtd%7Cluua216ynl%2Cbg%3Do5-h4rxg"),
-    geocode: function(query, success, error) {
-        var data;
-        if (typeof query === "string") {
-            data = {location: query};
-        } else {
-            data = query;
-        }
-        data.inFormat = "kvp";
-        data.thumbMaps = false;
-        data.key = MapQuest.key;
-        data.outFormat = "json";
-        return reqwest({
-            url: "http://www.mapquestapi.com/geocoding/v1/address?callback=?",
-            type: "jsonp",
-            jsonpCallback: "callback",
-            data: data,
-            success: function(response) {
-                var results = response.results;
-                if (results && results.length) {
-                    success.call(null, results);
-                } else {
-                    error.call(null, "No results");
-                }
-            },
-            error: error
-        });
-    }
-};
-
-/**
- * The ProviderHash is a class that looks for a provider name at the beginning
- * of the hash and calls the supplied setProvider(provider) function whenever it
- * changes.
- *
- * One feature of this parser is that it substitutes the center and zoom back in
- * if the hash changes to just "#provider", so you can link to new providers by
- * setting a link's href to simply "#provider" and ProviderHash will update the
- * hash accordingly.
- *
- * setProvider(provider) should accept a string and return true if the supplied
- * provider name was valid, or return false in any other case.
- *
- * Note also that ProviderHash requires a valid providerName in the constructor
- * to correctly set the initial hash value.
- */
-var ProviderHash = function(map, providerName, setProvider) {
-    this.providerName = providerName;
-    this.setProvider = setProvider;
-    MM.Hash.call(this, map);
-};
-
-ProviderHash.prototype = {
-    // the currently selected provider name
-    providerName: null,
-
-    /**
-     * Our parseHash() function looks for a provider name in the beginning of
-     * the URL.
-     */
-    parseHash: function(hash) {
-        var parts = hash.split("/");
-        if (parts.length > 0) {
-            var provider = parts.shift();
-            var parsed = parts.length
-                ? MM.Hash.prototype.parseHash.call(this, parts.join("/"))
-                : {center: this.map.getCenter(), zoom: this.map.getZoom()};
-            if (parsed) {
-                // console.log("parsed hash:", provider, parsed);
-                var didSetProvider = this.setProvider.call(this.map, provider);
-                if (didSetProvider) {
-                    this.providerName = provider;
-                    return parsed;
-                } else {
-                    return false;
-                }
+    // quick and dirty MQ search API
+    var MapQuest = {
+        // XXX: this is a Slow Tusnami key registered on the shawn@stamen.com
+        // MapQuest developer account
+        key: decodeURIComponent("Fmjtd%7Cluua216ynl%2Cbg%3Do5-h4rxg"),
+        geocode: function(query, success, error) {
+            var data;
+            if (typeof query === "string") {
+                data = {location: query};
             } else {
-                // console.log("parse error:", hash, parts, this.providerName);
+                data = query;
             }
-            return parsed;
-        } else {
-            // console.warn("(zero length, unable to parse");
-            return false;
+            data.inFormat = "kvp";
+            data.thumbMaps = false;
+            data.key = MapQuest.key;
+            data.outFormat = "json";
+            return reqwest({
+                url: "http://www.mapquestapi.com/geocoding/v1/address?callback=?",
+                type: "jsonp",
+                jsonpCallback: "callback",
+                data: data,
+                success: function(response) {
+                    var results = response.results;
+                    if (results && results.length) {
+                        success.call(null, results);
+                    } else {
+                        error.call(null, "No results");
+                    }
+                },
+                error: error
+            });
         }
-    },
+    };
 
     /**
-     * Our formatHash() function inserts the provider name as the first
-     * slash-delimited element in the URL.
+     * The ProviderHash is a class that looks for a provider name at the beginning
+     * of the hash and calls the supplied setProvider(provider) function whenever it
+     * changes.
+     *
+     * One feature of this parser is that it substitutes the center and zoom back in
+     * if the hash changes to just "#provider", so you can link to new providers by
+     * setting a link's href to simply "#provider" and ProviderHash will update the
+     * hash accordingly.
+     *
+     * setProvider(provider) should accept a string and return true if the supplied
+     * provider name was valid, or return false in any other case.
+     *
+     * Note also that ProviderHash requires a valid providerName in the constructor
+     * to correctly set the initial hash value.
      */
-    formatHash: function(hash) {
-        var format = MM.Hash.prototype.formatHash.call(this, hash);
-        return "#" + this.providerName + "/" + format.substr(1);
-    }
-};
+    var ProviderHash = function(map, providerName, setProvider) {
+        this.providerName = providerName;
+        this.setProvider = setProvider;
+        MM.Hash.call(this, map);
+    };
 
-MM.extend(ProviderHash, MM.Hash);
+    ProviderHash.prototype = {
+        // the currently selected provider name
+        providerName: null,
+
+        /**
+         * Our parseHash() function looks for a provider name in the beginning of
+         * the URL.
+         */
+        parseHash: function(hash) {
+            var parts = hash.split("/");
+            if (parts.length > 0) {
+                var provider = parts.shift();
+                var parsed = parts.length
+                    ? MM.Hash.prototype.parseHash.call(this, parts.join("/"))
+                    : {center: this.map.getCenter(), zoom: this.map.getZoom()};
+                if (parsed) {
+                    // console.log("parsed hash:", provider, parsed);
+                    var didSetProvider = this.setProvider.call(this.map, provider);
+                    if (didSetProvider) {
+                        this.providerName = provider;
+                        return parsed;
+                    } else {
+                        return false;
+                    }
+                } else {
+                    // console.log("parse error:", hash, parts, this.providerName);
+                }
+                return parsed;
+            } else {
+                // console.warn("(zero length, unable to parse");
+                return false;
+            }
+        },
+
+        /**
+         * Our formatHash() function inserts the provider name as the first
+         * slash-delimited element in the URL.
+         */
+        formatHash: function(hash) {
+            var format = MM.Hash.prototype.formatHash.call(this, hash);
+            return "#" + this.providerName + "/" + format.substr(1);
+        }
+    };
+
+    MM.extend(ProviderHash, MM.Hash);
+
+    try {
+
+        init();
+
+    } catch (e) {
+        console.error(e);
+    }
+
+})();
