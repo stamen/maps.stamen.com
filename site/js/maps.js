@@ -139,28 +139,25 @@ var MAPS = {};
             }
 
             var query = searchInput.value;
-            MapQuest.geocode(query, function(results) {
+            YahooPlaceSearch.geocode(query, function(places) {
                 revert();
                 // console.log("search results:", results);
                 // TODO: find the most relevant result?
-                var result = results[0].locations[0],
-                    loc = result.displayLatLng,
-                    zoom = map.getZoom();
-                switch (result.geocodeQuality) {
-                    case "CITY":
-                        zoom = 11;
-                        break;
-                    case "STATE":
-                        zoom = 7;
-                        break;
+                try {
+                    var result = places.place[0],
+                        northeast = result.boundingBox.northEast,
+                        southwest = result.boundingBox.southWest;
+                    main.setExtent([
+                        new MM.Location(northeast.latitude, northeast.longitude),
+                        new MM.Location(southwest.latitude, southwest.longitude)
+                    ]);
+                } catch (e) {
+                    alert('Sorry, something went wrong when searching for "' + query + '".');
                 }
-                main.setCenterZoom(new MM.Location(loc.lat, loc.lng), zoom);
-                // FIXME: offset the map so its center is
-                // to the left of the sub-maps?
                 // main.panBy(-(main.dimensions.x - wrapper.offsetWidth) / 2, 0);
             }, function(error) {
                 revert();
-                console.error("search error:", error);
+                alert('Sorry, we couldn\'t find "' + query + '".');
             });
 
             // cancel the submit event
@@ -188,40 +185,6 @@ var MAPS = {};
             lon = parseFloat(parts[1]);
         return new MM.Location(lat, lon);
     }
-
-    // quick and dirty MQ search API
-    var MapQuest = {
-        // XXX: this is a Slow Tusnami key registered on the shawn@stamen.com
-        // MapQuest developer account
-        key: decodeURIComponent("Fmjtd%7Cluua216ynl%2Cbg%3Do5-h4rxg"),
-        geocode: function(query, success, error) {
-            var data;
-            if (typeof query === "string") {
-                data = {location: query};
-            } else {
-                data = query;
-            }
-            data.inFormat = "kvp";
-            data.thumbMaps = false;
-            data.key = MapQuest.key;
-            data.outFormat = "json";
-            return reqwest({
-                url: "http://www.mapquestapi.com/geocoding/v1/address?callback=?",
-                type: "jsonp",
-                jsonpCallback: "callback",
-                data: data,
-                success: function(response) {
-                    var results = response.results;
-                    if (results && results.length) {
-                        success.call(null, results);
-                    } else {
-                        error.call(null, "No results");
-                    }
-                },
-                error: error
-            });
-        }
-    };
 
     /**
      * The ProviderHash is a class that looks for a provider name at the beginning
@@ -300,3 +263,63 @@ var MAPS = {};
     }
 
 })();
+
+var YahooPlaceSearch = {
+    appid: "1DiQEyLV34HbAVHyl0iWC5tAZ8wpLMPzIeFE9QsTukhx6H.Cn9bM70c_5dYgh7cR8w--",
+    url: "http://where.yahooapis.com/v1/places.q({q});count=1?callback=?",
+    geocode: function(query, success, error) {
+        var data = {};
+        data.appid = YahooPlaceSearch.appid;
+        data.select = "long";
+        data.format = "json";
+        return reqwest({
+            url: YahooPlaceSearch.url.replace("{q}", encodeURIComponent(query)),
+            type: "jsonp",
+            jsonpCallback: "callback",
+            data: data,
+            success: function(response) {
+                var results = response.places;
+                if (results) {
+                    success.call(null, results);
+                } else {
+                    error.call(null, "No results", response);
+                }
+            },
+            error: error
+        });
+    }
+};
+
+// quick and dirty MQ search API
+var MapQuest = {
+    // XXX: this is a Slow Tusnami key registered on the shawn@stamen.com
+    // MapQuest developer account
+    key: decodeURIComponent("Fmjtd%7Cluua216ynl%2Cbg%3Do5-h4rxg"),
+    geocode: function(query, success, error) {
+        var data;
+        if (typeof query === "string") {
+            data = {location: query};
+        } else {
+            data = query;
+        }
+        data.inFormat = "kvp";
+        data.thumbMaps = false;
+        data.key = MapQuest.key;
+        data.outFormat = "json";
+        return reqwest({
+            url: "http://www.mapquestapi.com/geocoding/v1/address?callback=?",
+            type: "jsonp",
+            jsonpCallback: "callback",
+            data: data,
+            success: function(response) {
+                var results = response.results;
+                if (results && results.length) {
+                    success.call(null, results);
+                } else {
+                    error.call(null, "No results");
+                }
+            },
+            error: error
+        });
+    }
+};
