@@ -1,7 +1,6 @@
 (function() {
 
-var stamen = {};
-stamen.tile = {
+var PROVIDERS =  {
     "toner": {
         "url": "http://{S}tile.stamen.com/toner/{Z}/{X}/{Y}.png",
         "zooms": 20
@@ -15,26 +14,27 @@ stamen.tile = {
         "zooms": 19
     }
 };
-var subdomains = ["", "a.", "b.", "c.", "d."];
+var SUBDOMAINS = ["", "a.", "b.", "c.", "d."];
 
 if (typeof MM === "object") {
     MM.StamenTileLayer = function(name) {
-        var url = stamen.tile[name].url;
-        return MM.TemplatedLayer.call(this, url, subdomains);
+        var url = PROVIDERS[name].url;
+        return MM.TemplatedLayer.call(this, url, SUBDOMAINS);
     };
     MM.extend(MM.StamenTileLayer, MM.TemplatedLayer);
 }
 
 if (typeof L === "object") {
-    L.StamenTileLayer = L.Class(L.TileLayer, {
+    L.StamenTileLayer = L.TileLayer.extend({
         initialize: function(name) {
-            var url = stamen.tile[name].url.toLowerCase();
+            var provider = PROVIDERS[name],
+                url = provider.url.toLowerCase();
             L.TileLayer.prototype.initialize.call(this, url, {
                 "minZoom":      0,
-                "maxZoom":      stamen.tile[name].zooms,
-                "subdomains":   subdomains,
+                "maxZoom":      provider.zooms,
+                "subdomains":   SUBDOMAINS,
                 "scheme":       "xyz",
-                "attribution": 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://creativecommons.org/licenses/by-sa/3.0">CC BY SA</a>.'
+                "attribution":  'Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://creativecommons.org/licenses/by-sa/3.0">CC BY SA</a>.'
             });
         }
     });
@@ -51,33 +51,35 @@ if (typeof OpenLayers === "object") {
     // based on http://www.bostongis.com/PrinterFriendly.aspx?content_name=using_custom_osm_tiles
     OpenLayers.Layer.Stamen = OpenLayers.Class(OpenLayers.Layer.OSM, {
         initialize: function(name, options) {
-            var url = stamen.tile[name].url,
+            var provider = PROVIDERS[name],
+                url = provider.url,
                 hosts = [];
             if (url.indexOf("{S}") > -1) {
-                for (var i = 0; i < subdomains.length; i++) {
-                    hosts.push(openlayerize(url.replace("{S}", subdomains[i])));
+                for (var i = 0; i < SUBDOMAINS.length; i++) {
+                    hosts.push(openlayerize(url.replace("{S}", SUBDOMAINS[i])));
                 }
             } else {
                 hosts.push(openlayerize(url));
             }
             options = OpenLayers.Util.extend({
-                "numZoomLevels":    stamen.tile[name].zooms,
+                "numZoomLevels":    provider.zooms,
                 "buffer":           0,
                 "transitionEffect": "resize"
             }, options);
-            OpenLayers.Layer.OSM.prototype.initialize.apply(this, [name, hosts, options]);
+            return OpenLayers.Layer.OSM.prototype.initialize.call(this, name, hosts, options);
         }
     });
 }
 
 if (typeof google === "object" && typeof google.maps === "object") {
     google.maps.StamenMapType = function(name) {
-        var url = stamen.tile[name].url.replace("{S}", "");
-        google.maps.ImageMapType.apply(this, {
+        var provider = PROVIDERS[name],
+            url = provider.url.replace("{S}", "");
+        return google.maps.ImageMapType.call(this, {
             "getTileUrl": function(coord, zoom) {
-                var index = (zoom + coord.x + coord.y) % subdomains.length;
+                var index = (zoom + coord.x + coord.y) % SUBDOMAINS.length;
                 return [
-                    url.replace("{S}", subdomains[index])
+                    url.replace("{S}", SUBDOMAINS[index])
                        .replace("{Z}", zoom)
                        .replace("{X}", coord.x)
                        .replace("{Y}", coord.y)
@@ -85,9 +87,11 @@ if (typeof google === "object" && typeof google.maps === "object") {
             },
             "tileSize": new google.maps.Size(256, 256),
             "name":     name,
-            "maxZoom":  stamen.tile[name].zooms
+            "maxZoom":  provider.zooms
         });
     };
+    // FIXME: is there a better way to extend classes in Google land?
+    google.maps.StamenMapType.prototype.__proto__ = google.maps.ImageMapType.prototype;
 }
 
 })();
