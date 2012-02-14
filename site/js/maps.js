@@ -7,6 +7,10 @@ var MAPS = {};
         return new MM.StamenTileLayer(layer);
     }
 
+    function onImageError(_map, img) {
+        // img.src = "images/tile-404.gif";
+    }
+
     function init() {
 
         var providerLabel = document.getElementById("current-provider"),
@@ -15,6 +19,7 @@ var MAPS = {};
 
         // our main map
         var main = MAPS.main = new MM.Map("map-main", getProvider(currentProvider), null, [new MM.DragHandler(), new MM.DoubleClickHandler()]);
+        main.layers[0].requestManager.addCallback("requesterror", onImageError);
 
         mapsByProvider[currentProvider] = main;
 
@@ -38,6 +43,7 @@ var MAPS = {};
                     _map.panning = false;
                 }
             });
+            map.layers[0].requestManager.addCallback("requesterror", onImageError);
             mapsByProvider[provider] = map;
             subs.push(map);
         }
@@ -68,7 +74,8 @@ var MAPS = {};
             return false;
         });
 
-        var fullscreen = false;
+        var fullscreen = false,
+            fstimeout;
         function toggleFullscreen(link) {
             fullscreen = !fullscreen;
             if (fullscreen) {
@@ -76,6 +83,8 @@ var MAPS = {};
             } else {
                 document.body.className = null;
             }
+            clearTimeout(fstimeout);
+            fstimeout = setTimeout(main.windowResize(), 1000);
         }
 
         MM.addEvent(document.getElementById("fullscreen"), "click", function(e) {

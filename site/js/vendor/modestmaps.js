@@ -1713,8 +1713,13 @@ var MM = com.modestmaps = {
                         // really stops loading
                         // FIXME: we'll never retry because this id is still
                         // in requestsById - is that right?
-                        theManager.dispatchCallback('requesterror', img.src);
-                        img.src = null;
+                        var lastSrc = img.src;
+                        theManager.dispatchCallback('requesterror', img);
+                        if (lastSrc == img.src) {
+                            img.src = null;
+                        } else {
+                            theManager.dispatchCallback('requestcomplete', img);
+                        }
                     }
 
                     // keep going in the same order
