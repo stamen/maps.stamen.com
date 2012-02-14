@@ -4,7 +4,7 @@ and explains how to get them into other sites.
 This repository also hosts a JavaScript utility which patches other map
 libraries to provide Stamen tile layers. Simply grab a copy of
 `js/tiles.stamen.js` and include it on your page after your favorite mapping
-library:
+library, then follow the instructions below:
 
 [ModestMaps](http://stamen.github.com/modestmaps-js/):
 
