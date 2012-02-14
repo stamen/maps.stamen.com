@@ -23,6 +23,7 @@ a:link, a:visited, a:active {
 
     #header .navbar-inner {
         background: none;
+        filter: none; /* for IE8 */
     }
 
     #header .container {
@@ -239,3 +240,6 @@ body.fullscreen #fullscreen {
     background: black;
 }
 
+img.tile {
+    max-width: auto !important;
+}
