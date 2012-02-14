@@ -32,10 +32,11 @@ a:link, a:visited, a:active {
 #stamen {
     position: absolute;
     right: -22px;
-    bottom: -25px;
+    bottom: -24px;
     font-size: 70px;
     line-height: 100%;
     font-weight: bold;
+    letter-spacing: -2px;
 }
 
 
@@ -89,7 +90,6 @@ input.btn {
     height: 230px;
     background-color: #999;
     /* border: 1px dotted black; */
-    box-shadow: inset rgba(0,0,0,.3) 8px 8px 16px;
 }
 
 #hero #maps-sub h3 {
@@ -146,6 +146,12 @@ h2 a,
     height: 156px;
 }
 
+#attribution h4 {
+    font-size: 15px;
+    line-height: 21px;
+    padding-top: 2px;
+}
+
 #attr {
     display: inline-block;
     background-color: #ffc;
@@ -171,6 +177,11 @@ h2 a,
 
 #usage-intro {
     margin-bottom: 18px;
+}
+
+.tiles .span3 ul {
+    /* to line the lists up with the paragraphs */
+    margin-top: 38px;
 }
 
 #footer {
