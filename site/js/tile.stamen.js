@@ -3,25 +3,29 @@
 var PROVIDERS =  {
     "toner": {
         "url": "http://{S}tile.stamen.com/toner/{Z}/{X}/{Y}.png",
-        "zooms": 20
+        "minZoom": 0,
+        "maxZoom": 20
     },
     "terrain": {
         "url": "http://{S}tile.stamen.com/terrain/{Z}/{X}/{Y}.jpg",
-        "zooms": 19
+        "minZoom": 4,
+        "maxZoom": 18
     },
     "watercolor": {
         "url": "http://{S}tile.stamen.com/watercolor/{Z}/{X}/{Y}.jpg",
-        "zooms": 19
+        "minZoom": 0,
+        "maxZoom": 18
     }
 };
 var SUBDOMAINS = ["", "a.", "b.", "c.", "d."];
 
 if (typeof MM === "object") {
     MM.StamenTileLayer = function(name) {
-        var url = PROVIDERS[name].url;
-        return MM.TemplatedLayer.call(this, url, SUBDOMAINS);
+        var provider = PROVIDERS[name];
+        MM.Layer.call(this, new MM.TemplatedMapProvider(provider.url, SUBDOMAINS));
+        this.provider.setZoomRange(provider.minZoom, provider.maxZoom);
     };
-    MM.extend(MM.StamenTileLayer, MM.TemplatedLayer);
+    MM.extend(MM.StamenTileLayer, MM.Layer);
 }
 
 if (typeof L === "object") {
@@ -30,8 +34,8 @@ if (typeof L === "object") {
             var provider = PROVIDERS[name],
                 url = provider.url.toLowerCase();
             L.TileLayer.prototype.initialize.call(this, url, {
-                "minZoom":      0,
-                "maxZoom":      provider.zooms,
+                "minZoom":      provider.minZoom,
+                "maxZoom":      provider.maxZoom,
                 "subdomains":   SUBDOMAINS,
                 "scheme":       "xyz",
                 "attribution":  'Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://creativecommons.org/licenses/by-sa/3.0">CC BY SA</a>.'
@@ -62,7 +66,7 @@ if (typeof OpenLayers === "object") {
                 hosts.push(openlayerize(url));
             }
             options = OpenLayers.Util.extend({
-                "numZoomLevels":    provider.zooms,
+                "numZoomLevels":    provider.maxZoom,
                 "buffer":           0,
                 "transitionEffect": "resize"
             }, options);
@@ -87,11 +91,12 @@ if (typeof google === "object" && typeof google.maps === "object") {
             },
             "tileSize": new google.maps.Size(256, 256),
             "name":     name,
-            "maxZoom":  provider.zooms
+            "minZoom":  provider.minZoom,
+            "maxZoom":  provider.maxZoom
         });
     };
     // FIXME: is there a better way to extend classes in Google land?
-    google.maps.StamenMapType.prototype.__proto__ = google.maps.ImageMapType.prototype;
+    google.maps.StamenMapType.prototype = new google.maps.ImageMapType("_");
 }
 
 })();
