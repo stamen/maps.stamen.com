@@ -3,7 +3,7 @@
     <head>
         <title>tile.stamen.com</title>
         <script type="text/javascript" src="js/vendor/reqwest.js"></script>
-        <script type="text/javascript" src="js/vendor/modestmaps.js"></script>
+        <script type="text/javascript" src="js/vendor/modestmaps.min.js"></script>
         <script type="text/javascript" src="js/tile.stamen.js"></script>
         <script type="text/javascript" src="js/vendor/google-code-prettify/prettify.js"></script>
         <style type="text/css">
@@ -32,8 +32,9 @@
                     </p>
                 </form>
                 <div id="controls">
-                    <a id="zoom-in" href="#">+</a>
-                    <a id="zoom-out" href="#">&minus;</a>
+                    <a id="zoom-in" title="zoom in" href="#">+</a>
+                    <a id="zoom-out" title="zoom out" href="#">&minus;</a>
+                    <a id="fullscreen" title="toggle fullscreen" href="#">&fnof;</a>
                 </div>
                 <div id="map-sub2" class="map switch" data-provider="terrain"><h3><a href="#terrain">Terrain</a></h3></div>
                 <div id="map-sub3" class="map switch" data-provider="watercolor"><h3><a href="#watercolor">Watercolor</a></h3></div>

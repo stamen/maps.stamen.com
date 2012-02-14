@@ -68,6 +68,31 @@ var MAPS = {};
             return false;
         });
 
+        var fullscreen = false;
+        function toggleFullscreen(link) {
+            fullscreen = !fullscreen;
+            if (fullscreen) {
+                document.body.className = "fullscreen";
+            } else {
+                document.body.className = null;
+            }
+        }
+
+        MM.addEvent(document.getElementById("fullscreen"), "click", function(e) {
+            try {
+                toggleFullscreen(e.target);
+            } catch (error) {
+                console.error(error);
+            }
+            return MM.cancelEvent(e);
+        });
+
+        MM.addEvent(window, "keyup", function(e) {
+            if (fullscreen && e.keyCode == 27) { // escape
+                toggleFullscreen(e.target);
+            }
+        });
+
         // pan the sub-maps when the main map is panned
         main.addCallback("panned", function(_map, offset) {
             if (main.panning) return;

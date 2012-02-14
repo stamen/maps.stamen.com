@@ -220,3 +220,22 @@ ol.linenums li {
   line-height: 18px;
   text-shadow: 0 1px 0 #fff;
 }
+
+#hero {
+    -webkit-transition-property: height;
+    -webkit-transition-duration: .5s;
+}
+
+body.fullscreen {
+    overflow: hidden;
+}
+
+body.fullscreen #hero {
+    height: 1000px;
+}
+
+body.fullscreen #fullscreen {
+    color: yellow;
+    background: black;
+}
+
