@@ -77,16 +77,16 @@ if (typeof OpenLayers === "object") {
 
 if (typeof google === "object" && typeof google.maps === "object") {
     google.maps.StamenMapType = function(name) {
-        var provider = PROVIDERS[name],
-            url = provider.url.replace("{S}", "");
+        var provider = PROVIDERS[name];
         return google.maps.ImageMapType.call(this, {
             "getTileUrl": function(coord, zoom) {
                 var index = (zoom + coord.x + coord.y) % SUBDOMAINS.length;
                 return [
-                    url.replace("{S}", SUBDOMAINS[index])
-                       .replace("{Z}", zoom)
-                       .replace("{X}", coord.x)
-                       .replace("{Y}", coord.y)
+                    provider.url
+                        .replace("{S}", SUBDOMAINS[index])
+                        .replace("{Z}", zoom)
+                        .replace("{X}", coord.x)
+                        .replace("{Y}", coord.y)
                 ];
             },
             "tileSize": new google.maps.Size(256, 256),
