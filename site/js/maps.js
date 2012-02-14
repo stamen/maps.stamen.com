@@ -60,11 +60,11 @@ var MAPS = {};
 
         // zoom click handlers
         MM.addEvent(document.getElementById("zoom-in"), "click", function() {
-            main.zoomIn();
+            try { main.zoomIn(); } catch (e) { }
             return false;
         });
         MM.addEvent(document.getElementById("zoom-out"), "click", function() {
-            main.zoomOut();
+            try { main.zoomOut(); } catch (e) { }
             return false;
         });
 
