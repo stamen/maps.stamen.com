@@ -74,33 +74,36 @@ var MAPS = {};
             return false;
         });
 
-        var fullscreen = false,
-            fstimeout;
-        function toggleFullscreen(link) {
-            fullscreen = !fullscreen;
-            if (fullscreen) {
-                document.body.className = "fullscreen";
-            } else {
-                document.body.className = null;
+        var fslink = document.getElementById("fullscreen");
+        if (fslink) {
+            var fullscreen = false,
+                fstimeout;
+            function toggleFullscreen(link) {
+                fullscreen = !fullscreen;
+                if (fullscreen) {
+                    document.body.className = "fullscreen";
+                } else {
+                    document.body.className = null;
+                }
+                clearTimeout(fstimeout);
+                fstimeout = setTimeout(main.windowResize(), 1000);
             }
-            clearTimeout(fstimeout);
-            fstimeout = setTimeout(main.windowResize(), 1000);
+
+            MM.addEvent(fslink, "click", function(e) {
+                try {
+                    toggleFullscreen(e.target);
+                } catch (error) {
+                    console.error(error);
+                }
+                return MM.cancelEvent(e);
+            });
+
+            MM.addEvent(window, "keyup", function(e) {
+                if (fullscreen && e.keyCode == 27) { // escape
+                    toggleFullscreen(e.target);
+                }
+            });
         }
-
-        MM.addEvent(document.getElementById("fullscreen"), "click", function(e) {
-            try {
-                toggleFullscreen(e.target);
-            } catch (error) {
-                console.error(error);
-            }
-            return MM.cancelEvent(e);
-        });
-
-        MM.addEvent(window, "keyup", function(e) {
-            if (fullscreen && e.keyCode == 27) { // escape
-                toggleFullscreen(e.target);
-            }
-        });
 
         // pan the sub-maps when the main map is panned
         main.addCallback("panned", function(_map, offset) {
@@ -121,7 +124,7 @@ var MAPS = {};
         main.addCallback("centered", updateSubMaps);
 
         // set the initial map position
-        main.setCenterZoom(new MM.Location(37.7719, -122.3926), 12);
+        main.setCenterZoom(new MM.Location(37.7706, -122.3782), 12);
 
         // and set up listening for the browser's location hash
         var hasher = new ProviderHash(main, currentProvider, function(provider) {
