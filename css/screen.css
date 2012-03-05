@@ -47,25 +47,18 @@ a:link, a:visited, a:active {
     height: 580px;
 }
 
-#hero h2 {
-    position: absolute;
-    margin: 0;
-}
-
-#controls {
-    position: absolute;
+.controls {
     font-size: 24px;
     line-height: 100%;
     font-weight: bold;
 }
 
-/*
-input.btn {
-    background: yellow !important;
+#controls {
+    position: absolute;
 }
-*/
 
-#controls a {
+.controls a {
+    cursor: pointer;
     color: black;
     background: yellow;
     text-decoration: none;
@@ -76,6 +69,29 @@ input.btn {
     position: absolute;
     width: 100%;
     height: 100%;
+}
+
+#map-main #bottom {
+    position: absolute;
+    bottom: 25px;
+    width: 100%;
+    z-index: 99;
+}
+
+#map-main h2 {
+    font-size: inherit;
+    line-height: 34px;
+    display: inline-block;
+    background: black;
+    color: white;
+    margin: 0;
+    padding: 0 10px;
+}
+
+#map-main .controls a {
+    display: block;
+    float: left;
+    padding: 3px 10px 6px 10px;
 }
 
 #hero #maps-sub {
@@ -227,18 +243,36 @@ ol.linenums li {
     -webkit-transition-duration: .5s;
 }
 
+a#fullscreen {
+    color: transparent;
+    background-image: url(img/arrow-down.png);
+    background-position: center center;
+    background-repeat: no-repeat;
+}
+
+body.fullscreen a#fullscreen {
+    background-image: url(img/arrow-up.png);
+}
+
+a#fullscreen span {
+    display: none;
+}
+
+/*
 body.fullscreen {
-    /* overflow: hidden; */
+}
+
+body.fullscreen {
+    position: relative;
 }
 
 body.fullscreen #hero {
-    height: 1000px;
+    position: absolute;
+    z-index: 999;
+    width: 100%;
+    height: 100%;
 }
-
-body.fullscreen #fullscreen {
-    color: yellow;
-    background: black;
-}
+*/
 
 img.tile {
     max-width: auto !important;

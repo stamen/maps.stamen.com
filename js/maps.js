@@ -126,6 +126,15 @@ var MAPS = {};
         // set the initial map position
         main.setCenterZoom(new MM.Location(37.7706, -122.3782), 12);
 
+        function updateTitle(map, provider) {
+            // update the link in the clicked sub-map
+            var node = map.parent.querySelector(".provider-name");
+            node.innerHTML = provider.substr(0, 1).toUpperCase() + provider.substr(1);
+            if ("href" in node) {
+                node.href = "#" + provider;
+            }
+        }
+
         // and set up listening for the browser's location hash
         var hasher = new ProviderHash(main, currentProvider, function(provider) {
             if (!provider || !(provider in mapsByProvider)) {
@@ -140,10 +149,8 @@ var MAPS = {};
                 source.setLayerAt(0, getProvider(currentProvider));
                 target.setLayerAt(0, getProvider(provider));
 
-                // update the link in the clicked sub-map
-                var link = source.parent.querySelector("h3 a");
-                link.innerHTML = currentProvider.substr(0, 1).toUpperCase() + currentProvider.substr(1);
-                link.href = "#" + currentProvider;
+                updateTitle(source, currentProvider);
+                updateTitle(target, provider);
 
                 // update the selected provider label text
                 providerLabel.innerHTML = provider;
