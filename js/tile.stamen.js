@@ -1,23 +1,23 @@
 (function() {
 
-var PROVIDERS =  {
-    "toner": {
-        "url": "http://{S}tile.stamen.com/toner/{Z}/{X}/{Y}.png",
-        "minZoom": 0,
-        "maxZoom": 20
-    },
-    "terrain": {
-        "url": "http://{S}tile.stamen.com/terrain/{Z}/{X}/{Y}.jpg",
-        "minZoom": 4,
-        "maxZoom": 18
-    },
-    "watercolor": {
-        "url": "http://{S}tile.stamen.com/watercolor/{Z}/{X}/{Y}.jpg",
-        "minZoom": 0,
-        "maxZoom": 18
-    }
-};
-var SUBDOMAINS = ["", "a.", "b.", "c.", "d."];
+var SUBDOMAINS = ["", "a.", "b.", "c.", "d."],
+    PROVIDERS =  {
+        "toner": {
+            "url": "http://{S}tile.stamen.com/toner/{Z}/{X}/{Y}.png",
+            "minZoom": 0,
+            "maxZoom": 20
+        },
+        "terrain": {
+            "url": "http://{S}tile.stamen.com/terrain/{Z}/{X}/{Y}.jpg",
+            "minZoom": 4,
+            "maxZoom": 18
+        },
+        "watercolor": {
+            "url": "http://{S}tile.stamen.com/watercolor-mask_set_1/{Z}/{X}/{Y}.jpg",
+            "minZoom": 0,
+            "maxZoom": 18
+        }
+    };
 
 if (typeof MM === "object") {
     MM.StamenTileLayer = function(name) {
