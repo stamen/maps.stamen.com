@@ -3,17 +3,18 @@ body {
     overflow: hidden;
 }
 
+#search, #controls {
+            user-select: none;
+    -webkit-user-select: none;
+       -moz-user-select: none;
+        -ms-user-select: none;
+         -o-user-select: none;
+}
+
 #header {
     position: relative;
     overflow: hidden;
     z-index: 102;
-}
-
-#header h1 a {
-    font-weight: inherit;
-    font-family: inherit;
-    font-size: inherit;
-    text-decoration: none;
 }
 
 #map-main {
