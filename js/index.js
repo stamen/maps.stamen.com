@@ -224,9 +224,9 @@ var MAPS = {};
             MAPS.minis.push(map);
         }
 
-        var inheritLinks = document.querySelectorAll("a.hashish");
-        for (var i = 0; i < inheritLinks.length; i++) {
-            MM.addEvent(inheritLinks[i], "mouseover", function(e) {
+        var hashish = document.querySelectorAll("a.hashish");
+        for (var i = 0; i < hashish.length; i++) {
+            MM.addEvent(hashish[i], "mouseover", function(e) {
                 var link = e.target,
                     parts = link.href.split("#"),
                     suffix = location.hash.split("/").slice(1).join("/");
