@@ -1,0 +1,31 @@
+body {
+    position: relative;
+    overflow: hidden;
+}
+
+#header {
+    position: relative;
+    overflow: hidden;
+    z-index: 102;
+}
+
+#header h1 a {
+    font-weight: inherit;
+    font-family: inherit;
+    font-size: inherit;
+    text-decoration: none;
+}
+
+#map-main {
+    z-index: 100;
+}
+
+#overlay {
+    position: relative;
+    z-index: 101;
+    top: 20px;
+}
+
+#controls {
+    position: relative;
+}
