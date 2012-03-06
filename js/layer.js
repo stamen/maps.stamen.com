@@ -24,7 +24,7 @@
         MM.addEvent(window, "resize", resize);
 
         // our main map
-        var main = new MM.Map("map-main", provider, size,
+        var main = new MM.Map(parent, provider, size,
             [new MM.DragHandler(), new MM.DoubleClickHandler(), new MM.TouchHandler()]);
         parent.style.position = "absolute";
         main.autoSize = false;
