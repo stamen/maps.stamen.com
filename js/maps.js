@@ -18,7 +18,8 @@ var MAPS = {};
             mapsByProvider = MAPS.byProvider = {};
 
         // our main map
-        var main = MAPS.main = new MM.Map("map-main", getProvider(currentProvider), null, [new MM.DragHandler(), new MM.DoubleClickHandler()]);
+        var main = MAPS.main = new MM.Map("map-main", getProvider(currentProvider), null,
+            [new MM.DragHandler(), new MM.DoubleClickHandler(), new MM.TouchHandler()]);
         main.layers[0].requestManager.addCallback("requesterror", onImageError);
 
         mapsByProvider[currentProvider] = main;
@@ -153,7 +154,9 @@ var MAPS = {};
                 updateTitle(target, provider);
 
                 // update the selected provider label text
-                providerLabel.innerHTML = provider;
+                if (providerLabel) {
+                    providerLabel.innerHTML = provider;
+                }
 
                 // swap the map references in mapsByProvider
                 mapsByProvider[provider] = target;
