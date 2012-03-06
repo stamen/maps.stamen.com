@@ -223,6 +223,16 @@ var MAPS = {};
             map.setCenterZoom(center, zoom);
             MAPS.minis.push(map);
         }
+
+        var inheritLinks = document.querySelectorAll("a.hashish");
+        for (var i = 0; i < inheritLinks.length; i++) {
+            MM.addEvent(inheritLinks[i], "mouseover", function(e) {
+                var link = e.target,
+                    parts = link.href.split("#"),
+                    suffix = location.hash.split("/").slice(1).join("/");
+                link.href = [parts[0], suffix].join("#");
+            });
+        }
     }
 
     // parse a string into an MM.Location instance
