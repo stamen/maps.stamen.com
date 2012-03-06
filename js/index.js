@@ -346,37 +346,3 @@ var YahooPlaceSearch = {
         });
     }
 };
-
-// quick and dirty MQ search API
-var MapQuest = {
-    // XXX: this is a Slow Tusnami key registered on the shawn@stamen.com
-    // MapQuest developer account
-    key: decodeURIComponent("Fmjtd%7Cluua216ynl%2Cbg%3Do5-h4rxg"),
-    geocode: function(query, success, error) {
-        var data;
-        if (typeof query === "string") {
-            data = {location: query};
-        } else {
-            data = query;
-        }
-        data.inFormat = "kvp";
-        data.thumbMaps = false;
-        data.key = MapQuest.key;
-        data.outFormat = "json";
-        return reqwest({
-            url: "http://www.mapquestapi.com/geocoding/v1/address?callback=?",
-            type: "jsonp",
-            jsonpCallback: "callback",
-            data: data,
-            success: function(response) {
-                var results = response.results;
-                if (results && results.length) {
-                    success.call(null, results);
-                } else {
-                    error.call(null, "No results");
-                }
-            },
-            error: error
-        });
-    }
-};
