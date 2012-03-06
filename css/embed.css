@@ -1,0 +1,45 @@
+body {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 12px;
+    line-height: 15px;
+}
+
+a:link, a:visited, a:hover {
+    color: inherit;
+}
+
+#controls,
+#attribution {
+    position: absolute;
+    z-index: 100;
+}
+
+#controls {
+    left: 10px;
+    top: 10px;
+}
+
+#controls a {
+    font-size: 24px;
+    font-weight: bold;
+    display: block;
+    float: left;
+    text-align: center;
+    line-height: 30px;
+    width: 34px;
+    height: 34px;
+    cursor: pointer;
+    color: black;
+    background: yellow;
+    text-decoration: none;
+    margin-right: 8px;
+}
+
+#attribution {
+    bottom: 0;
+    right: 0;
+    color: white;
+    background: black;
+    padding: 3px 5px 2px;
+    margin: 0;
+}
