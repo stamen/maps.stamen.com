@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>maps.stamen.com</title>
+        <script type="text/javascript" src="../js/vendor/modestmaps.min.js"></script>
+        <script type="text/javascript" src="../js/vendor/reqwest.js"></script>
+        <script type="text/javascript" src="../js/tile.stamen.js"></script>
+        <style type="text/css">
+            @import url(../css/bootstrap/bootstrap.css);
+            @import url(../css/screen.css);
+            @import url(../css/layer.css);
+        </style>
+    </head>
+    <body>
+        <div id="header" class="navbar">
+            <div class="navbar-inner">
+                <div class="container">
+                    <h1 id="tiles" class="brand"><a href="../">maps.stamen.com</a> / <span id="current-provider">toner</span></h1>
+                    <a id="stamen" class="brand" href="http://stamen.com">stamen</a>
+                </div>
+            </div>
+        </div>
+
+        <div id="map-main" class="map" data-provider="toner">
+        </div>
+
+        <div id="overlay" class="container">
+            <form id="search" action="#">
+                <p>
+                <input id="search-location" class="span3" type="text" placeholder="Type a location">
+                <input id="search-submit" class="btn" type="submit" value="Find">
+                </p>
+            </form>
+            <div id="controls" class="controls">
+                <a id="zoom-in" title="zoom in" href="#">+</a>
+                <a id="zoom-out" title="zoom out" href="#">&minus;</a>
+            </div>
+        </div>
+
+        <script type="text/javascript" src="../js/layer.js" defer></script>
+    </body>
+</html>
+
