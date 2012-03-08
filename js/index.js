@@ -92,7 +92,7 @@ var MAPS = {};
 
             MM.addEvent(fslink, "click", function(e) {
                 try {
-                    toggleFullscreen(e.target);
+                    toggleFullscreen(e.srcElement || e.target);
                 } catch (error) {
                     console.error(error);
                 }
@@ -101,7 +101,7 @@ var MAPS = {};
 
             MM.addEvent(window, "keyup", function(e) {
                 if (fullscreen && e.keyCode == 27) { // escape
-                    toggleFullscreen(e.target);
+                    toggleFullscreen(e.srcElement || e.target);
                 }
             });
         }
@@ -227,7 +227,7 @@ var MAPS = {};
         var hashish = document.querySelectorAll("a.hashish");
         for (var i = 0; i < hashish.length; i++) {
             MM.addEvent(hashish[i], "mouseover", function(e) {
-                var link = e.target,
+                var link = e.srcElement || e.target,
                     parts = link.href.split("#"),
                     suffix = location.hash.split("/").slice(1).join("/");
                 link.href = [parts[0], suffix].join("#");
@@ -311,13 +311,7 @@ var MAPS = {};
 
     MM.extend(ProviderHash, MM.Hash);
 
-    try {
-
-        init();
-
-    } catch (e) {
-        console.error(e);
-    }
+    init();
 
 })();
 

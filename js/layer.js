@@ -11,15 +11,22 @@
 
     function init() {
 
+        var doc = document.documentElement;
+        function getSize() {
+            return new MM.Point(doc.clientWidth, doc.clientHeight);
+        }
+
         var parent = document.getElementById("map-main"),
-            size = new MM.Point(window.innerWidth, window.innerHeight),
+            size = getSize(),
             provider = getProvider(parent.getAttribute("data-provider"));
 
         function resize() {
-            size.x = parent.style.width = window.innerWidth + "px";
-            size.y = parent.style.height = (window.innerHeight - parent.offsetTop) + "px";
-            console.log("resize:", [size.x, size.y]);
-            if (main) main.setSize(size);
+            try {
+                size = getSize();
+                if (main) main.setSize(size);
+            } catch (e) {
+            }
+            // console.log("resize:", [size.x, size.y]);
         }
         MM.addEvent(window, "resize", resize);
 
@@ -89,11 +96,7 @@
         });
     }
 
-    try {
-        init();
-    } catch (e) {
-        console.warn(e);
-    }
+    init();
 
 })();
 
