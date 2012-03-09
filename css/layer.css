@@ -3,6 +3,7 @@ body {
     overflow: hidden;
 }
 
+/* make them unselectable */
 #search, #controls {
             user-select: none;
     -webkit-user-select: none;
@@ -25,8 +26,16 @@ body {
     position: relative;
     z-index: 101;
     top: 20px;
+    height: 0;
+}
+
+#search {
+    /* so it doesn't capture mouse events */
+    width: 30% !important;
 }
 
 #controls {
     position: relative;
+    /* so it doesn't capture mouse events */
+    height: 1px;
 }
