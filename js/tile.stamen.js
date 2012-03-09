@@ -7,15 +7,25 @@ var SUBDOMAINS = ["", "a.", "b.", "c.", "d."],
             "minZoom": 0,
             "maxZoom": 20
         },
+        "toner-lines": {
+            "url": "http://{S}tile.stamen.com/toner-lines/{Z}/{X}/{Y}.png",
+            "minZoom": 0,
+            "maxZoom": 20
+        },
+        "toner-labels": {
+            "url": "http://{S}tile.stamen.com/toner-labels/{Z}/{X}/{Y}.png",
+            "minZoom": 0,
+            "maxZoom": 20
+        },
         "terrain": {
             "url": "http://{S}tile.stamen.com/terrain/{Z}/{X}/{Y}.jpg",
             "minZoom": 4,
             "maxZoom": 18
         },
         "watercolor": {
-            "url": "http://{S}tile.stamen.com/watercolor-mask_set_1/{Z}/{X}/{Y}.jpg",
+            "url": "http://{S}tile.stamen.com/watercolor/{Z}/{X}/{Y}.jpg",
             "minZoom": 0,
-            "maxZoom": 18
+            "maxZoom": 16
         }
     };
 
