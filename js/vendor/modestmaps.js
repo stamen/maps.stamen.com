@@ -1,5 +1,5 @@
 /*!
- * Modest Maps JS v1.0.0-alpha
+ * Modest Maps JS v1.0.0
  * http://modestmaps.com/
  *
  * Copyright (c) 2011 Stamen Design, All Rights Reserved.
@@ -110,9 +110,6 @@ var MM = com.modestmaps = {
             // Optimize for identity transforms, where you don't actually
             // need to change this element's string. Browsers can optimize for
             // the .style.left case but not for this CSS case.
-            if (!point.scale) point.scale = 1;
-            if (!point.width) point.width = 0;
-            if (!point.height) point.height = 0;
             var ms = MM.matrixString(point);
             if (el[MM.transformProperty] !== ms) {
                 el.style[MM.transformProperty] =
@@ -121,12 +118,8 @@ var MM = com.modestmaps = {
         } else {
             el.style.left = point.x + 'px';
             el.style.top = point.y + 'px';
-            // Don't set width unless asked to: this is performance-intensive
-            // and not always necessary
-            if (point.width && point.height && point.scale) {
-                el.style.width =  Math.ceil(point.width  * point.scale) + 'px';
-                el.style.height = Math.ceil(point.height * point.scale) + 'px';
-            }
+            el.style.width =  Math.ceil(point.width  * point.scale) + 'px';
+            el.style.height = Math.ceil(point.height * point.scale) + 'px';
         }
     };
 
@@ -153,19 +146,6 @@ var MM = com.modestmaps = {
         return function() {
           return func.apply(obj, args.concat(slice.call(arguments)));
         };
-    };
-
-    MM.coerceLayer = function(layerish) {
-        if (typeof layerish == 'string') {
-            // Probably a template string
-            return new MM.Layer(new MM.TemplatedMapProvider(layerish));
-        } else if ('draw' in layerish && typeof layerish.draw == 'function') {
-            // good enough, though we should probably enforce .parent and .destroy() too
-            return layerish;
-        } else {
-            // probably a MapProvider
-            return new MM.Layer(layerish);
-        }
     };
 
     // see http://ejohn.org/apps/jselect/event.html for the originals
@@ -220,16 +200,16 @@ var MM = com.modestmaps = {
 
     // Get the euclidean distance between two points
     MM.Point.distance = function(p1, p2) {
-        return Math.sqrt(
-            Math.pow(p2.x - p1.x, 2) +
-            Math.pow(p2.y - p1.y, 2));
+        var dx = (p2.x - p1.x);
+        var dy = (p2.y - p1.y);
+        return Math.sqrt(dx*dx + dy*dy);
     };
 
     // Get a point between two other points, biased by `t`.
     MM.Point.interpolate = function(p1, p2, t) {
-        return new MM.Point(
-            p1.x + (p2.x - p1.x) * t,
-            p1.y + (p2.y - p1.y) * t);
+        var px = p1.x + (p2.x - p1.x) * t;
+        var py = p1.y + (p2.y - p1.y) * t;
+        return new MM.Point(px, py);
     };
     // Coordinate
     // ----------
@@ -261,7 +241,7 @@ var MM = com.modestmaps = {
             // them out. Contributions welcome but watch out for collisions when the
             // row or column are negative and check thoroughly (exhaustively) before
             // committing.
-            return this.zoom + ',' + this.row + ',' + this.column;
+            return [ this.zoom, this.row, this.column ].join(',');
         },
         // Clone this object.
         copy: function() {
@@ -359,19 +339,6 @@ var MM = com.modestmaps = {
         return Math.acos(c + d + e) * r;
     };
 
-    // parse a string in the format "lat,lon"
-    MM.Location.fromString = function(str, longitudeFirst) {
-        var parts = str.split(/\s*,\s*/);
-        if (parts.length == 2) {
-            var lat = parseFloat(longitudeFirst ? parts[1] : parts[0]),
-                lon = parseFloat(longitudeFirst ? parts[0] : parts[1]);
-            if (!isNaN(lat) && !isNaN(lon)) {
-                return new MM.Location(lat, lon);
-            }
-        }
-        return null;
-    };
-
     // Interpolates along a great circle, f between 0 and 1
     //
     // * FIXME: could be heavily optimized (lots of trig calls to cache)
@@ -417,31 +384,31 @@ var MM = com.modestmaps = {
         return new MM.Location(latN / deg2rad, lonN / deg2rad);
     };
 
-    // Extent
+    // MapExtent
     // ----------
     // An object representing a map's rectangular extent, defined by its north,
     // south, east and west bounds.
 
-    MM.Extent = function(north, west, south, east) {
-        if (arguments[1] instanceof MM.Location) {
-            var southeast = arguments[1];
-            south = southeast.lat;
-            east = southeast.lon;
-        }
+    MM.MapExtent = function(north, west, south, east) {
         if (arguments[0] instanceof MM.Location) {
             var northwest = arguments[0];
             north = northwest.lat;
             west = northwest.lon;
         }
+        if (arguments[1] instanceof MM.Location) {
+            var southeast = arguments[1];
+            south = southeast.lat;
+            east = southeast.lon;
+        }
         if (isNaN(south)) south = north;
         if (isNaN(east)) east = west;
-        this.north = north > south ? north : south;
-        this.south = north > south ? south : north;
-        this.east = east > west ? east : west;
-        this.west = east > west ? west : east;
+        this.north = Math.max(north, south);
+        this.south = Math.min(north, south);
+        this.east = Math.max(east, west);
+        this.west = Math.min(east, west);
     };
 
-    MM.Extent.prototype = {
+    MM.MapExtent.prototype = {
         // boundary attributes
         north: 0,
         south: 0,
@@ -449,7 +416,7 @@ var MM = com.modestmaps = {
         west: 0,
 
         copy: function() {
-            return new MM.Extent(this.north, this.west, this.south, this.east);
+            return new MM.MapExtent(this.north, this.west, this.south, this.east);
         },
 
         toString: function(precision) {
@@ -520,10 +487,10 @@ var MM = com.modestmaps = {
 
         // determine if a location is within this extent
         containsLocation: function(loc) {
-            return loc.lat >= this.south &&
-                loc.lat <= this.north &&
-                loc.lon >= this.west &&
-                loc.lon <= this.east;
+            return loc.lat >= this.south
+                && loc.lat <= this.north
+                && loc.lon >= this.west
+                && loc.lon <= this.east;
         },
 
         // turn an extent into an array of locations containing its northwest
@@ -533,12 +500,12 @@ var MM = com.modestmaps = {
         }
     };
 
-    MM.Extent.fromString = function(str) {
+    MM.MapExtent.fromString = function(str) {
         var parts = str.split(/\s*,\s*/);
         if (parts.length != 4) {
             throw "Invalid extent string (expecting 4 comma-separated numbers)";
         }
-        return new MM.Extent(
+        return new MM.MapExtent(
             parseFloat(parts[0]),
             parseFloat(parts[1]),
             parseFloat(parts[2]),
@@ -546,8 +513,8 @@ var MM = com.modestmaps = {
         );
     };
 
-    MM.Extent.fromArray = function(locations) {
-        var extent = new MM.Extent();
+    MM.MapExtent.fromArray = function(locations) {
+        var extent = new MM.MapExtent();
         extent.setFromLocations(locations);
         return extent;
     };
@@ -726,16 +693,13 @@ var MM = com.modestmaps = {
     };
 
     MM.extend(MM.MercatorProjection, MM.Projection);
+
     // Providers
     // ---------
     // Providers provide tile URLs and possibly elements for layers.
-    //
-    // MapProvider ->
-    //   TemplatedMapProvider
-    //
-    MM.MapProvider = function(getTile) {
-        if (getTile) {
-            this.getTile = getTile;
+    MM.MapProvider = function(getTileUrl) {
+        if (getTileUrl) {
+            this.getTileUrl = getTileUrl;
         }
     };
 
@@ -744,21 +708,20 @@ var MM = com.modestmaps = {
         // these are limits for available *tiles*
         // panning limits will be different (since you can wrap around columns)
         // but if you put Infinity in here it will screw up sourceCoordinate
-        tileLimits: [
-            new MM.Coordinate(0,0,0),             // top left outer
-            new MM.Coordinate(1,1,0).zoomTo(18)   // bottom right inner
-        ],
+        tileLimits: [ new MM.Coordinate(0,0,0),             // top left outer
+                      new MM.Coordinate(1,1,0).zoomTo(18) ], // bottom right inner
 
         getTileUrl: function(coordinate) {
-            throw "Abstract method getTileUrl() not implemented by subclass.";
+            throw "Abstract method not implemented by subclass.";
         },
 
         getTile: function(coordinate) {
-            throw "Abstract method getTile() not implemented by subclass.";
+            throw "Abstract method not implemented by subclass.";
         },
 
-        // releaseTile is not required
-        releaseTile: function(element) { },
+        releaseTile: function(element) {
+            throw "Abstract method not implemented by subclass.";
+        },
 
         // use this to tell MapProvider that tiles only exist between certain zoom levels.
         // should be set separately on Map to restrict interactive zoom/pan ranges
@@ -772,24 +735,20 @@ var MM = com.modestmaps = {
         // ... you should override this function if you change the tile limits
         // ... see enforce-limits in examples for details
         sourceCoordinate: function(coord) {
-            var TL = this.tileLimits[0].zoomTo(coord.zoom),
-                BR = this.tileLimits[1].zoomTo(coord.zoom),
-                columnSize = Math.pow(2, coord.zoom),
-                wrappedColumn;
-
-            if (coord.column < 0) {
-                wrappedColumn = (coord.column + columnSize) % columnSize;
-            } else {
-                wrappedColumn = coord.column % columnSize;
-            }
-
-            if (coord.row < TL.row || coord.row >= BR.row) {
+            var TL = this.tileLimits[0].zoomTo(coord.zoom);
+            var BR = this.tileLimits[1].zoomTo(coord.zoom);
+            var vSize = BR.row - TL.row;
+            if (coord.row < 0 | coord.row >= vSize) {
+                // it's too high or too low:
                 return null;
-            } else if (wrappedColumn < TL.column || wrappedColumn >= BR.column) {
-                return null;
-            } else {
-                return new MM.Coordinate(coord.row, wrappedColumn, coord.zoom);
             }
+            var hSize = BR.column - TL.column;
+            // assume infinite horizontal scrolling
+            var wrappedColumn = coord.column % hSize;
+            while (wrappedColumn < 0) {
+                wrappedColumn += hSize;
+            }
+            return new MM.Coordinate(coord.row, wrappedColumn, coord.zoom);
         }
     };
 
@@ -816,16 +775,22 @@ var MM = com.modestmaps = {
      * var placeholder = new MM.TemplatedMapProvider("http://placehold.it/256/f0f/fff.png&text={Z}/{X}/{Y}");
      *
      */
-    MM.TemplatedMapProvider = function(template, subdomains) {
-        var isQuadKey = template.match(/{(Q|quadkey)}/);
-        // replace Microsoft style substitution strings
-        if (isQuadKey) template = template
-            .replace('{subdomains}', '{S}')
-            .replace('{zoom}', '{Z}')
-            .replace('{quadkey}', '{Q}');
+    MM.TemplatedMapProvider = function(template, subdomains)
+    {
+        var isQuadKey = false;
+        if (template.match(/{(Q|quadkey)}/)) {
+            isQuadKey = true;
+            // replace Microsoft style substitution strings
+            template = template
+                .replace('{subdomains}', '{S}')
+                .replace('{zoom}', '{Z}')
+                .replace('{quadkey}', '{Q}');
+        }
 
-        var hasSubdomains = (subdomains &&
-            subdomains.length && template.indexOf("{S}") >= 0);
+        var hasSubdomains = false;
+        if (subdomains && subdomains.length && template.indexOf("{S}") >= 0) {
+            hasSubdomains = true;
+        }
 
         var getTileUrl = function(coordinate) {
             var coord = this.sourceCoordinate(coordinate);
@@ -834,16 +799,13 @@ var MM = com.modestmaps = {
             }
             var base = template;
             if (hasSubdomains) {
-                var index = parseInt(coord.zoom + coord.row + coord.column, 10) %
-                    subdomains.length;
+                var index = parseInt(coord.zoom + coord.row + coord.column, 10) % subdomains.length;
                 base = base.replace('{S}', subdomains[index]);
             }
             if (isQuadKey) {
                 return base
                     .replace('{Z}', coord.zoom.toFixed(0))
-                    .replace('{Q}', this.quadKey(coord.row,
-                        coord.column,
-                        coord.zoom));
+                    .replace('{Q}', this.quadKey(coord.row, coord.column, coord.zoom));
             } else {
                 return base
                     .replace('{Z}', coord.zoom.toFixed(0))
@@ -851,29 +813,41 @@ var MM = com.modestmaps = {
                     .replace('{Y}', coord.row.toFixed(0));
             }
         };
-
+    
         MM.MapProvider.call(this, getTileUrl);
     };
 
     MM.TemplatedMapProvider.prototype = {
         // quadKey generator
         quadKey: function(row, column, zoom) {
-            var key = '';
+            var key = "";
             for (var i = 1; i <= zoom; i++) {
                 key += (((row >> zoom - i) & 1) << 1) | ((column >> zoom - i) & 1);
             }
-            return key || '0';
-        },
-        getTile: function(coord) {
-          return this.getTileUrl(coord);
+            return key || "0";
         }
     };
 
     MM.extend(MM.TemplatedMapProvider, MM.MapProvider);
 
-    MM.TemplatedLayer = function(template, subdomains) {
-      return new MM.Layer(new MM.TemplatedMapProvider(template, subdomains));
+   /**
+    * Possible new kind of provider that deals in elements.
+    */
+    MM.TilePaintingProvider = function(template_provider) {
+        this.template_provider = template_provider;
     };
+
+    MM.TilePaintingProvider.prototype = {
+
+        getTile: function(coord) {
+            return this.template_provider.getTileUrl(coord);
+        },
+
+        releaseTile: function(coord) {
+        }
+    };
+
+    MM.extend(MM.TilePaintingProvider, MM.MapProvider);
     // Event Handlers
     // --------------
 
@@ -909,10 +883,6 @@ var MM = com.modestmaps = {
 
     MM.MouseWheelHandler.prototype = {
         precise: false,
-        // MM.Point to zoom about
-        centerPoint: null,
-        // MM.Location to zoom about
-        centerLocation: null,
 
         init: function(map) {
             this.map = map;
@@ -946,26 +916,17 @@ var MM = com.modestmaps = {
             var timeSince = new Date().getTime() - this.prevTime;
 
             if (Math.abs(delta) > 0 && (timeSince > 200) && !this.precise) {
-                var point = this.getZoomPoint(e);
+                var point = MM.getMousePoint(e, this.map);
                 this.map.zoomByAbout(delta > 0 ? 1 : -1, point);
 
                 this.prevTime = new Date().getTime();
             } else if (this.precise) {
-                var point = this.getZoomPoint(e);
+                var point = MM.getMousePoint(e, this.map);
                 this.map.zoomByAbout(delta * 0.001, point);
             }
 
             // Cancel the event so that the page doesn't scroll
             return MM.cancelEvent(e);
-        },
-
-        getZoomPoint: function(e) {
-            if (this.centerPoint) {
-                return this.centerPoint;
-            } else if (this.centerLocation) {
-                return this.map.locationPoint(this.centerLocation);
-            }
-            return MM.getMousePoint(e, this.map);
         }
     };
 
@@ -1056,11 +1017,10 @@ var MM = com.modestmaps = {
     // A shortcut for adding drag, double click,
     // and mouse wheel events to the map. This is the default
     // handler attached to a map if the handlers argument isn't given.
-    MM.MouseHandler = function(map, precise) {
+    MM.MouseHandler = function(map) {
         if (map !== undefined) {
             this.init(map);
         }
-        this.precise = precise === true;
     };
 
     MM.MouseHandler.prototype = {
@@ -1069,7 +1029,7 @@ var MM = com.modestmaps = {
             this.handlers = [
                 new MM.DragHandler(map),
                 new MM.DoubleClickHandler(map),
-                new MM.MouseWheelHandler(map, this.precise)
+                new MM.MouseWheelHandler(map)
             ];
         },
         remove: function() {
@@ -1081,8 +1041,8 @@ var MM = com.modestmaps = {
 
     var HAS_HASHCHANGE = (function() {
         var doc_mode = window.documentMode;
-        return ('onhashchange' in window) &&
-            (doc_mode === undefined || doc_mode > 7);
+        return ('onhashchange' in window)
+            && (doc_mode === undefined || doc_mode > 7);
     })();
 
     MM.Hash = function(map) {
@@ -1100,7 +1060,7 @@ var MM = com.modestmaps = {
         parseHash: function(hash) {
             var args = hash.split("/");
             if (args.length == 3) {
-                var zoom = parseInt(args[0], 10),
+                var zoom = parseInt(args[0]),
                     lat = parseFloat(args[1]),
                     lon = parseFloat(args[2]);
                 if (isNaN(zoom) || isNaN(lat) || isNaN(lon)) {
@@ -1131,7 +1091,7 @@ var MM = com.modestmaps = {
             this.map.addCallback("drawn", this.onMapMove);
             // reset the hash
             this.lastHash = null;
-            this.update();
+            this.onHashChange();
 
             if (!this.isListening) {
                 this.startListening();
@@ -1146,9 +1106,7 @@ var MM = com.modestmaps = {
         },
 
         onMapMove: function(map) {
-            // bail if we're moving the map (updating from a hash),
-            // or if the map has no zoom set
-            if (this.movingMap || this.map.zoom === 0) {
+            if (this.movingMap) {
                 return false;
             }
             var hash = this.formatHash(map);
@@ -1158,8 +1116,7 @@ var MM = com.modestmaps = {
             }
         },
 
-        movingMap: false,
-        update: function() {
+        onHashChange: function() {
             var hash = location.hash;
             if (hash === this.lastHash) {
                 // console.info("(no change)");
@@ -1173,23 +1130,8 @@ var MM = com.modestmaps = {
                 this.map.setCenterZoom(parsed.center, parsed.zoom);
                 this.movingMap = false;
             } else {
-                // console.warn("parse error; resetting:", this.map.getCenter(), this.map.getZoom());
+                // console.warn("parse error; resetting");
                 this.onMapMove(this.map);
-            }
-        },
-
-        // defer hash change updates every 100ms
-        changeDefer: 100,
-        changeTimeout: null,
-        onHashChange: function() {
-            // throttle calls to update() so that they only happen every
-            // `changeDefer` ms
-            if (!this.changeTimeout) {
-                var that = this;
-                this.changeTimeout = setTimeout(function() {
-                    that.update();
-                    that.changeTimeout = null;
-                }, this.changeDefer);
             }
         },
 
@@ -1214,11 +1156,7 @@ var MM = com.modestmaps = {
             this.isListening = false;
         }
     };
-    MM.TouchHandler = function(map, options) {
-        if (map) {
-            this.init(map, options);
-        }
-    };
+    MM.TouchHandler = function() { };
 
     MM.TouchHandler.prototype = {
 
@@ -1526,8 +1464,7 @@ var MM = com.modestmaps = {
         this.maxOpenRequests = 4;
         this.requestQueue = [];
 
-        this.callbackManager = new MM.CallbackManager(this, [
-            'requestcomplete', 'requesterror']);
+        this.callbackManager = new MM.CallbackManager(this, ['requestcomplete']);
     };
 
     MM.RequestManager.prototype = {
@@ -1567,12 +1504,12 @@ var MM = com.modestmaps = {
         clear: function() {
             this.clearExcept({});
         },
-
+        
         clearRequest: function(id) {
             if(id in this.requestsById) {
                 delete this.requestsById[id];
             }
-
+            
             for(var i = 0; i < this.requestQueue.length; i++) {
                 var request = this.requestQueue[i];
                 if(request && request.id == id) {
@@ -1580,7 +1517,7 @@ var MM = com.modestmaps = {
                 }
             }
         },
-
+        
         // Clear everything in the queue except for certain keys, specified
         // by an object of the form
         //
@@ -1606,14 +1543,14 @@ var MM = com.modestmaps = {
                     img.src = img.coord = img.onload = img.onerror = null;
                 }
             }
-
+            
             // hasOwnProperty protects against prototype additions
             // > "The standard describes an augmentable Object.prototype.
             //  Ignore standards at your own peril."
             // -- http://www.yuiblog.com/blog/2006/09/26/for-in-intrigue/
             for (var id in this.requestsById) {
-                if (!(id in validIds)) {
-                    if (this.requestsById.hasOwnProperty(id)) {
+                if (this.requestsById.hasOwnProperty(id)) {
+                    if (!(id in validIds)) {
                         var requestToRemove = this.requestsById[id];
                         // whether we've done the request or not...
                         delete this.requestsById[id];
@@ -1647,7 +1584,7 @@ var MM = com.modestmaps = {
                 }
             }
         },
-
+        
         getProcessQueue: function() {
             // let's only create this closure once...
             if (!this._processQueue) {
@@ -1658,7 +1595,7 @@ var MM = com.modestmaps = {
             }
             return this._processQueue;
         },
-
+        
         // Select images from the `requestQueue` and create image elements for
         // them, attaching their load events to the function returned by
         // `this.getLoadComplete()` so that they can be added to the map.
@@ -1720,7 +1657,7 @@ var MM = com.modestmaps = {
 
                     // unset these straight away so we don't call this twice
                     img.onload = img.onerror = null;
-
+                    
                     // pull it back out of the (hidden) DOM
                     // so that draw will add it correctly later
                     theManager.loadingBay.removeChild(img);
@@ -1738,7 +1675,6 @@ var MM = com.modestmaps = {
                         // really stops loading
                         // FIXME: we'll never retry because this id is still
                         // in requestsById - is that right?
-                        theManager.dispatchCallback('requesterror', img.src);
                         img.src = null;
                     }
 
@@ -1759,7 +1695,7 @@ var MM = com.modestmaps = {
 
     MM.Layer = function(provider, parent) {
         this.parent = parent || document.createElement('div');
-        this.parent.style.cssText = 'position: absolute; top: 0px; left: 0px; margin: 0; padding: 0; z-index: 0';
+        this.parent.style.cssText = 'position: absolute; top: 0px; left: 0px; width: 100%; height: 100%; margin: 0; padding: 0; z-index: 0';
 
         this.levels = {};
 
@@ -1784,7 +1720,7 @@ var MM = com.modestmaps = {
 
         provider: null,
         recentTiles: null,
-        recentTilesById: {},
+        recentTilesById: null,
 
         enablePyramidLoading: false,
 
@@ -2037,21 +1973,23 @@ var MM = com.modestmaps = {
                     this.provider.releaseTile(tile.coord);
                     this.requestManager.clearRequest(tile.coord.toKey());
                     level.removeChild(tile);
-                }
-                // log last-touched-time of currently cached tiles
-                this.recentTilesById[tile.id].lastTouchedTime = now;
-            }
+                } else {
+                    // position tiles
+                    MM.moveElement(tile, {
+                        x: Math.round(center.x +
+                            (tile.coord.column - theCoord.column) * tileWidth),
+                        y: Math.round(center.y +
+                            (tile.coord.row - theCoord.row) * tileHeight),
+                        scale: scale,
+                        // TODO: pass only scale or only w/h
+                        width: this.map.tileSize.x,
+                        height: this.map.tileSize.y
+                    });
 
-            // position tiles
-            MM.moveElement(level, {
-                x: Math.round(center.x - (theCoord.column * tileWidth)),
-                y: Math.round(center.y - (theCoord.row * tileHeight)),
-                scale: scale,
-                // TODO: pass only scale or only w/h
-                // width: this.map.tileSize.x,
-                width: Math.pow(2, theCoord.zoom) * this.map.tileSize.x,
-                height: Math.pow(2, theCoord.zoom) * this.map.tileSize.y
-            });
+                    // log last-touched-time of currently cached tiles
+                    this.recentTilesById[tile.id].lastTouchedTime = now;
+                }
+            }
         },
 
         createOrGetLevel: function(zoom) {
@@ -2096,6 +2034,7 @@ var MM = com.modestmaps = {
         positionTile: function(tile) {
             // position this tile (avoids a full draw() call):
             var theCoord = this.map.coordinate.zoomTo(tile.coord.zoom);
+            var scale = Math.pow(2, this.map.coordinate.zoom - tile.coord.zoom);
 
             // Start tile positioning and prevent drag for modern browsers
             tile.style.cssText = 'position:absolute;-webkit-user-select: none;-webkit-user-drag: none;-moz-user-drag: none;';
@@ -2103,15 +2042,19 @@ var MM = com.modestmaps = {
             // Prevent drag for IE
             tile.ondragstart = function() { return false; };
 
-            var tx = tile.coord.column *
-                this.map.tileSize.x;
-            var ty = tile.coord.row *
-                this.map.tileSize.y;
+            var scale = Math.pow(2, this.map.coordinate.zoom - tile.coord.zoom);
+            var tx = ((this.map.dimensions.x/2) +
+                (tile.coord.column - theCoord.column) *
+                this.map.tileSize.x * scale);
+            var ty = ((this.map.dimensions.y/2) +
+                (tile.coord.row - theCoord.row) *
+                this.map.tileSize.y * scale);
 
-            // TODO: pass only scale or only w/h
             MM.moveElement(tile, {
                 x: Math.round(tx),
                 y: Math.round(ty),
+                scale: scale,
+                // TODO: pass only scale or only w/h
                 width: this.map.tileSize.x,
                 height: this.map.tileSize.y
             });
@@ -2175,7 +2118,7 @@ var MM = com.modestmaps = {
                 });
             }
 
-            while (this.recentTiles.length && this.tileCacheSize > maxTiles) {
+            while (this.tileCacheSize > maxTiles) {
                 // delete the oldest record
                 var tileRecord = this.recentTiles.pop();
                 var now = new Date().getTime();
@@ -2195,6 +2138,10 @@ var MM = com.modestmaps = {
         },
 
         setProvider: function(newProvider) {
+            if ('getTileUrl' in newProvider && (typeof newProvider.getTileUrl === 'function')) {
+                newProvider = new MM.TilePaintingProvider(newProvider);
+            }
+
             var firstProvider = (this.provider === null);
 
             // if we already have a provider the we'll need to
@@ -2256,8 +2203,6 @@ var MM = com.modestmaps = {
             };
         },
 
-        // Remove this layer from the DOM, cancel all of its requests
-        // and unbind any callbacks that are bound to it.
         destroy: function() {
             this.requestManager.clear();
             this.requestManager.removeCallback('requestcomplete', this.getTileComplete());
@@ -2472,6 +2417,19 @@ var MM = com.modestmaps = {
             return this;
         },
 
+        /*
+        panZoom: function(dx, dy, zoom) {
+            this.coordinate.column -= dx / this.tileSize.x;
+            this.coordinate.row -= dy / this.tileSize.y;
+            this.coordinate = this.coordinate.zoomTo(zoom);
+
+            // Defer until the browser is ready to draw.
+            MM.getFrame(this.getRedraw());
+            this.dispatchCallback('panned', [dx, dy]);
+            return this;
+        },
+        */
+
         panLeft: function() { return this.panBy(100, 0); },
         panRight: function() { return this.panBy(-100, 0); },
         panDown: function() { return this.panBy(0, -100); },
@@ -2490,8 +2448,8 @@ var MM = com.modestmaps = {
         },
 
         setExtent: function(locations, precise) {
-            // coerce locations to an array if it's a Extent instance
-            if (locations instanceof MM.Extent) {
+            // coerce locations to an array if it's a MapExtent instance
+            if (locations instanceof MM.MapExtent) {
                 locations = locations.toArray();
             }
 
@@ -2505,8 +2463,7 @@ var MM = com.modestmaps = {
                     BR.row = Math.max(BR.row, coordinate.row);
                     BR.column = Math.max(BR.column, coordinate.column);
                     BR.zoom = Math.max(BR.zoom, coordinate.zoom);
-                }
-                else {
+                } else {
                     TL = coordinate.copy();
                     BR = coordinate.copy();
                 }
@@ -2545,7 +2502,10 @@ var MM = com.modestmaps = {
             var centerColumn = (TL.column + BR.column) / 2;
             var centerZoom = TL.zoom;
 
-            this.coordinate = new MM.Coordinate(centerRow, centerColumn, centerZoom).zoomTo(initZoom);
+            this.coordinate = new MM.Coordinate(
+                centerRow,
+                centerColumn,
+                centerZoom).zoomTo(initZoom);
             this.draw(); // draw calls enforceLimits
             // (if you switch to getFrame, call enforceLimits first)
 
@@ -2619,10 +2579,10 @@ var MM = com.modestmaps = {
 
         // inspecting
         getExtent: function() {
-            return new MM.Extent(
-                this.pointLocation(new MM.Point(0, 0)),
-                this.pointLocation(this.dimensions)
-            );
+            var extent = [];
+            extent.push(this.pointLocation(new MM.Point(0, 0)));
+            extent.push(this.pointLocation(this.dimensions));
+            return extent;
         },
 
         extent: function(locations, precise) {
@@ -2651,11 +2611,33 @@ var MM = com.modestmaps = {
             return this.coordinate.zoom;
         },
 
+        // Simple syntatic sugar for making the old behavior of
+        // setExtent attainable.
+        roundZoom: function() {
+            return this.setZoom(Math.round(this.getZoom));
+        },
+
         zoom: function(zoom) {
             if (zoom !== undefined) {
                 return this.setZoom(zoom);
             } else {
                 return this.getZoom();
+            }
+        },
+
+        // layers
+        // HACK for 0.x.y - stare at @RandomEtc 
+        // this method means we can also pass a URL template or a MapProvider to addLayer
+        coerceLayer: function(layerish) {
+            if ('draw' in layerish && typeof layerish.draw == 'function') {
+                // good enough, though we should probably enforce .parent and .destroy() too
+                return layerish;
+            } else if (typeof layerish == 'string') {
+                // probably a template string
+                return new MM.Layer(new MM.TemplatedMapProvider(layerish));
+            } else {
+                // probably a MapProvider
+                return new MM.Layer(layerish);
             }
         },
 
@@ -2671,9 +2653,10 @@ var MM = com.modestmaps = {
 
         // put the given layer on top of all the others
         addLayer: function(layer) {
+            layer = this.coerceLayer(layer);
             this.layers.push(layer);
             // make sure layer.parent doesn't already have a parentNode
-            if (layer.parent.parentNode != this.parent) {
+            if (!layer.parent.parentNode) {
                 this.parent.appendChild(layer.parent); 
             }
             layer.map = this; // TODO: remove map property from MM.Layer?
@@ -2697,6 +2680,8 @@ var MM = com.modestmaps = {
             if (index < 0 || index >= this.layers.length) {
                 throw new Error('invalid index in setLayerAt(): ' + index);
             }
+
+            layer = this.coerceLayer(layer);
 
             if (this.layers[index] != layer) {
 
@@ -2723,7 +2708,9 @@ var MM = com.modestmaps = {
                 throw new Error('invalid index in insertLayerAt(): ' + index);
             }
 
-            if (index == this.layers.length) {
+            layer = this.coerceLayer(layer);
+
+            if(index == this.layers.length) {
                 // it just gets tacked on to the end
                 this.layers.push(layer);
                 this.parent.appendChild(layer.parent);
@@ -2817,8 +2804,7 @@ var MM = com.modestmaps = {
                 // this handles infinite limits:
                 // (Infinity - Infinity) is Nan
                 // NaN is never less than anything
-                if (bottomRightLimit.row - topLeftLimit.row <
-                    currentBottomRight.row - currentTopLeft.row) {
+                if (bottomRightLimit.row - topLeftLimit.row < currentBottomRight.row - currentTopLeft.row) {
                     // if the limit is smaller than the current view center it
                     coord.row = (bottomRightLimit.row + topLeftLimit.row) / 2;
                 }
@@ -2830,8 +2816,7 @@ var MM = com.modestmaps = {
                         coord.row -= currentBottomRight.row - bottomRightLimit.row;
                     }
                 }
-                if (bottomRightLimit.column - topLeftLimit.column <
-                    currentBottomRight.column - currentTopLeft.column) {
+                if (bottomRightLimit.column - topLeftLimit.column < currentBottomRight.column - currentTopLeft.column) {
                     // if the limit is smaller than the current view, center it
                     coord.column = (bottomRightLimit.column + topLeftLimit.column) / 2;
                 }
@@ -2926,36 +2911,6 @@ var MM = com.modestmaps = {
                 MM.removeEvent(window, 'resize', this.windowResize());
             }
         }
-    };
-    // Instance of a map intended for drawing to a div.
-    //
-    //  * `parent` (required DOM element)
-    //      Can also be an ID of a DOM element
-    //  * `provider` (required MM.MapProvider or URL template)
-    //  * `location` (required MM.Location)
-    //      Location for map to show
-    //  * `zoom` (required number)
-    MM.mapByCenterZoom = function(parent, layerish, location, zoom) {
-        var layer = MM.coerceLayer(layerish),
-            map = new MM.Map(parent, layer, false);
-        map.setCenterZoom(location, zoom).draw();
-        return map;
-    };
-
-    // Instance of a map intended for drawing to a div.
-    //
-    //  * `parent` (required DOM element)
-    //      Can also be an ID of a DOM element
-    //  * `provider` (required MM.MapProvider or URL template)
-    //  * `locationA` (required MM.Location)
-    //      Location of one map corner
-    //  * `locationB` (required MM.Location)
-    //      Location of other map corner
-    MM.mapByExtent = function(parent, layerish, locationA, locationB) {
-        var layer = MM.coerceLayer(layerish),
-            map = new MM.Map(parent, layer, false);
-        map.setExtent([locationA, locationB]).draw();
-        return map;
     };
     if (typeof module !== 'undefined' && module.exports) {
       module.exports = {
