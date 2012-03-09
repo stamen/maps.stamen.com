@@ -148,9 +148,29 @@
                     <div class="span10">
                         <p>
                             <span id="attr">Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://creativecommons.org/licenses/by-sa/3.0">CC BY SA</a>.</span>
-                            <small><a href="#" id="attr-show-html" onclick="with(document.getElementById('attr-html')){value=document.getElementById('attr').innerHTML;style.display='block';focus();select();}return false;">&lt;<span>COPY HTML</span>&gt;</a></small>
+                            <small><a href="#" id="attr-show-html" >&lt;<span>COPY HTML</span>&gt;</a></small>
                         </p>
                         <textarea rows="3" class="row span10" id="attr-html"></textarea>
+                        <script type="text/javascript">
+                        (function() {
+                            var link = document.getElementById("attr-show-html"),
+                                source = document.getElementById("attr"),
+                                target = document.getElementById("attr-html"),
+                                showing = false;
+                            MM.addEvent(link, "click", function(e) {
+                                showing = !showing;
+                                if (showing) {
+                                    target.value = source.innerHTML;
+                                    target.style.display = "block";
+                                    target.focus();
+                                    target.select();
+                                } else {
+                                    target.style.display = "none";
+                                }
+                                return MM.cancelEvent(e);
+                            });
+                        })();
+                        </script>
                         <p>If you roll your own tiles from a source you will still need to credit &ldquo;Map data by OpenStreetMap, under CC-BY-SA.&rdquo; And if you <em>do</em> use the tiles elsewhere, please post a tweet to <a href="http://twitter.com/stamen">@stamen</a>!</p>
                     </div>
                 </div>
