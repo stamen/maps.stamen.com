@@ -1,10 +1,5 @@
 (function() {
 
-    // returns the map provider for a given TileStache layer name
-    function getProvider(layer) {
-        return new MM.StamenTileLayer(layer);
-    }
-
     function onImageError(_map, img) {
         // img.src = "images/tile-404.gif";
     }
@@ -18,7 +13,7 @@
 
         var parent = document.getElementById("map-main"),
             size = getSize(),
-            provider = getProvider(parent.getAttribute("data-provider"));
+            provider = new MM.StamenTileLayer(parent.getAttribute("data-provider"));
 
         function resize() {
             try {
