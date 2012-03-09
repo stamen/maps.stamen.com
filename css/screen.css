@@ -282,3 +282,10 @@ body.fullscreen #hero {
 img.tile {
     max-width: auto !important;
 }
+
+.controls a,
+.map h3 a,
+#search input,
+#search button {
+    box-shadow: 0 0 8px rgba(0, 0, 0, .3);
+}
