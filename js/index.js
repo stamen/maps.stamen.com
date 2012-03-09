@@ -7,8 +7,10 @@ var MAPS = {};
         return new MM.StamenTileLayer(layer);
     }
 
-    function onImageError(_map, img) {
-        // img.src = "images/tile-404.gif";
+    function doImageErrors(map) {
+        map.layers[0].requestManager.addCallback("requesterror", function(_, img) {
+            // img.src = "images/tile-404.gif";
+        });
     }
 
     function init() {
@@ -17,10 +19,12 @@ var MAPS = {};
             currentProvider = "toner",
             mapsByProvider = MAPS.byProvider = {};
 
+        var allProviders = [currentProvider];
+
         // our main map
         var main = MAPS.main = new MM.Map("map-main", getProvider(currentProvider), null,
             [new MM.DragHandler(), new MM.DoubleClickHandler(), new MM.TouchHandler()]);
-        main.layers[0].requestManager.addCallback("requesterror", onImageError);
+        // doImageErrors(main);
 
         mapsByProvider[currentProvider] = main;
 
@@ -44,7 +48,9 @@ var MAPS = {};
                     _map.panning = false;
                 }
             });
-            map.layers[0].requestManager.addCallback("requesterror", onImageError);
+            // add it to the list
+            allProviders.push(provider);
+            // doImageErrors(map);
             mapsByProvider[provider] = map;
             subs.push(map);
         }
@@ -134,6 +140,14 @@ var MAPS = {};
             if ("href" in node) {
                 node.href = "#" + provider;
             }
+        }
+
+        // set provider randomly if one wasn't specified in the URL hash
+        if (!location.hash) {
+            var index = ~~(Math.random() * allProviders.length),
+                randomProvider = allProviders[index];
+            // console.log("random provider:", randomProvider);
+            location.replace("#" + randomProvider);
         }
 
         // and set up listening for the browser's location hash
