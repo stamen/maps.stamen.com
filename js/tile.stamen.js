@@ -27,13 +27,18 @@ var SUBDOMAINS = ["", "a.", "b.", "c.", "d."],
             "minZoom": 0,
             "maxZoom": 16
         }
-    };
+    },
+    ATTRIBUTION = 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, ' +
+        'under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. ' +
+        'Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, ' +
+        'under <a href="http://creativecommons.org/licenses/by-sa/3.0">CC BY SA</a>.';
 
 if (typeof MM === "object") {
     MM.StamenTileLayer = function(name) {
         var provider = PROVIDERS[name];
         MM.Layer.call(this, new MM.TemplatedMapProvider(provider.url, SUBDOMAINS));
         this.provider.setZoomRange(provider.minZoom, provider.maxZoom);
+        this.attribution = ATTRIBUTION;
     };
     MM.extend(MM.StamenTileLayer, MM.Layer);
 }
@@ -48,7 +53,7 @@ if (typeof L === "object") {
                 "maxZoom":      provider.maxZoom,
                 "subdomains":   SUBDOMAINS,
                 "scheme":       "xyz",
-                "attribution":  'Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://creativecommons.org/licenses/by-sa/3.0">CC BY SA</a>.'
+                "attribution":  ATTRIBUTION
             });
         }
     });
