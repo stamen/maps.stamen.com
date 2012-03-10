@@ -34,12 +34,3 @@ a:link, a:visited, a:hover {
     text-decoration: none;
     margin-right: 8px;
 }
-
-#attribution {
-    bottom: 0;
-    right: 0;
-    color: white;
-    background: black;
-    padding: 3px 5px 2px;
-    margin: 0;
-}
