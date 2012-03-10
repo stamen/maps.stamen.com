@@ -23,15 +23,22 @@
         </div>
 
         <div id="overlay" class="navbar-inner">
-            <form id="search" action="#">
+            <div id="search">
                 <p>
                 <input id="search-location" class="span3" type="text" placeholder="Type a location">
                 <input id="search-submit" class="btn" type="submit" value="Find">
                 </p>
-            </form>
+            </div>
             <div id="controls" class="controls">
                 <a id="zoom-in" title="zoom in" href="#">+</a>
                 <a id="zoom-out" title="zoom out" href="#">&minus;</a>
+            </div>
+            <div id="embed" class="controls">
+                <a id="embed-toggle" title="embed this map" href="#">&lt;embed&gt;</a>
+                <div id="embed-content" style="display: none;">
+                    <p>Copy the HTML below to embed this map:</p>
+                    <textarea id="embed-code" rows="3">&lt;iframe width="600" height="420" src="{url}"&gt;&lt;/iframe&gt;</textarea>
+                </div>
             </div>
         </div>
 
