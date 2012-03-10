@@ -6,6 +6,8 @@
 
     function init() {
 
+        addBrowserClasses(document.body);
+
         var doc = document.documentElement;
         function getSize() {
             return new MM.Point(doc.clientWidth, doc.clientHeight);
@@ -119,6 +121,31 @@
             return MM.cancelEvent(e);
         });
     }
+
+    var addBrowserClasses = (function() {
+        var ua = navigator.userAgent,
+            matches = {
+                ie: ua.match(/MSIE\s([^;]*)/) ? true : false,
+                ios: ua.match(/like Mac OS X/i) ? true : false,
+                iphone: ua.match(/iPhone/i) ? true : false,
+                ipad: ua.match(/iPad/i) ? true : false,
+                firefox: ua.match(/Firefox/i) ? true : false,
+                webkit: ua.match(/WebKit/i) ? true : false,
+                safari: ua.match(/Safari/i) ? true : false,
+                chrome: ua.match(/Chrome/i) ? true : false,
+                opera: ua.match(/Opera/i) ? true : false
+            },
+            classes = [];
+        for (var klass in matches) {
+            if (matches[klass]) classes.push(klass);
+        }
+        classes = classes.join(" ");
+        return function(el) {
+            el.className = el.className
+                ? [el.className, classes].join(" ")
+                : classes;
+        };
+    })();
 
     init();
 
