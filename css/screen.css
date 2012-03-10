@@ -43,6 +43,7 @@ a:link, a:visited, a:active {
     line-height: 100%;
     font-weight: bold;
     letter-spacing: -2px;
+    text-decoration: none;
 }
 
 

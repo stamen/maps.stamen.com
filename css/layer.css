@@ -44,7 +44,7 @@ body {
     height: 1px;
 }
 
-/*
+/* iPhone and smaller */
 @media only screen and (max-width : 600px) {
     #header {
         padding-top: 10px;
@@ -68,4 +68,3 @@ body {
         margin-bottom: 0;
     }
 }
-*/
