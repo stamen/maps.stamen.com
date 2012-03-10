@@ -15,7 +15,8 @@
             provider = getProvider(parent.getAttribute("data-provider"));
 
         // our main map
-        var main = new MM.Map(parent, provider);
+        var main = new MM.Map(parent, provider, null,
+            [new MM.DragHandler(), new MM.DoubleClickHandler(), new MM.TouchHandler()]);
 
         // zoom click handlers
         MM.addEvent(document.getElementById("zoom-in"), "click", function() {
