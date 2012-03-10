@@ -56,7 +56,6 @@ a:link, a:visited, a:active {
 .controls {
     font-size: 24px;
     line-height: 100%;
-    font-weight: bold;
 }
 
 #controls {
@@ -65,6 +64,7 @@ a:link, a:visited, a:active {
 
 .controls a {
     cursor: pointer;
+    font-weight: bold;
     color: black;
     background: yellow;
     text-decoration: none;
