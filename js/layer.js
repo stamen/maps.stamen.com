@@ -44,6 +44,31 @@
         // set the initial map position
         main.setCenterZoom(new MM.Location(37.7706, -122.3782), 12);
 
+        var embedLink = document.getElementById("embed-toggle");
+        if (embedLink) {
+            var embed = document.getElementById("embed-content"),
+                textarea = document.getElementById("embed-code"),
+                template = textarea.value,
+                embedShowing = embed.style.display != "none",
+                originalClass = embedLink.className;
+            MM.addEvent(embedLink, "click", function(e) {
+                embedShowing = !embedShowing;
+                if (embedShowing) {
+                    embed.style.display = "block";
+                    var url = location.href.split("#");
+                    url.splice(1, 0, "embed#");
+                    textarea.value = template.replace("{url}", url.join(""));
+                    textarea.focus();
+                    textarea.select();
+                    embedLink.className = [originalClass, "active"].join(" ");
+                } else {
+                    embed.style.display = "none";
+                    embedLink.className = originalClass;
+                }
+                return MM.cancelEvent(e);
+            });
+        }
+
         var hasher = new MM.Hash(main);
 
         // set up form element references
