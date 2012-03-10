@@ -31,6 +31,10 @@
         parent.style.position = "absolute";
         main.autoSize = false;
 
+        var attribution = parent.appendChild(document.createElement("p"));
+        attribution.className = "attribution";
+        attribution.innerHTML = provider.attribution;
+
         // zoom click handlers
         MM.addEvent(document.getElementById("zoom-in"), "click", function() {
             try { main.zoomIn(); } catch (e) { }
