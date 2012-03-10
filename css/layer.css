@@ -3,6 +3,10 @@ body {
     overflow: hidden;
 }
 
+#stamen {
+    right: 0;
+}
+
 /* make them unselectable */
 #search, #controls {
             user-select: none;
@@ -31,7 +35,7 @@ body {
 
 #search {
     /* so it doesn't capture mouse events */
-    width: 30% !important;
+    width: 300px !important;
 }
 
 #controls {
@@ -39,3 +43,29 @@ body {
     /* so it doesn't capture mouse events */
     height: 1px;
 }
+
+/*
+@media only screen and (max-width : 600px) {
+    #header {
+        padding-top: 10px;
+    }
+
+    #stamen {
+        line-height: 80%;
+        position: relative;
+        margin: 0;
+        padding: 0;
+        left: auto;
+        right: auto;
+        bottom: auto;
+    }
+
+    #overlay {
+        top: 19px;
+    }
+
+    #search {
+        margin-bottom: 0;
+    }
+}
+*/
