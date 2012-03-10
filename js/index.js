@@ -138,9 +138,13 @@ var MAPS = {};
             var node = map.parent.querySelector(".provider-name");
             node.innerHTML = provider.substr(0, 1).toUpperCase() + provider.substr(1);
             if ("href" in node) {
-                node.href = "#" + provider;
+                node.href = (node.className.indexOf("permalink") > -1)
+                    ? provider + "/"
+                    : "#" + provider;
             }
         }
+
+        updateTitle(main, currentProvider);
 
         // set provider randomly if one wasn't specified in the URL hash
         if (!location.hash) {
