@@ -9,6 +9,29 @@
         // img.src = "images/tile-404.gif";
     }
 
+    function preventDoubleClick(el) {
+        MM.addEvent(el, "dblclick", function(e) {
+            return MM.cancelEvent(e);
+        });
+    }
+
+    function setupZoomControls(map) {
+        var zoomIn = document.getElementById("zoom-in"),
+            zoomOut = document.getElementById("zoom-out");
+
+        preventDoubleClick(zoomIn);
+        MM.addEvent(zoomIn, "click", function(e) {
+            try { map.zoomIn(); } catch (err) { }
+            return MM.cancelEvent(e);
+        });
+        preventDoubleClick(zoomOut);
+        MM.addEvent(zoomOut, "click", function(e) {
+            try { map.zoomOut(); } catch (err) { }
+            return MM.cancelEvent(e);
+        });
+
+    }
+
     function init() {
 
         var parent = document.getElementById("map"),
@@ -18,18 +41,10 @@
         var main = new MM.Map(parent, provider, null,
             [new MM.DragHandler(), new MM.DoubleClickHandler(), new MM.TouchHandler()]);
 
-        // zoom click handlers
-        MM.addEvent(document.getElementById("zoom-in"), "click", function() {
-            try { main.zoomIn(); } catch (e) { }
-            return false;
-        });
-        MM.addEvent(document.getElementById("zoom-out"), "click", function() {
-            try { main.zoomOut(); } catch (e) { }
-            return false;
-        });
-
         // set the initial map position
         main.setCenterZoom(new MM.Location(37.7706, -122.3782), 12);
+
+        setupZoomControls(main);
 
         var hasher = new MM.Hash(main);
     }
