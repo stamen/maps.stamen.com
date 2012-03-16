@@ -11,6 +11,15 @@ a:link, a:visited, a:active {
     color: #888;
 }
 
+/* don't allow selections */
+.map, .controls, #hero {
+            user-select: none;
+    -webkit-user-select: none;
+       -moz-user-select: none;
+        -ms-user-select: none;
+         -o-user-select: none;
+}
+
 #header {
     padding-top: 40px;
     background: black;

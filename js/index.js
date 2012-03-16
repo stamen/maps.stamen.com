@@ -13,6 +13,29 @@ var MAPS = {};
         });
     }
 
+    function preventDoubleClick(el) {
+        MM.addEvent(el, "dblclick", function(e) {
+            return MM.cancelEvent(e);
+        });
+    }
+
+    function setupZoomControls(map) {
+        var zoomIn = document.getElementById("zoom-in"),
+            zoomOut = document.getElementById("zoom-out");
+
+        preventDoubleClick(zoomIn);
+        MM.addEvent(zoomIn, "click", function(e) {
+            try { map.zoomIn(); } catch (err) { }
+            return MM.cancelEvent(e);
+        });
+        preventDoubleClick(zoomOut);
+        MM.addEvent(zoomOut, "click", function(e) {
+            try { map.zoomOut(); } catch (err) { }
+            return MM.cancelEvent(e);
+        });
+
+    }
+
     function init() {
 
         var providerLabel = document.getElementById("current-provider"),
@@ -71,46 +94,7 @@ var MAPS = {};
             }
         }
 
-        // zoom click handlers
-        MM.addEvent(document.getElementById("zoom-in"), "click", function() {
-            try { main.zoomIn(); } catch (e) { }
-            return false;
-        });
-        MM.addEvent(document.getElementById("zoom-out"), "click", function() {
-            try { main.zoomOut(); } catch (e) { }
-            return false;
-        });
-
-        var fslink = document.getElementById("fullscreen");
-        if (fslink) {
-            var fullscreen = false,
-                fstimeout;
-            function toggleFullscreen(link) {
-                fullscreen = !fullscreen;
-                if (fullscreen) {
-                    document.body.className = "fullscreen";
-                } else {
-                    document.body.className = null;
-                }
-                clearTimeout(fstimeout);
-                fstimeout = setTimeout(main.windowResize(), 1000);
-            }
-
-            MM.addEvent(fslink, "click", function(e) {
-                try {
-                    toggleFullscreen(e.srcElement || e.target);
-                } catch (error) {
-                    console.error(error);
-                }
-                return MM.cancelEvent(e);
-            });
-
-            MM.addEvent(window, "keyup", function(e) {
-                if (fullscreen && e.keyCode == 27) { // escape
-                    toggleFullscreen(e.srcElement || e.target);
-                }
-            });
-        }
+        setupZoomControls(main);
 
         // pan the sub-maps when the main map is panned
         main.addCallback("panned", function(_map, offset) {
