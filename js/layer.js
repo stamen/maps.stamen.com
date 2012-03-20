@@ -139,10 +139,15 @@
         }
 
         if (feedbackToggle || embedToggle) {
-            MM.addEvent(parent, "mousedown", function() {
+            function hideToggles() {
                 if (feedbackToggle) feedbackToggle.hide();
                 if (embedToggle) embedToggle.hide();
-            });
+            }
+            // hide toggles on map mouse down
+            MM.addEvent(parent, "mousedown", hideToggles);
+            // hide toggles when the map is zoomed
+            // (mousedowns occur on #overlay, not the map)
+            main.addCallback("zoomed", hideToggles);
         }
 
         var hasher = new MM.Hash(main);
