@@ -5,12 +5,14 @@ $sent = false;
 if ($_SERVER['REQUEST_METHOD'] == 'POST' || $_GET['test'] == 'send') {
     $style = $_GET['style'];
     $center = $_POST['center'];
+    $description = $_POST['description'];
+    $sender = sprintf("%s @ %s", $_POST['sender'] ? $_POST['sender'] : 'anonymous', $_SERVER['REMOTE_ADDR']);
 
     $subject = "[maps.stamen.com / ${style}]: Bug report @ ${center}";
     $message = <<<MESSAGE
-Bug report:
+Bug report from ${sender}:
 
-"${description}"
+${description}
 
 http://maps.stamen.com/${style}/#${center}
 
