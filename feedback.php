@@ -5,17 +5,22 @@ $sent = false;
 if ($_SERVER['REQUEST_METHOD'] == 'POST' || $_GET['test'] == 'send') {
     $style = $_GET['style'];
     $center = $_POST['center'];
-    $description = $_POST['description'];
-    $sender = sprintf("%s @ %s", $_POST['sender'] ? $_POST['sender'] : 'anonymous', $_SERVER['REMOTE_ADDR']);
+    $description = stripslashes($_POST['description']);
+    $sender = $_POST['sender'];
+    if (!$sender) $sender = 'anonymous';
+    $ip = $_SERVER['REMOTE_ADDR'];
+    $form_url = sprintf('http://%s%s', $_SERVER['HTTP_HOST'], $_SERVER['REQUEST_URI']);
 
     $subject = "[maps.stamen.com / ${style}]: Bug report @ ${center}";
     $message = <<<MESSAGE
-Bug report from ${sender}:
+Bug report from ${sender} ($ip):
 
-${description}
+\t${description}
 
 http://maps.stamen.com/${style}/#${center}
 
+-- 
+feedback form @ $form_url
 MESSAGE;
 
     try {
