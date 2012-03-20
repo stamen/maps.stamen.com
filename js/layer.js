@@ -1,69 +1,5 @@
 (function() {
 
-    function onImageError(_map, img) {
-        // img.src = "images/tile-404.gif";
-    }
-
-    function preventDoubleClick(el) {
-        MM.addEvent(el, "dblclick", function(e) {
-            return MM.cancelEvent(e);
-        });
-    }
-
-    function getOffset(el) {
-        var offset = {left: 0, top: 0},
-            offsetParent = el.offsetParent;
-        while (el && el != offsetParent) {
-            offset.left += el.offsetLeft;
-            offset.top += el.offsetTop;
-            el = el.parentNode;
-        }
-        return offset;
-    }
-
-    function setupZoomControls(map) {
-        var zoomIn = document.getElementById("zoom-in"),
-            zoomOut = document.getElementById("zoom-out");
-
-        preventDoubleClick(zoomIn);
-        MM.addEvent(zoomIn, "click", function(e) {
-            try { map.zoomIn(); } catch (err) { }
-            return MM.cancelEvent(e);
-        });
-        preventDoubleClick(zoomOut);
-        MM.addEvent(zoomOut, "click", function(e) {
-            try { map.zoomOut(); } catch (err) { }
-            return MM.cancelEvent(e);
-        });
-    }
-
-    function createToggle(link, target, callback) {
-        var showing = target.style.display != "none",
-            originalClass = link.className,
-            toggler = function(s) {
-                showing = s;
-                if (showing) {
-                    target.style.display = "";
-                    link.className = [originalClass, "active"].join(" ");
-                } else {
-                    target.style.display = "none";
-                    link.className = originalClass;
-                }
-                callback.call(target, showing);
-            };
-
-        MM.addEvent(link, "click", function(e) {
-            toggler.toggle();
-            return MM.cancelEvent(e);
-        });
-
-        toggler.toggle = function() { toggler(!showing); };
-        toggler.show = function() { toggler(true); };
-        toggler.hide = function() { toggler(false); };
-
-        return toggler;
-    }
-
     function init() {
 
         addBrowserClasses(document.body);
@@ -197,57 +133,6 @@
         });
     }
 
-    var addBrowserClasses = (function() {
-        var ua = navigator.userAgent,
-            matches = {
-                ie: ua.match(/MSIE\s([^;]*)/) ? true : false,
-                ios: ua.match(/like Mac OS X/i) ? true : false,
-                iphone: ua.match(/iPhone/i) ? true : false,
-                ipad: ua.match(/iPad/i) ? true : false,
-                firefox: ua.match(/Firefox/i) ? true : false,
-                webkit: ua.match(/WebKit/i) ? true : false,
-                safari: ua.match(/Safari/i) ? true : false,
-                chrome: ua.match(/Chrome/i) ? true : false,
-                opera: ua.match(/Opera/i) ? true : false
-            },
-            classes = [];
-        for (var klass in matches) {
-            if (matches[klass]) classes.push(klass);
-        }
-        classes = classes.join(" ");
-        return function(el) {
-            el.className = el.className
-                ? [el.className, classes].join(" ")
-                : classes;
-        };
-    })();
-
     init();
 
 })();
-
-var YahooPlaceSearch = {
-    appid: "1DiQEyLV34HbAVHyl0iWC5tAZ8wpLMPzIeFE9QsTukhx6H.Cn9bM70c_5dYgh7cR8w--",
-    url: "http://where.yahooapis.com/v1/places.q({q});count=1?callback=?",
-    geocode: function(query, success, error) {
-        var data = {};
-        data.appid = YahooPlaceSearch.appid;
-        data.select = "long";
-        data.format = "json";
-        return reqwest({
-            url: YahooPlaceSearch.url.replace("{q}", encodeURIComponent(query)),
-            type: "jsonp",
-            jsonpCallback: "callback",
-            data: data,
-            success: function(response) {
-                var results = response.places;
-                if (results) {
-                    success.call(null, results);
-                } else {
-                    error.call(null, "No results", response);
-                }
-            },
-            error: error
-        });
-    }
-};

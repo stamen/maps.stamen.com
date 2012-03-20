@@ -2,38 +2,10 @@
 var MAPS = {};
 (function() {
 
-    // returns the map provider for a given TileStache layer name
-    function getProvider(layer) {
-        return new MM.StamenTileLayer(layer);
-    }
-
     function doImageErrors(map) {
         map.layers[0].requestManager.addCallback("requesterror", function(_, img) {
             // img.src = "images/tile-404.gif";
         });
-    }
-
-    function preventDoubleClick(el) {
-        MM.addEvent(el, "dblclick", function(e) {
-            return MM.cancelEvent(e);
-        });
-    }
-
-    function setupZoomControls(map) {
-        var zoomIn = document.getElementById("zoom-in"),
-            zoomOut = document.getElementById("zoom-out");
-
-        preventDoubleClick(zoomIn);
-        MM.addEvent(zoomIn, "click", function(e) {
-            try { map.zoomIn(); } catch (err) { }
-            return MM.cancelEvent(e);
-        });
-        preventDoubleClick(zoomOut);
-        MM.addEvent(zoomOut, "click", function(e) {
-            try { map.zoomOut(); } catch (err) { }
-            return MM.cancelEvent(e);
-        });
-
     }
 
     function init() {
@@ -245,100 +217,6 @@ var MAPS = {};
         return new MM.Location(lat, lon);
     }
 
-    /**
-     * The ProviderHash is a class that looks for a provider name at the beginning
-     * of the hash and calls the supplied setProvider(provider) function whenever it
-     * changes.
-     *
-     * One feature of this parser is that it substitutes the center and zoom back in
-     * if the hash changes to just "#provider", so you can link to new providers by
-     * setting a link's href to simply "#provider" and ProviderHash will update the
-     * hash accordingly.
-     *
-     * setProvider(provider) should accept a string and return true if the supplied
-     * provider name was valid, or return false in any other case.
-     *
-     * Note also that ProviderHash requires a valid providerName in the constructor
-     * to correctly set the initial hash value.
-     */
-    var ProviderHash = function(map, providerName, setProvider) {
-        this.providerName = providerName;
-        this.setProvider = setProvider;
-        MM.Hash.call(this, map);
-    };
-
-    ProviderHash.prototype = {
-        // the currently selected provider name
-        providerName: null,
-
-        /**
-         * Our parseHash() function looks for a provider name in the beginning of
-         * the URL.
-         */
-        parseHash: function(hash) {
-            var parts = hash.split("/");
-            if (parts.length > 0) {
-                var provider = parts.shift();
-                var parsed = parts.length
-                    ? MM.Hash.prototype.parseHash.call(this, parts.join("/"))
-                    : {center: this.map.getCenter(), zoom: this.map.getZoom()};
-                if (parsed) {
-                    // console.log("parsed hash:", provider, parsed);
-                    var didSetProvider = this.setProvider.call(this.map, provider);
-                    if (didSetProvider) {
-                        this.providerName = provider;
-                        return parsed;
-                    } else {
-                        return false;
-                    }
-                } else {
-                    // console.log("parse error:", hash, parts, this.providerName);
-                }
-                return parsed;
-            } else {
-                // console.warn("(zero length, unable to parse");
-                return false;
-            }
-        },
-
-        /**
-         * Our formatHash() function inserts the provider name as the first
-         * slash-delimited element in the URL.
-         */
-        formatHash: function(hash) {
-            var format = MM.Hash.prototype.formatHash.call(this, hash);
-            return "#" + this.providerName + "/" + format.substr(1);
-        }
-    };
-
-    MM.extend(ProviderHash, MM.Hash);
-
     init();
 
 })();
-
-var YahooPlaceSearch = {
-    appid: "1DiQEyLV34HbAVHyl0iWC5tAZ8wpLMPzIeFE9QsTukhx6H.Cn9bM70c_5dYgh7cR8w--",
-    url: "http://where.yahooapis.com/v1/places.q({q});count=1?callback=?",
-    geocode: function(query, success, error) {
-        var data = {};
-        data.appid = YahooPlaceSearch.appid;
-        data.select = "long";
-        data.format = "json";
-        return reqwest({
-            url: YahooPlaceSearch.url.replace("{q}", encodeURIComponent(query)),
-            type: "jsonp",
-            jsonpCallback: "callback",
-            data: data,
-            success: function(response) {
-                var results = response.places;
-                if (results) {
-                    success.call(null, results);
-                } else {
-                    error.call(null, "No results", response);
-                }
-            },
-            error: error
-        });
-    }
-};
