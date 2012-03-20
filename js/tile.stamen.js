@@ -24,7 +24,7 @@ var SUBDOMAINS = ["", "a.", "b.", "c.", "d."],
         },
         "watercolor": {
             "url": "http://{S}tile.stamen.com/watercolor/{Z}/{X}/{Y}.jpg",
-            "minZoom": 0,
+            "minZoom": 3,
             "maxZoom": 16
         }
     },
@@ -33,9 +33,17 @@ var SUBDOMAINS = ["", "a.", "b.", "c.", "d."],
         'Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, ' +
         'under <a href="http://creativecommons.org/licenses/by-sa/3.0">CC BY SA</a>.';
 
+function getProvider(name) {
+    if (name in PROVIDERS) {
+        return PROVIDERS[name];
+    } else {
+        throw 'No such provider: "' + name + '"';
+    }
+}
+
 if (typeof MM === "object") {
     MM.StamenTileLayer = function(name) {
-        var provider = PROVIDERS[name];
+        var provider = getProvider(name);
         MM.Layer.call(this, new MM.TemplatedMapProvider(provider.url, SUBDOMAINS));
         this.provider.setZoomRange(provider.minZoom, provider.maxZoom);
         this.attribution = ATTRIBUTION;
@@ -46,7 +54,7 @@ if (typeof MM === "object") {
 if (typeof L === "object") {
     L.StamenTileLayer = L.TileLayer.extend({
         initialize: function(name) {
-            var provider = PROVIDERS[name],
+            var provider = getProvider(name),
                 url = provider.url.toLowerCase();
             L.TileLayer.prototype.initialize.call(this, url, {
                 "minZoom":      provider.minZoom,
@@ -70,7 +78,7 @@ if (typeof OpenLayers === "object") {
     // based on http://www.bostongis.com/PrinterFriendly.aspx?content_name=using_custom_osm_tiles
     OpenLayers.Layer.Stamen = OpenLayers.Class(OpenLayers.Layer.OSM, {
         initialize: function(name, options) {
-            var provider = PROVIDERS[name],
+            var provider = getProvider(name),
                 url = provider.url,
                 hosts = [];
             if (url.indexOf("{S}") > -1) {
@@ -92,7 +100,7 @@ if (typeof OpenLayers === "object") {
 
 if (typeof google === "object" && typeof google.maps === "object") {
     google.maps.StamenMapType = function(name) {
-        var provider = PROVIDERS[name];
+        var provider = getProvider(name);
         return google.maps.ImageMapType.call(this, {
             "getTileUrl": function(coord, zoom) {
                 var index = (zoom + coord.x + coord.y) % SUBDOMAINS.length;
