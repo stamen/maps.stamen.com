@@ -85,11 +85,19 @@ textarea {
 }
 
 a#toggle-feedback {
-    color: #999;
-    margin-left: 4px;
+    margin-left: 8px;
+    display: inline-block;
+    font-size: 14px;
+    line-height: 25px;
+    padding-bottom: 0;
+    padding-left: 18px;
+    background-image: url(../images/bug.png);
+    background-position: left 16px;
+    background-repeat: no-repeat;
+    opacity: .5;
 }
 a#toggle-feedback.active {
-    color: #fff;
+    opacity: 1;
 }
 
 #feedback {

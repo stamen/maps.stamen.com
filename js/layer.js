@@ -132,7 +132,7 @@
 
                     var offset = getOffset(feedbackLink);
                     // console.log("offset:", [offset.left, offset.top]);
-                    feedback.style.left = (offset.left + 10) + "px";
+                    feedback.style.left = (offset.left - 9) + "px";
                 } else {
                 }
             });
