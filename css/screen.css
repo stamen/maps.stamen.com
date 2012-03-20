@@ -1,3 +1,6 @@
+a {
+    cursor: pointer;
+}
 a:link, a:visited, a:active {
     color: inherit;
     text-decoration: underline;
@@ -21,6 +24,7 @@ a:link, a:visited, a:active {
 }
 
 #header {
+    z-index: 200;
     padding-top: 40px;
     background: black;
     margin-bottom: 0;
