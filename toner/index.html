@@ -16,6 +16,7 @@
             <div class="navbar-inner">
                 <h1 id="tiles" class="brand"><a href="../">maps.stamen.com</a> / <span id="current-provider">toner</span></h1>
                 <a id="stamen" class="brand" href="http://stamen.com">stamen</a>
+                <a id="toggle-feedback" class="brand toggler">report a bug</a>
             </div>
         </div>
 
@@ -39,6 +40,18 @@
                     <p>Copy the HTML below to embed this map:</p>
                     <textarea id="embed-code" rows="3">&lt;iframe width="600" height="420" src="{url}"&gt;&lt;/iframe&gt;</textarea>
                 </div>
+            </div>
+            <div id="feedback" class="toggle" style="display: none;">
+                <form target="_blank" method="POST" action="../feedback.php?style=toner">
+                    <input id="feedback-center" name="center" type="hidden">
+                    <p><strong>Our toner maps may not look quite right in some
+                    parts of the world.</strong> You can help us track down problems by
+                    sending us a brief description of what&rsquo;s wrong:</p>
+                    <textarea name="description"></textarea>
+                    <p><small>A link to the current view will be included automatically.</small></p>
+                    <p><label>Your email (optional): <input type="text" name="sender"></label></p>
+                    <p><input id="send-feedback" class="btn btn-success" type="submit" value="submit"></p>
+                </form>
             </div>
         </div>
 
