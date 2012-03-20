@@ -86,6 +86,7 @@ textarea {
 
 a#toggle-feedback {
     color: #999;
+    margin-left: 4px;
 }
 a#toggle-feedback.active {
     color: #fff;

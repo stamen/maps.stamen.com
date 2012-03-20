@@ -39,19 +39,29 @@
 
     function createToggle(link, target, callback) {
         var showing = target.style.display != "none",
-            originalClass = link.className;
+            originalClass = link.className,
+            toggler = function(s) {
+                showing = s;
+                if (showing) {
+                    target.style.display = "";
+                    link.className = [originalClass, "active"].join(" ");
+                } else {
+                    target.style.display = "none";
+                    link.className = originalClass;
+                }
+                callback.call(target, showing);
+            };
+
         MM.addEvent(link, "click", function(e) {
-            showing = !showing;
-            if (showing) {
-                target.style.display = "";
-                link.className = [originalClass, "active"].join(" ");
-            } else {
-                target.style.display = "none";
-                link.className = originalClass;
-            }
-            callback.call(target, showing);
+            toggler.toggle();
             return MM.cancelEvent(e);
         });
+
+        toggler.toggle = function() { toggler(!showing); };
+        toggler.show = function() { toggler(true); };
+        toggler.hide = function() { toggler(false); };
+
+        return toggler;
     }
 
     function init() {
@@ -92,12 +102,13 @@
         // set the initial map position
         main.setCenterZoom(new MM.Location(37.7706, -122.3782), 12);
 
-        var embedLink = document.getElementById("embed-toggle");
+        var embedLink = document.getElementById("embed-toggle"),
+            embedToggle;
         if (embedLink) {
             var embed = document.getElementById("embed-content"),
                 textarea = document.getElementById("embed-code"),
                 template = textarea.value;
-            createToggle(embedLink, embed, function(showing) {
+            embedToggle = createToggle(embedLink, embed, function(showing) {
                 if (showing) {
                     var url = location.href.split("#");
                     url.splice(1, 0, "embed#");
@@ -109,11 +120,12 @@
             });
         }
 
-        var feedbackLink = document.getElementById("toggle-feedback");
+        var feedbackLink = document.getElementById("toggle-feedback"),
+            feedbackToggle;
         if (feedbackLink) {
             var feedback = document.getElementById("feedback"),
                 centerInput = document.getElementById("feedback-center");
-            createToggle(feedbackLink, feedback, function(showing) {
+            feedbackToggle = createToggle(feedbackLink, feedback, function(showing) {
                 if (showing) {
                     // update the center
                     centerInput.value = location.hash.substr(1);
@@ -123,6 +135,13 @@
                     feedback.style.left = (offset.left + 10) + "px";
                 } else {
                 }
+            });
+        }
+
+        if (feedbackToggle || embedToggle) {
+            MM.addEvent(parent, "mousedown", function() {
+                if (feedbackToggle) feedbackToggle.hide();
+                if (embedToggle) embedToggle.hide();
             });
         }
 
