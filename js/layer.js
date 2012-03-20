@@ -10,6 +10,17 @@
         });
     }
 
+    function getOffset(el) {
+        var offset = {left: 0, top: 0},
+            offsetParent = el.offsetParent;
+        while (el && el != offsetParent) {
+            offset.left += el.offsetLeft;
+            offset.top += el.offsetTop;
+            el = el.parentNode;
+        }
+        return offset;
+    }
+
     function setupZoomControls(map) {
         var zoomIn = document.getElementById("zoom-in"),
             zoomOut = document.getElementById("zoom-out");
@@ -24,7 +35,23 @@
             try { map.zoomOut(); } catch (err) { }
             return MM.cancelEvent(e);
         });
+    }
 
+    function createToggle(link, target, callback) {
+        var showing = target.style.display != "none",
+            originalClass = link.className;
+        MM.addEvent(link, "click", function(e) {
+            showing = !showing;
+            if (showing) {
+                target.style.display = "";
+                link.className = [originalClass, "active"].join(" ");
+            } else {
+                target.style.display = "none";
+                link.className = originalClass;
+            }
+            callback.call(target, showing);
+            return MM.cancelEvent(e);
+        });
     }
 
     function init() {
@@ -69,24 +96,33 @@
         if (embedLink) {
             var embed = document.getElementById("embed-content"),
                 textarea = document.getElementById("embed-code"),
-                template = textarea.value,
-                embedShowing = embed.style.display != "none",
-                originalClass = embedLink.className;
-            MM.addEvent(embedLink, "click", function(e) {
-                embedShowing = !embedShowing;
-                if (embedShowing) {
-                    embed.style.display = "block";
+                template = textarea.value;
+            createToggle(embedLink, embed, function(showing) {
+                if (showing) {
                     var url = location.href.split("#");
                     url.splice(1, 0, "embed#");
                     textarea.value = template.replace("{url}", url.join(""));
                     textarea.focus();
                     textarea.select();
-                    embedLink.className = [originalClass, "active"].join(" ");
                 } else {
-                    embed.style.display = "none";
-                    embedLink.className = originalClass;
                 }
-                return MM.cancelEvent(e);
+            });
+        }
+
+        var feedbackLink = document.getElementById("toggle-feedback");
+        if (feedbackLink) {
+            var feedback = document.getElementById("feedback"),
+                centerInput = document.getElementById("feedback-center");
+            createToggle(feedbackLink, feedback, function(showing) {
+                if (showing) {
+                    // update the center
+                    centerInput.value = location.hash.substr(1);
+
+                    var offset = getOffset(feedbackLink);
+                    // console.log("offset:", [offset.left, offset.top]);
+                    feedback.style.left = (offset.left + 10) + "px";
+                } else {
+                }
             });
         }
 

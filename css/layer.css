@@ -59,17 +59,17 @@ body {
     right: 20px;
 }
 
-#embed-toggle {
+.toggle a.toggler {
     float: right;
     margin-right: 0;
 }
 
-a#embed-toggle.active {
+.toggle a.toggler.active {
     background: #000;
     color: #fff;
 }
 
-#embed-content {
+.toggle .toggle-content {
     clear: both;
     width: 320px;
     color: #fff !important;
@@ -77,11 +77,43 @@ a#embed-toggle.active {
     padding: 10px;
 }
 
-#embed-content textarea {
+textarea {
     box-sizing: border-box;
     display: block;
     width: 100%;
     margin: 0;
+}
+
+a#toggle-feedback {
+    color: #999;
+}
+a#toggle-feedback.active {
+    color: #fff;
+}
+
+#feedback {
+    position: absolute;
+    left: 0;
+    top: -20px;
+    width: 280px;
+    color: #fff;
+    background: black;
+    padding: 10px;
+    padding-top: 0;
+}
+
+#feedback form,
+#feedback form p {
+    margin: 0;
+}
+#feedback form label {
+    color: #aaa;
+}
+
+#feedback form textarea {
+    margin: 10px 0;
+}
+#feedback form input[type="text"] {
 }
 
 /* iPhone and smaller */
