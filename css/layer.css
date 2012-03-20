@@ -69,7 +69,7 @@ body {
     color: #fff;
 }
 
-.toggle .toggle-content {
+#embed-content {
     clear: both;
     width: 320px;
     color: #fff !important;
