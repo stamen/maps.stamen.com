@@ -3,8 +3,8 @@
 $sent = false;
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' || $_GET['test'] == 'send') {
-    $style = $_POST['style'] or $_GET['style'];
-    $center = $_POST['center'] or '';
+    $style = $_GET['style'];
+    $center = $_POST['center'];
 
     $subject = "[maps.stamen.com / ${style}]: Bug report @ ${center}";
     $message = <<<MESSAGE
