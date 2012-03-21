@@ -7,7 +7,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || $_GET['test'] == 'send') {
     $center = $_POST['center'];
     $description = stripslashes($_POST['description']);
     $sender = $_POST['sender'];
-    if (!$sender) $sender = 'anonymous';
+    if (stristr($sender, "@")) {
+        $from_email = $sender;
+    } else {
+        $sender = 'anonymous';
+        $from_email = '(no address provided) <maps@stamen.com>';
+    }
     $ip = $_SERVER['REMOTE_ADDR'];
     $form_url = sprintf('http://%s%s', $_SERVER['HTTP_HOST'], $_SERVER['REQUEST_URI']);
 
@@ -23,8 +28,10 @@ http://maps.stamen.com/${style}/#${center}
 feedback form @ $form_url
 MESSAGE;
 
+    $headers = sprintf("From: %s", $from_email);
+
     try {
-        mail("maps@stamen.com", $subject, $message);
+        mail("maps@stamen.com", $subject, $message, $headers);
         $sent = true;
     } catch (Exception $error) {
         $message = $error;
