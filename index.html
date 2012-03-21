@@ -26,6 +26,7 @@
                 <div class="container">
                     <h1 class="brand">maps.stamen.com</h1>
                     <a id="stamen" class="brand" href="http://stamen.com">stamen</a>
+                    <a id="toggle-feedback" class="brand toggler">report a bug</a>
                 </div>
             </div>
         </div>
@@ -51,6 +52,19 @@
                 </div>
                 <div id="map-sub2" class="map switch" data-provider="terrain"><h3><a class="provider-name" href="#terrain">Terrain</a></h3></div>
                 <div id="map-sub3" class="map switch" data-provider="watercolor"><h3><a class="provider-name" href="#watercolor">Watercolor</a></h3></div>
+                <div id="feedback" class="toggle" style="display: none;">
+                    <form id="feedback-form" target="_blank" method="POST" action="../feedback.php">
+                        <input id="feedback-center" name="center" type="hidden">
+                        <input id="feedback-style" name="name" type="hidden">
+                        <p><strong>Our maps may not look quite right in some
+                        parts of the world.</strong> You can help us track down problems by
+                        sending us a brief description of what&rsquo;s wrong:</p>
+                        <textarea name="description"></textarea>
+                        <p><small>A link to the current view will be included automatically.</small></p>
+                        <p><label>Your email (optional): <input type="text" name="sender"></label></p>
+                        <p><input id="send-feedback" class="btn btn-success" type="submit" value="submit"></p>
+                    </form>
+                </div>
             </div>
         </div>
 
