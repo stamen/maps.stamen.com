@@ -195,7 +195,11 @@
                             <p class="span4">ModestMaps is a no-frills mapping library by Stamen and friends.
                                 View the <a href="test/modestmaps.html">example</a>.</p>
                             <div class="span8">
-                                <script src="https://gist.github.com/1982587.js?file=modestmaps.js"></script>
+                                <pre class="prettyprint">// replace "toner" here with "terrain" or "watercolor"
+var layer = new MM.StamenTileLayer("toner");
+var map = new MM.Map("element_id", layer);
+map.setCenterZoom(new MM.Location(37.7, -122.4), 12);</pre>
+                                <!-- <script src="https://gist.github.com/1982587.js?file=modestmaps.js"></script> -->
                             </div>
                         </div>
                     </div>
@@ -206,7 +210,14 @@
                             <p class="span4">Leaflet is a lightweight and easy-to-use library by <a href="http://cloudmade.com">Cloudmade</a>.
                                 View the <a href="test/leaflet.html">example</a>.</p>
                             <div class="span8">
-                                <script src="https://gist.github.com/1982587.js?file=leaflet.js"></script>
+                                <pre class="prettyprint">// replace "toner" here with "terrain" or "watercolor"
+var layer = new L.StamenTileLayer("toner");
+var map = new L.Map("element_id", {
+    center: new L.LatLng(37.7, -122.4),
+    zoom: 12
+});
+map.addLayer(layer);</pre>
+                                <!-- <script src="https://gist.github.com/1982587.js?file=leaflet.js"></script> -->
                             </div>
                         </div>
                     </div>
@@ -217,7 +228,11 @@
                             <p class="span4">OpenLayers is a hefty and featureful mapping library for use with a variety of GIS applications.
                                 View the <a href="test/openlayers.html">example</a>.</p>
                             <div class="span8">
-                                <script src="https://gist.github.com/1982587.js?file=openlayers.js"></script>
+                                <pre class="prettyprint">// replace "toner" here with "terrain" or "watercolor"
+var layer = new OpenLayers.Layer.Stamen("toner");
+var map = new OpenLayers.Map("element_id");
+map.addLayer(layer);</pre>
+                                <!-- <script src="https://gist.github.com/1982587.js?file=openlayers.js"></script> -->
                             </div>
                         </div>
                     </div>
@@ -228,7 +243,18 @@
                             <p class="span4">The Google Maps API is ubiquitous and feature-rich, but requires an <a href="#">API key</a> and may <a href="http://code.google.com/apis/maps/faq.html#usage_pricing">cost money</a> if your usage exceeds 25,000 map views per day.
                                 View the <a href="test/google.html">example</a>.</p>
                             <div class="span8">
-                                <script src="https://gist.github.com/1982587.js?file=google.js"></script>
+                                <pre class="prettyprint">// replace "toner" here with "terrain" or "watercolor"
+var layer = "toner";
+var map = new google.maps.Map(document.getElementById("element_id"), {
+    center: new google.maps.LatLng(37.7, -122.4),
+    zoom: 12,
+    mapTypeId: layer,
+    mapTypeControlOptions: {
+        mapTypeIds: [layer]
+    }
+});
+map.mapTypes.set(layer, new google.maps.StamenMapType(layer));</pre>
+                                <!-- <script src="https://gist.github.com/1982587.js?file=google.js"></script> -->
                             </div>
                         </div>
                     </div>
