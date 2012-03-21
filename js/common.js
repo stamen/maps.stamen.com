@@ -30,6 +30,37 @@ function setupZoomControls(map) {
 
 }
 
+function syncMapLinks(map, links, modifyHashParts) {
+    var len = links.length,
+        timeout,
+        delay = 200;
+    function formatHash() {
+        var center = map.getCenter(),
+            zoom = map.getZoom(),
+            precision = Math.max(0, Math.ceil(Math.log(zoom) / Math.LN2)),
+            parts = [zoom,
+                center.lat.toFixed(precision),
+                center.lon.toFixed(precision)
+            ];
+        if (modifyHashParts) {
+            modifyHashParts.call(null, parts);
+        }
+        return parts.join("/");
+    }
+    map.addCallback("drawn", function() {
+        clearTimeout(timeout);
+        timeout = setTimeout(function() {
+            var hash = formatHash();
+            for (var i = 0; i < len; i++) {
+                var link = links[i],
+                    href = link.href || "",
+                    uri = link.href.split("#").shift();
+                link.href = [uri, hash].join("#");
+            }
+        }, delay);
+    });
+}
+
 // get the pixel offset of an element from the top left of its offset parent
 function getOffset(el) {
     var offset = {left: 0, top: 0},

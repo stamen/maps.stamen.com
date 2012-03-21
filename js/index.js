@@ -100,6 +100,8 @@ var MAPS = {};
             }
         }
 
+        syncMapLinks(main, [document.getElementById("main-permalink")]);
+
         updateTitle(main, currentProvider);
 
         // set provider randomly if one wasn't specified in the URL hash

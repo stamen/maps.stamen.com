@@ -11,7 +11,8 @@
 
         var parent = document.getElementById("map-main"),
             size = getSize(),
-            provider = new MM.StamenTileLayer(parent.getAttribute("data-provider"));
+            providerName = parent.getAttribute("data-provider"),
+            provider = new MM.StamenTileLayer(providerName);
 
         function resize() {
             try {
@@ -37,6 +38,10 @@
 
         // set the initial map position
         main.setCenterZoom(new MM.Location(37.7706, -122.3782), 12);
+
+        syncMapLinks(main, [document.getElementById("home-link")], function(parts) {
+            parts.unshift(providerName);
+        });
 
         var embedLink = document.getElementById("embed-toggle"),
             embedToggle;
