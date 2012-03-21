@@ -187,6 +187,10 @@ ProviderHash.prototype = {
     parseHash: function(hash) {
         var parts = hash.split("/");
         if (parts.length > 0) {
+            // ignore the trailing slash
+            if (parts[parts.length - 1] === "") {
+                parts.pop();
+            }
             var provider = parts.shift();
             var parsed = parts.length
                 ? MM.Hash.prototype.parseHash.call(this, parts.join("/"))
