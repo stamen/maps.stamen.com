@@ -3,7 +3,9 @@
 $sent = false;
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' || $_GET['test'] == 'send') {
-    $style = $_GET['style'];
+    $style = array_key_exists('style', $_POST)
+        ? $_POST['style']
+        : $_GET['style'];
     $center = $_POST['center'];
     $description = stripslashes($_POST['description']);
     $sender = $_POST['sender'];
