@@ -89,6 +89,11 @@
             // hide toggles when the map is zoomed
             // (mousedowns occur on #overlay, not the map)
             main.addCallback("zoomed", hideToggles);
+            MM.addEvent(window, "keyup", function(e) {
+                if (e.keyCode === 27) {
+                    hideToggles();
+                }
+            });
         }
 
         var hasher = new MM.Hash(main);
