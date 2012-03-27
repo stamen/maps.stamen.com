@@ -359,6 +359,19 @@ var MM = com.modestmaps = {
         return Math.acos(c + d + e) * r;
     };
 
+    // parse a string in the format "lat,lon"
+    MM.Location.fromString = function(str, longitudeFirst) {
+        var parts = str.split(/\s*,\s*/);
+        if (parts.length == 2) {
+            var lat = parseFloat(longitudeFirst ? parts[1] : parts[0]),
+                lon = parseFloat(longitudeFirst ? parts[0] : parts[1]);
+            if (!isNaN(lat) && !isNaN(lon)) {
+                return new MM.Location(lat, lon);
+            }
+        }
+        return null;
+    };
+
     // Interpolates along a great circle, f between 0 and 1
     //
     // * FIXME: could be heavily optimized (lots of trig calls to cache)
@@ -422,10 +435,10 @@ var MM = com.modestmaps = {
         }
         if (isNaN(south)) south = north;
         if (isNaN(east)) east = west;
-        this.north = Math.max(north, south);
-        this.south = Math.min(north, south);
-        this.east = Math.max(east, west);
-        this.west = Math.min(east, west);
+        this.north = north > south ? north : south;
+        this.south = north > south ? south : north;
+        this.east = east > west ? east : west;
+        this.west = east > west ? west : east;
     };
 
     MM.Extent.prototype = {
@@ -737,11 +750,11 @@ var MM = com.modestmaps = {
         ],
 
         getTileUrl: function(coordinate) {
-            throw "Abstract method not implemented by subclass.";
+            throw "Abstract method getTileUrl() not implemented by subclass.";
         },
 
         getTile: function(coordinate) {
-            throw "Abstract method not implemented by subclass.";
+            throw "Abstract method getTile() not implemented by subclass.";
         },
 
         // releaseTile is not required
@@ -896,6 +909,10 @@ var MM = com.modestmaps = {
 
     MM.MouseWheelHandler.prototype = {
         precise: false,
+        // MM.Point to zoom about
+        centerPoint: null,
+        // MM.Location to zoom about
+        centerLocation: null,
 
         init: function(map) {
             this.map = map;
@@ -929,17 +946,26 @@ var MM = com.modestmaps = {
             var timeSince = new Date().getTime() - this.prevTime;
 
             if (Math.abs(delta) > 0 && (timeSince > 200) && !this.precise) {
-                var point = MM.getMousePoint(e, this.map);
+                var point = this.getZoomPoint(e);
                 this.map.zoomByAbout(delta > 0 ? 1 : -1, point);
 
                 this.prevTime = new Date().getTime();
             } else if (this.precise) {
-                var point = MM.getMousePoint(e, this.map);
+                var point = this.getZoomPoint(e);
                 this.map.zoomByAbout(delta * 0.001, point);
             }
 
             // Cancel the event so that the page doesn't scroll
             return MM.cancelEvent(e);
+        },
+
+        getZoomPoint: function(e) {
+            if (this.centerPoint) {
+                return this.centerPoint;
+            } else if (this.centerLocation) {
+                return this.map.locationPoint(this.centerLocation);
+            }
+            return MM.getMousePoint(e, this.map);
         }
     };
 
@@ -1030,10 +1056,11 @@ var MM = com.modestmaps = {
     // A shortcut for adding drag, double click,
     // and mouse wheel events to the map. This is the default
     // handler attached to a map if the handlers argument isn't given.
-    MM.MouseHandler = function(map) {
+    MM.MouseHandler = function(map, precise) {
         if (map !== undefined) {
             this.init(map);
         }
+        this.precise = precise === true;
     };
 
     MM.MouseHandler.prototype = {
@@ -1042,7 +1069,7 @@ var MM = com.modestmaps = {
             this.handlers = [
                 new MM.DragHandler(map),
                 new MM.DoubleClickHandler(map),
-                new MM.MouseWheelHandler(map)
+                new MM.MouseWheelHandler(map, this.precise)
             ];
         },
         remove: function() {
@@ -1104,7 +1131,7 @@ var MM = com.modestmaps = {
             this.map.addCallback("drawn", this.onMapMove);
             // reset the hash
             this.lastHash = null;
-            this.onHashChange();
+            this.update();
 
             if (!this.isListening) {
                 this.startListening();
@@ -1170,7 +1197,7 @@ var MM = com.modestmaps = {
         hashChangeInterval: null,
         startListening: function() {
             if (HAS_HASHCHANGE) {
-                window.addEventListener("hashchange", this.onHashChange, false);
+                MM.addEvent(window, "hashchange", this.onHashChange);
             } else {
                 clearInterval(this.hashChangeInterval);
                 this.hashChangeInterval = setInterval(this.onHashChange, 50);
@@ -1180,7 +1207,7 @@ var MM = com.modestmaps = {
 
         stopListening: function() {
             if (HAS_HASHCHANGE) {
-                window.removeEventListener("hashchange", this.onHashChange);
+                MM.removeEvent(window, "hashchange", this.onHashChange);
             } else {
                 clearInterval(this.hashChangeInterval);
             }
@@ -1732,7 +1759,7 @@ var MM = com.modestmaps = {
 
     MM.Layer = function(provider, parent) {
         this.parent = parent || document.createElement('div');
-        this.parent.style.cssText = 'position: absolute; top: 0px; left: 0px; width: 100%; height: 100%; margin: 0; padding: 0; z-index: 0';
+        this.parent.style.cssText = 'position: absolute; top: 0px; left: 0px; margin: 0; padding: 0; z-index: 0';
 
         this.levels = {};
 
@@ -2650,7 +2677,10 @@ var MM = com.modestmaps = {
         // put the given layer on top of all the others
         addLayer: function(layer) {
             this.layers.push(layer);
-            this.parent.appendChild(layer.parent);
+            // make sure layer.parent doesn't already have a parentNode
+            if (layer.parent.parentNode != this.parent) {
+                this.parent.appendChild(layer.parent); 
+            }
             layer.map = this; // TODO: remove map property from MM.Layer?
             return this;
         },
