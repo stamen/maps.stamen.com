@@ -174,6 +174,8 @@ var ProviderHash = function(map, providerName, setProvider) {
     this.providerName = providerName;
     this.setProvider = setProvider;
     MM.Hash.call(this, map);
+    // no really, update
+    this.update();
 };
 
 ProviderHash.prototype = {
