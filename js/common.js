@@ -154,6 +154,100 @@ var YahooPlaceSearch = {
     }
 };
 
+var QueryString = function(params) {
+    if (params) {
+        if (typeof params === "string") {
+            params = this.parse(params);
+        }
+    }
+    this.params = params || {};
+};
+
+QueryString.parse = function(str) {
+    if (str.charAt(0) === "?") {
+        str = str.substr(1);
+    }
+    var parts = str.split("&"),
+        len = parts.length;
+        params = {};
+    for (var i = 0; i < len; i++) {
+        var kv = parts[i].split("=");
+        params[decodeURIComponent(kv[0])] = (kv.length === 2)
+            ? decodeURIComponent(kv[1])
+            : true;
+    }
+    return params;
+};
+
+QueryString.format = function(params) {
+    var parts = [],
+        i = 0;
+    for (var key in params) {
+        if (i++ > 0) parts.push("&");
+        var value = params[key];
+        if (value !== null) {
+            parts.push(encodeURIComponent(key), "=", encodeURIComponent(value));
+        }
+    }
+    return parts.join("");
+};
+
+QueryString.prototype = {
+    clear: function() {
+        this.params = {};
+    },
+    parse: function(str) {
+        var parsed = QueryString.parse(str);
+        return this.update(parsed);
+    },
+    update: function(params) {
+        var old = this.params;
+        this.params = {};
+        var changed = {};
+        for (var key in params) {
+            var value = params[key];
+            if (old[key] != value) {
+                changed[key] = value;
+            }
+            this.params[key] = value;
+        }
+        return changed;
+    },
+    toString: function() {
+        var str = QueryString.format(this.params);
+        return str.length ? "?" + str : "";
+    }
+};
+
+
+MM.QueryHash = function(map, onQueryChange) {
+    this.query = new QueryString();
+    this.onQueryChange = onQueryChange;
+    MM.Hash.call(this, map);
+};
+
+MM.QueryHash.prototype = {
+    query: null,
+    parseHash: function(hash) {
+        var qs = "";
+        if (hash.indexOf("?") > -1) {
+            var parts = hash.split("?");
+            hash = parts[0];
+            qs = parts[1];
+        }
+        var parsed = MM.Hash.prototype.parseHash.call(this, hash);
+        if (parsed) {
+            this.query.params = this.onQueryChange.call(this, this.query.parse(qs));
+        }
+        return parsed;
+    },
+    formatHash: function(hash) {
+        return MM.Hash.prototype.formatHash.call(this, hash) + this.query.toString();
+    }
+};
+
+MM.extend(MM.QueryHash, MM.Hash);
+
 /**
  * The ProviderHash is a class that looks for a provider name at the beginning
  * of the hash and calls the supplied setProvider(provider) function whenever it
