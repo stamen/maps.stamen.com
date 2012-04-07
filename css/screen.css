@@ -81,7 +81,7 @@ a:link, a:visited, a:active {
     color: black;
     background: yellow;
     text-decoration: none;
-    padding: 1px 10px 5px 10px;
+    padding: 3px 10px 6px 10px;
     display: block;
     float: left;
     margin-right: 8px;
@@ -118,10 +118,6 @@ a:link, a:visited, a:active {
     #hero h2 i {
         vertical-align: middle;
     }
-
-.controls a {
-    padding: 3px 10px 6px 10px;
-}
 
 #hero #maps-sub {
     position: relative;
@@ -276,6 +272,7 @@ img.tile {
 }
 
 .controls a,
+.controls label,
 .map h3 a,
 #search input,
 #search button {
