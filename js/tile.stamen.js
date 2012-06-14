@@ -42,9 +42,12 @@ function getProvider(name) {
 }
 
 if (typeof MM === "object") {
+    var ModestTemplate = (typeof MM.Template === "function")
+        ? MM.Template
+        : MM.TemplatedMapProvider;
     MM.StamenTileLayer = function(name) {
         var provider = getProvider(name);
-        MM.Layer.call(this, new MM.TemplatedMapProvider(provider.url, SUBDOMAINS));
+        MM.Layer.call(this, new ModestTemplate(provider.url, SUBDOMAINS));
         this.provider.setZoomRange(provider.minZoom, provider.maxZoom);
         this.attribution = ATTRIBUTION;
     };
@@ -55,7 +58,9 @@ if (typeof L === "object") {
     L.StamenTileLayer = L.TileLayer.extend({
         initialize: function(name) {
             var provider = getProvider(name),
-                url = provider.url.toLowerCase();
+                url = provider.url.replace(/({[A-Z]})/g, function(s) {
+                    return s.toLowerCase();
+                });
             L.TileLayer.prototype.initialize.call(this, url, {
                 "minZoom":      provider.minZoom,
                 "maxZoom":      provider.maxZoom,
