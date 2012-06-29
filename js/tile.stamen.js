@@ -1,5 +1,9 @@
 (function() {
 
+/*
+ * tile.stamen.js v1.0
+ */
+
 var SUBDOMAINS = " a. b. c. d.".split(" "),
     MAKE_PROVIDER = function(layer, type, minZoom, maxZoom) {
         return {
