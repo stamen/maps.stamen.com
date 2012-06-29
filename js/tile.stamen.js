@@ -1,16 +1,17 @@
-(function() {
+(function(exports) {
 
 /*
- * tile.stamen.js v1.0
+ * tile.stamen.js v1.1
  */
 
 var SUBDOMAINS = " a. b. c. d.".split(" "),
     MAKE_PROVIDER = function(layer, type, minZoom, maxZoom) {
         return {
-            "url":      ["http://{S}tile.stamen.com/", layer, "/{Z}/{X}/{Y}.", type].join(""),
-            "type":     type,
-            "minZoom":  minZoom,
-            "maxZoom":  maxZoom
+            "url":          ["http://{S}tile.stamen.com/", layer, "/{Z}/{X}/{Y}.", type].join(""),
+            "type":         type,
+            "subdomains":   SUBDOMAINS.slice(),
+            "minZoom":      minZoom,
+            "maxZoom":      maxZoom
         };
     },
     PROVIDERS =  {
@@ -29,6 +30,14 @@ var SUBDOMAINS = " a. b. c. d.".split(" "),
 setupFlavors("toner", ["hybrid", "labels", "lines", "background", "lite"]);
 setupFlavors("terrain", ["background"]);
 setupFlavors("terrain", ["labels", "lines"], "png");
+
+/*
+ * Export stamen.tile to the provided namespace.
+ */
+exports.stamen = exports.stamen || {};
+exports.stamen.tile = exports.stamen.tile || {};
+exports.stamen.tile.providers = PROVIDERS;
+exports.stamen.tile.getProvider = getProvider;
 
 /*
  * A shortcut for specifying "flavors" of a style, which are assumed to have the
@@ -161,4 +170,4 @@ if (typeof google === "object" && typeof google.maps === "object") {
     google.maps.StamenMapType.prototype = new google.maps.ImageMapType("_");
 }
 
-})();
+})(typeof exports === "undefined" ? this : exports);
