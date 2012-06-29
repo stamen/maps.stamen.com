@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>maps.stamen.com / toner-labels</title>
+        <meta name="description" content="Stamen's toner-labels map style is lovingly crafted and free for the taking.">
+        <script type="text/javascript" src="../js/vendor/modestmaps.min.js"></script>
+        <script type="text/javascript" src="../js/vendor/reqwest.min.js"></script>
+        <script type="text/javascript" src="../js/tile.stamen.js"></script>
+        <script type="text/javascript" src="../js/common.js"></script>
+        <style type="text/css">
+            @import url(../css/bootstrap/bootstrap.css);
+            @import url(../css/screen.css);
+            @import url(../css/layer.css);
+        </style>
+    </head>
+    <body>
+        <div id="header" class="navbar">
+            <div class="navbar-inner">
+                <h1 id="tiles" class="brand"><a id="home-link" href="../">maps.stamen.com</a> / <span id="current-provider">toner-labels</span></h1>
+                <a id="stamen" class="brand" href="http://stamen.com">stamen</a>
+                <a id="toggle-feedback" class="brand toggler">report a bug</a>
+            </div>
+        </div>
+
+        <div id="map-main" class="map" data-provider="toner-labels">
+            <p class="attribution">
+                <a id="home-link" target="_top" href="../">Map tiles</a> by <a target="_top" href="http://stamen.com">Stamen Design</a>, under <a target="_top" href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a target="_top" href="http://openstreetmap.org">OpenStreetMap</a>, under <a target="_top" href="http://creativecommons.org/licenses/by-sa/3.0">CC BY SA</a>.
+            </p>
+        </div>
+
+        <div id="overlay">
+            <form id="search">
+                <p>
+                <input id="search-location" class="span3" type="text" placeholder="Type a location">
+                <input id="search-submit" class="btn" type="submit" value="Find">
+                </p>
+            </form>
+            <div id="controls" class="controls">
+                <a id="zoom-in" title="zoom in">+</a>
+                <a id="zoom-out" title="zoom out">&minus;</a>
+            </div>
+            <div id="embed" class="toggle controls">
+                <a id="embed-toggle" class="toggler" title="embed this map">&lt;embed&gt;</a>
+                <div id="embed-content" class="toggle-content" style="display: none;">
+                    <p>Copy the HTML below to embed this map:</p>
+                    <textarea id="embed-code" rows="3">&lt;iframe width="600" height="420" src="{url}"&gt;&lt;/iframe&gt;</textarea>
+                </div>
+            </div>
+            <div id="feedback" class="toggle" style="display: none;">
+                <form target="_blank" method="POST" action="../feedback.php?style=toner-labels">
+                    <input id="feedback-center" name="center" type="hidden">
+                    <p><strong>Not looking right?</strong>
+                    <a href="http://citytracking.org/some-known-bugs-and-whats-to-do/">See here for more info.</a><br>
+                    You can help us track down problems by sending us a
+                    brief description of what&rsquo;s wrong:</p>
+                    <textarea name="description"></textarea>
+                    <p><small>A link to the current view will be included automatically.</small></p>
+                    <p><label>Your email (optional): <input type="text" name="sender"></label></p>
+                    <p><input id="send-feedback" class="btn btn-success" type="submit" value="submit"></p>
+                </form>
+            </div>
+        </div>
+
+        <script type="text/javascript" src="../js/layer.js" defer></script>
+        <script type="text/javascript" defer>track();</script>
+    </body>
+</html>
+
