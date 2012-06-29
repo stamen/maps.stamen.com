@@ -320,9 +320,10 @@ ProviderHash.prototype = {
 
 MM.extend(ProviderHash, MM.Hash);
 
+var _gaq;
 // Google Analytics tracking
 function track() {
-  var _gaq = _gaq || [];
+  _gaq = _gaq || [];
   _gaq.push(['_setAccount', 'UA-32986126-1']);
   _gaq.push(['_trackPageview']);
 
