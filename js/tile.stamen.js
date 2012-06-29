@@ -133,9 +133,11 @@ if (typeof OpenLayers === "object") {
                 hosts.push(openlayerize(url));
             }
             options = OpenLayers.Util.extend({
-                "numZoomLevels":    provider.maxZoom,
-                "buffer":           0,
-                "transitionEffect": "resize"
+                "numZoomLevels":        provider.maxZoom,
+                "buffer":               0,
+                "transitionEffect":     "resize",
+                // see: <http://dev.openlayers.org/apidocs/files/OpenLayers/Tile/Image-js.html#OpenLayers.Tile.Image.crossOriginKeyword>
+                "crossOriginKeyword":   "anonymous"
             }, options);
             return OpenLayers.Layer.OSM.prototype.initialize.call(this, name, hosts, options);
         }
