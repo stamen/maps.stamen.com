@@ -32,7 +32,7 @@ body {
 #map-main {
     z-index: 100;
     background-color: transparent;
-    background-image: url(img/checker-light.png);
+    /* background-image: url(img/checker-light.png); */
 }
 
 #overlay {
