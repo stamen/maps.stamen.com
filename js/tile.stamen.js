@@ -1,7 +1,7 @@
 (function(exports) {
 
 /*
- * tile.stamen.js v1.1
+ * tile.stamen.js v1.1.1
  */
 
 var SUBDOMAINS = " a. b. c. d.".split(" "),
@@ -28,6 +28,10 @@ var SUBDOMAINS = " a. b. c. d.".split(" "),
 
 // set up toner and terrain flavors
 setupFlavors("toner", ["hybrid", "labels", "lines", "background", "lite"]);
+// toner 2010
+setupFlavors("toner", ["2010"]);
+// toner 2011 flavors
+setupFlavors("toner", ["2011", "2011-lines", "2011-labels", "2011-lite"]);
 setupFlavors("terrain", ["background"]);
 setupFlavors("terrain", ["labels", "lines"], "png");
 
