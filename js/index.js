@@ -10,6 +10,8 @@ var MAPS = {};
 
     function init() {
 
+        // setupProviderSelector();
+
         var providerLabel = document.getElementById("current-provider"),
             currentProvider = "toner",
             mapsByProvider = MAPS.byProvider = {};
@@ -254,5 +256,6 @@ var MAPS = {};
     }
 
     init();
+    track();
 
 })();

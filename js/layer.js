@@ -14,6 +14,8 @@
             providerName = parent.getAttribute("data-provider"),
             provider = new MM.StamenTileLayer(providerName);
 
+        // setupProviderSelector(providerName, "../");
+
         function resize() {
             try {
                 size = getSize();
