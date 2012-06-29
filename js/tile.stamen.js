@@ -23,17 +23,18 @@ var SUBDOMAINS = " a. b. c. d.".split(" "),
 
 // set up toner and terrain flavors
 setupFlavors("toner", ["hybrid", "labels", "lines", "background", "lite"]);
-setupFlavors("terrain", ["labels", "lines"]);
+setupFlavors("terrain", ["background"]);
+setupFlavors("terrain", ["labels", "lines"], "png");
 
 /*
  * A shortcut for specifying "flavors" of a style, which are assumed to have the
  * same type and zoom range.
  */
-function setupFlavors(base, flavors) {
+function setupFlavors(base, flavors, type) {
     var provider = getProvider(base);
     for (var i = 0; i < flavors.length; i++) {
         var flavor = [base, flavors[i]].join("-");
-        PROVIDERS[flavor] = MAKE_PROVIDER(flavor, provider.type, provider.minZoom, provider.maxZoom);
+        PROVIDERS[flavor] = MAKE_PROVIDER(flavor, type || provider.type, provider.minZoom, provider.maxZoom);
     }
 }
 
