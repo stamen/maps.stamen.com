@@ -1,46 +1,59 @@
 (function() {
 
-var SUBDOMAINS = ["", "a.", "b.", "c.", "d."],
-    PROVIDERS =  {
-        "toner": {
-            "url": "http://{S}tile.stamen.com/toner/{Z}/{X}/{Y}.png",
-            "minZoom": 0,
-            "maxZoom": 20
-        },
-        "toner-lines": {
-            "url": "http://{S}tile.stamen.com/toner-lines/{Z}/{X}/{Y}.png",
-            "minZoom": 0,
-            "maxZoom": 20
-        },
-        "toner-labels": {
-            "url": "http://{S}tile.stamen.com/toner-labels/{Z}/{X}/{Y}.png",
-            "minZoom": 0,
-            "maxZoom": 20
-        },
-        "terrain": {
-            "url": "http://{S}tile.stamen.com/terrain/{Z}/{X}/{Y}.jpg",
-            "minZoom": 4,
-            "maxZoom": 18
-        },
-        "watercolor": {
-            "url": "http://{S}tile.stamen.com/watercolor/{Z}/{X}/{Y}.jpg",
-            "minZoom": 3,
-            "maxZoom": 16
-        }
+var SUBDOMAINS = " a. b. c. d.".split(" "),
+    MAKE_PROVIDER = function(layer, type, minZoom, maxZoom) {
+        return {
+            "url":      ["http://{S}tile.stamen.com/", layer, "/{Z}/{X}/{Y}.", type].join(""),
+            "type":     type,
+            "minZoom":  minZoom,
+            "maxZoom":  maxZoom
+        };
     },
-    ATTRIBUTION = 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, ' +
-        'under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. ' +
-        'Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, ' +
-        'under <a href="http://creativecommons.org/licenses/by-sa/3.0">CC BY SA</a>.';
+    PROVIDERS =  {
+        "toner":        MAKE_PROVIDER("toner", "png", 0, 20),
+        "terrain":      MAKE_PROVIDER("terrain", "jpg", 4, 18),
+        "watercolor":   MAKE_PROVIDER("watercolor", "jpg", 3, 16)
+    },
+    ATTRIBUTION = [
+        'Map tiles by <a href="http://stamen.com">Stamen Design</a>, ',
+        'under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. ',
+        'Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, ',
+        'under <a href="http://creativecommons.org/licenses/by-sa/3.0">CC BY SA</a>.'
+    ].join("");
 
+// set up toner and terrain flavors
+setupFlavors("toner", ["hybrid", "labels", "lines", "background", "lite"]);
+setupFlavors("terrain", ["labels", "lines"]);
+
+/*
+ * A shortcut for specifying "flavors" of a style, which are assumed to have the
+ * same type and zoom range.
+ */
+function setupFlavors(base, flavors) {
+    var provider = getProvider(base);
+    for (var i = 0; i < flavors.length; i++) {
+        var flavor = [base, flavors[i]].join("-");
+        PROVIDERS[flavor] = MAKE_PROVIDER(flavor, provider.type, provider.minZoom, provider.maxZoom);
+    }
+}
+
+/*
+ * Get the named provider, or throw an exception if it doesn't exist.
+ */
 function getProvider(name) {
     if (name in PROVIDERS) {
         return PROVIDERS[name];
     } else {
-        throw 'No such provider: "' + name + '"';
+        throw 'No such provider (' + name + ')';
     }
 }
 
+/*
+ * StamenTileLayer for modestmaps-js
+ * <https://github.com/modestmaps/modestmaps-js/>
+ *
+ * Works with both 1.x and 2.x by checking for the existence of MM.Template.
+ */
 if (typeof MM === "object") {
     var ModestTemplate = (typeof MM.Template === "function")
         ? MM.Template
@@ -54,6 +67,12 @@ if (typeof MM === "object") {
     MM.extend(MM.StamenTileLayer, MM.Layer);
 }
 
+/*
+ * StamenTileLayer for Leaflet
+ * <http://leaflet.cloudmade.com/>
+ *
+ * Tested with version 0.3 and 0.4, but should work on all 0.x releases.
+ */
 if (typeof L === "object") {
     L.StamenTileLayer = L.TileLayer.extend({
         initialize: function(name) {
@@ -72,6 +91,12 @@ if (typeof L === "object") {
     });
 }
 
+/*
+ * StamenTileLayer for OpenLayers
+ * <http://openlayers.org/>
+ *
+ * Tested with v2.1x.
+ */
 if (typeof OpenLayers === "object") {
     // make a tile URL template OpenLayers-compatible
     function openlayerize(url) {
@@ -103,6 +128,10 @@ if (typeof OpenLayers === "object") {
     });
 }
 
+/*
+ * StamenMapType for Google Maps API V3
+ * <https://developers.google.com/maps/documentation/javascript/>
+ */
 if (typeof google === "object" && typeof google.maps === "object") {
     google.maps.StamenMapType = function(name) {
         var provider = getProvider(name);
