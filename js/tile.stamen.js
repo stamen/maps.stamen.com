@@ -1,7 +1,7 @@
 (function(exports) {
 
 /*
- * tile.stamen.js v1.1.1
+ * tile.stamen.js v1.1.2
  */
 
 var SUBDOMAINS = " a. b. c. d.".split(" "),
@@ -140,8 +140,11 @@ if (typeof OpenLayers === "object") {
                 "numZoomLevels":        provider.maxZoom,
                 "buffer":               0,
                 "transitionEffect":     "resize",
-                // see: <http://dev.openlayers.org/apidocs/files/OpenLayers/Tile/Image-js.html#OpenLayers.Tile.Image.crossOriginKeyword>
-                "crossOriginKeyword":   "anonymous"
+                // see: <http://dev.openlayers.org/apidocs/files/OpenLayers/Layer/OSM-js.html#OpenLayers.Layer.OSM.tileOptions>
+                // and: <http://dev.openlayers.org/apidocs/files/OpenLayers/Tile/Image-js.html#OpenLayers.Tile.Image.crossOriginKeyword>
+                "tileOptions": {
+                    "crossOriginKeyword": null
+                }
             }, options);
             return OpenLayers.Layer.OSM.prototype.initialize.call(this, name, hosts, options);
         }
