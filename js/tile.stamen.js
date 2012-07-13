@@ -144,7 +144,8 @@ if (typeof OpenLayers === "object") {
                 // and: <http://dev.openlayers.org/apidocs/files/OpenLayers/Tile/Image-js.html#OpenLayers.Tile.Image.crossOriginKeyword>
                 "tileOptions": {
                     "crossOriginKeyword": null
-                }
+                },
+                "attribution": ATTRIBUTION
             }, options);
             return OpenLayers.Layer.OSM.prototype.initialize.call(this, name, hosts, options);
         }
