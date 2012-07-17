@@ -63,6 +63,24 @@
             });
         }
 
+        var imgLink = document.getElementById("make-image");
+        if (imgLink) {
+            var round = function(n) {
+                return Math.ceil(n / 500) * 500;
+            };
+            MM.addEvent(imgLink, "mouseover", function() {
+                var hash = location.hash.substr(1),
+                    width = round(main.dimensions.x),
+                    height = round(main.dimensions.y);
+                this.href = [
+                    "http://maps.stamen.com/m2i/",
+                    "#" + providerName, "/",
+                    width, ":", height, "/",
+                    hash
+                ].join("");
+            });
+        }
+
         var feedbackLink = document.getElementById("toggle-feedback"),
             feedbackToggle;
         if (feedbackLink) {
