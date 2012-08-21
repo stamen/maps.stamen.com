@@ -264,9 +264,10 @@ MM.extend(MM.QueryHash, MM.Hash);
  * Note also that ProviderHash requires a valid providerName in the constructor
  * to correctly set the initial hash value.
  */
-var ProviderHash = function(map, providerName, setProvider) {
+var ProviderHash = function(map, providerName, setProvider, overwriteInvalidHashes) {
     this.providerName = providerName;
     this.setProvider = setProvider;
+    this.overwriteInvalidHashes = overwriteInvalidHashes !== false;
     MM.Hash.call(this, map);
 };
 
@@ -315,6 +316,28 @@ ProviderHash.prototype = {
     formatHash: function(hash) {
         var format = MM.Hash.prototype.formatHash.call(this, hash);
         return "#" + this.providerName + "/" + format.substr(1);
+    },
+
+    overwriteInvalidHashes: true,
+    update: function() {
+        var hash = location.hash;
+        if (hash === this.lastHash) {
+            // console.info("(no change)");
+            return;
+        }
+        var sansHash = hash.substr(1),
+            parsed = this.parseHash(sansHash);
+        if (parsed) {
+            // console.log("parsed:", parsed.zoom, parsed.center.toString());
+            this.movingMap = true;
+            this.map.setCenterZoom(parsed.center, parsed.zoom);
+            this.movingMap = false;
+        } else {
+            // console.warn("parse error; resetting:", this.map.getCenter(), this.map.getZoom());
+            if (this.overwriteInvalidHashes) {
+                this.onMapMove(this.map);
+            }
+        }
     }
 };
 
