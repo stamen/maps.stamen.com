@@ -177,7 +177,9 @@ var MAPS = {};
                 currentProvider = provider;
             }
             return true;
-        });
+        // allow linking to other anchors by telling the hasher not to
+        // overwrite invalid hashes
+        }, false);
 
         // set up form element references
         var searchForm = document.getElementById("search"),
