@@ -152,6 +152,23 @@ a:link, a:visited, a:active {
     text-decoration: none;
 }
 
+#main-title {
+    padding-right: 0 !important;
+}
+
+#main-title .provider-name {
+    padding-right: 12px;
+}
+
+#main-title .icon {
+    background: #ff0;
+    color: #000;
+    display: inline-block;
+    font-weight: normal;
+    width: 35px;
+    text-align: center;
+}
+
 #content {
     margin-top: 2em;
 }

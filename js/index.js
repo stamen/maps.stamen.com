@@ -95,14 +95,17 @@ var MAPS = {};
             // update the link in the clicked sub-map
             var node = map.parent.querySelector(".provider-name");
             node.innerHTML = provider.substr(0, 1).toUpperCase() + provider.substr(1);
-            if ("href" in node) {
-                node.href = (node.className.indexOf("permalink") > -1)
-                    ? provider + "/"
-                    : "#" + provider;
-            }
+            var link = node.href
+                ? node
+                : node.parentNode;
+            link.href = (link.className.indexOf("permalink") > -1)
+                ? provider + "/"
+                : "#" + provider;
         }
 
-        syncMapLinks(main, [document.getElementById("main-permalink")]);
+        syncMapLinks(main, [
+            document.getElementById("main-permalink")
+        ]);
 
         var feedbackLink = document.getElementById("toggle-feedback");
         if (feedbackLink) {
