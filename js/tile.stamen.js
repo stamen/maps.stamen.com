@@ -1,7 +1,7 @@
 (function(exports) {
 
 /*
- * tile.stamen.js v1.1.2
+ * tile.stamen.js v1.1.3
  */
 
 var SUBDOMAINS = " a. b. c. d.".split(" "),
@@ -160,13 +160,17 @@ if (typeof google === "object" && typeof google.maps === "object") {
         var provider = getProvider(name);
         return google.maps.ImageMapType.call(this, {
             "getTileUrl": function(coord, zoom) {
-                var index = (zoom + coord.x + coord.y) % SUBDOMAINS.length;
+                var numTiles = 1 << zoom,
+                    wx = coord.x % numTiles,
+                    x = (wx < 0) ? wx + numTiles : wx,
+                    y = coord.y,
+                    index = (zoom + x + y) % SUBDOMAINS.length;
                 return [
                     provider.url
                         .replace("{S}", SUBDOMAINS[index])
                         .replace("{Z}", zoom)
-                        .replace("{X}", coord.x)
-                        .replace("{Y}", coord.y)
+                        .replace("{X}", x)
+                        .replace("{Y}", y)
                 ];
             },
             "tileSize": new google.maps.Size(256, 256),
