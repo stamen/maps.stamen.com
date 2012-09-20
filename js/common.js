@@ -52,8 +52,9 @@ function syncMapLinks(map, links, modifyHashParts) {
         timeout = setTimeout(function() {
             var hash = formatHash();
             for (var i = 0; i < len; i++) {
-                var link = links[i],
-                    href = link.href || "",
+                var link = links[i];
+                if (!link) continue;
+                var href = link.href || "",
                     uri = link.href.split("#").shift();
                 link.href = [uri, hash].join("#");
             }
