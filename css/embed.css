@@ -17,8 +17,7 @@ a:link, a:visited, a:hover {
     color: inherit;
 }
 
-#controls,
-#attribution {
+#controls {
     position: absolute;
     z-index: 100;
 }
