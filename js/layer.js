@@ -1,4 +1,4 @@
-(function() {
+(function(exports) {
 
     function init() {
 
@@ -38,8 +38,21 @@
 
         setupZoomControls(main);
 
+        var didSetLimits = provider.setCoordLimits(main);
+
         // set the initial map position
         main.setCenterZoom(new MM.Location(37.7706, -122.3782), 12);
+
+        var zoom = parseInt(parent.getAttribute("data-zoom"));
+        if (!isNaN(zoom)) {
+            main.setZoom(zoom);
+        }
+
+        var center = parent.getAttribute("data-center");
+        if (center && center.length) {
+            var bits = center.split(",");
+            main.setCenter(new MM.Location(parseFloat(bits[0]), parseFloat(bits[1])));
+        }
 
         syncMapLinks(main, [document.getElementById("home-link")], function(parts) {
             parts.unshift(providerName);
@@ -119,50 +132,54 @@
         var hasher = new MM.Hash(main);
 
         // set up form element references
-        var searchForm = document.getElementById("search"),
-            searchInput = document.getElementById("search-location"),
-            searchButton = document.getElementById("search-submit");
-        // listen for the submit event
-        MM.addEvent(searchForm, "submit", function(e) {
-            // remember the old search text
-            var oldSearchText = searchButton.getAttribute("value");
-            // put the button into its submitting state
-            searchButton.setAttribute("value", "Finding...");
-            searchButton.setAttribute("class", "btn disabled");
-            // set up a function to rever the form to its original state
-            // (which executes whether there was an error or not)
-            function revert() {
-                searchButton.setAttribute("class", "btn");
-                searchButton.setAttribute("value", oldSearchText);
-            }
-
-            var query = searchInput.value;
-            YahooPlaceSearch.geocode(query, function(places) {
-                revert();
-                // console.log("search results:", results);
-                // TODO: find the most relevant result?
-                try {
-                    var result = places.place[0],
-                        northeast = result.boundingBox.northEast,
-                        southwest = result.boundingBox.southWest;
-                    main.setExtent([
-                        new MM.Location(northeast.latitude, northeast.longitude),
-                        new MM.Location(southwest.latitude, southwest.longitude)
-                    ]);
-                } catch (e) {
-                    alert('Sorry, something went wrong when searching for "' + query + '".');
+        var searchForm = document.getElementById("search");
+        if (searchForm) {
+            var searchInput = document.getElementById("search-location"),
+                searchButton = document.getElementById("search-submit");
+            // listen for the submit event
+            MM.addEvent(searchForm, "submit", function(e) {
+                // remember the old search text
+                var oldSearchText = searchButton.getAttribute("value");
+                // put the button into its submitting state
+                searchButton.setAttribute("value", "Finding...");
+                searchButton.setAttribute("class", "btn disabled");
+                // set up a function to rever the form to its original state
+                // (which executes whether there was an error or not)
+                function revert() {
+                    searchButton.setAttribute("class", "btn");
+                    searchButton.setAttribute("value", oldSearchText);
                 }
-                // main.panBy(-(main.dimensions.x - wrapper.offsetWidth) / 2, 0);
-            }, function(error) {
-                revert();
-                alert('Sorry, we couldn\'t find "' + query + '".');
-            });
 
-            // cancel the submit event
-            return MM.cancelEvent(e);
-        });
+                var query = searchInput.value;
+                YahooPlaceSearch.geocode(query, function(places) {
+                    revert();
+                    // console.log("search results:", results);
+                    // TODO: find the most relevant result?
+                    try {
+                        var result = places.place[0],
+                            northeast = result.boundingBox.northEast,
+                            southwest = result.boundingBox.southWest;
+                        main.setExtent([
+                            new MM.Location(northeast.latitude, northeast.longitude),
+                            new MM.Location(southwest.latitude, southwest.longitude)
+                        ]);
+                    } catch (e) {
+                        alert('Sorry, something went wrong when searching for "' + query + '".');
+                    }
+                    // main.panBy(-(main.dimensions.x - wrapper.offsetWidth) / 2, 0);
+                }, function(error) {
+                    revert();
+                    alert('Sorry, we couldn\'t find "' + query + '".');
+                });
+
+                // cancel the submit event
+                return MM.cancelEvent(e);
+            });
+        }
+
+        exports.MAP = main;
     }
 
     init();
 
-})();
+})(this);
