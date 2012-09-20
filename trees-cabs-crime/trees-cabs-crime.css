@@ -1,0 +1,22 @@
+#toner-background {
+            opacity: .1;
+         -o-opacity: .1;
+        -ms-opacity: .1;
+       -moz-opacity: .1;
+     -khtml-opacity: .1;
+    -webkit-opacity: .1;
+    filter: alpha(opacity=10);
+}
+
+#current-provider { color: #fff !important; }
+.trees { color: #0ff !important; }
+.cabs  { color: #ff0 !important; }
+.crime { color: #f0f !important; }
+
+#controls a,
+.controls a {
+    background: #000;
+    color: #fff;
+}
+
+
