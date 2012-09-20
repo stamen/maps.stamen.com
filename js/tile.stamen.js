@@ -1,7 +1,7 @@
 (function(exports) {
 
 /*
- * tile.stamen.js v1.1.3
+ * tile.stamen.js v1.2.0
  */
 
 var SUBDOMAINS = " a. b. c. d.".split(" "),
@@ -11,13 +11,31 @@ var SUBDOMAINS = " a. b. c. d.".split(" "),
             "type":         type,
             "subdomains":   SUBDOMAINS.slice(),
             "minZoom":      minZoom,
-            "maxZoom":      maxZoom
+            "maxZoom":      maxZoom,
+            "attribution":  ATTRIBUTION
         };
     },
     PROVIDERS =  {
         "toner":        MAKE_PROVIDER("toner", "png", 0, 20),
         "terrain":      MAKE_PROVIDER("terrain", "jpg", 4, 18),
-        "watercolor":   MAKE_PROVIDER("watercolor", "jpg", 3, 16)
+        "watercolor":   MAKE_PROVIDER("watercolor", "jpg", 3, 16),
+        "trees-cabs-crime": {
+            "url": "http://{S}.tiles.mapbox.com/v3/stamen.trees-cabs-crime/{Z}/{X}/{Y}.png",
+            "type": "png",
+            "subdomains": "a b c d".split(" "),
+            "minZoom": 11,
+            "maxZoom": 18,
+            "extent": [
+                {"lat": 37.853, "lon": -122.577},
+                {"lat": 37.684, "lon": -122.313}
+            ],
+            "attribution": [
+                'Design by Shawn Allen at <a href="http://stamen.com">Stamen</a>.',
+                'Data courtesy of <a href="http://fuf.net">FuF</a>,',
+                '<a href="http://www.yellowcabsf.com">Yellow Cab</a>',
+                '&amp; <a href="http://sf-police.org">SFPD</a>.'
+            ].join(" ")
+        }
     },
     ATTRIBUTION = [
         'Map tiles by <a href="http://stamen.com">Stamen Design</a>, ',
@@ -78,10 +96,27 @@ if (typeof MM === "object") {
         : MM.TemplatedMapProvider;
     MM.StamenTileLayer = function(name) {
         var provider = getProvider(name);
-        MM.Layer.call(this, new ModestTemplate(provider.url, SUBDOMAINS));
+        this._provider = provider;
+        MM.Layer.call(this, new ModestTemplate(provider.url, provider.subdomains));
         this.provider.setZoomRange(provider.minZoom, provider.maxZoom);
-        this.attribution = ATTRIBUTION;
+        this.attribution = provider.attribution;
     };
+
+    MM.StamenTileLayer.prototype = {
+        setCoordLimits: function(map) {
+            var provider = this._provider;
+            if (provider.extent) {
+                map.coordLimits = [
+                    map.locationCoordinate(provider.extent[0]).zoomTo(provider.minZoom),
+                    map.locationCoordinate(provider.extent[1]).zoomTo(provider.maxZoom)
+                ];
+                return true;
+            } else {
+                return false;
+            }
+        }
+    };
+
     MM.extend(MM.StamenTileLayer, MM.Layer);
 }
 
@@ -101,9 +136,9 @@ if (typeof L === "object") {
             L.TileLayer.prototype.initialize.call(this, url, {
                 "minZoom":      provider.minZoom,
                 "maxZoom":      provider.maxZoom,
-                "subdomains":   SUBDOMAINS,
+                "subdomains":   provider.subdomains,
                 "scheme":       "xyz",
-                "attribution":  ATTRIBUTION
+                "attribution":  provider.attribution
             });
         }
     });
@@ -128,10 +163,11 @@ if (typeof OpenLayers === "object") {
         initialize: function(name, options) {
             var provider = getProvider(name),
                 url = provider.url,
+                subdomains = provider.subdomains,
                 hosts = [];
             if (url.indexOf("{S}") > -1) {
-                for (var i = 0; i < SUBDOMAINS.length; i++) {
-                    hosts.push(openlayerize(url.replace("{S}", SUBDOMAINS[i])));
+                for (var i = 0; i < subdomains.length; i++) {
+                    hosts.push(openlayerize(url.replace("{S}", subdomains[i])));
                 }
             } else {
                 hosts.push(openlayerize(url));
@@ -157,17 +193,18 @@ if (typeof OpenLayers === "object") {
  */
 if (typeof google === "object" && typeof google.maps === "object") {
     google.maps.StamenMapType = function(name) {
-        var provider = getProvider(name);
+        var provider = getProvider(name),
+            subdomains = provider.subdomains;
         return google.maps.ImageMapType.call(this, {
             "getTileUrl": function(coord, zoom) {
                 var numTiles = 1 << zoom,
                     wx = coord.x % numTiles,
                     x = (wx < 0) ? wx + numTiles : wx,
                     y = coord.y,
-                    index = (zoom + x + y) % SUBDOMAINS.length;
+                    index = (zoom + x + y) % subdomains.length;
                 return [
                     provider.url
-                        .replace("{S}", SUBDOMAINS[index])
+                        .replace("{S}", subdomains[index])
                         .replace("{Z}", zoom)
                         .replace("{X}", x)
                         .replace("{Y}", y)
