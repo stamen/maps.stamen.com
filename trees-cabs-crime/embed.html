@@ -1,24 +1,29 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>maps.stamen.com / watercolor</title>
+        <title>maps.stamen.com / trees-cabs-crime</title>
         <script type="text/javascript" src="../js/vendor/modestmaps.min.js"></script>
         <script type="text/javascript" src="../js/tile.stamen.js?v1.1.3"></script>
         <script type="text/javascript" src="../js/common.js"></script>
         <style type="text/css">
             @import url(../css/embed.css);
+            @import url(trees-cabs-crime.css);
         </style>
     </head>
-    <body id="map" data-provider="watercolor">
+    <body id="map"
+        data-provider="trees-cabs-crime"
+        data-zoom="13"
+        data-center="37.7629,-122.4400">
         <div id="controls" class="controls">
             <a id="zoom-in" title="zoom in">+</a>
             <a id="zoom-out" title="zoom out">&minus;</a>
         </div>
         <p class="attribution">
-            <a id="home-link" target="_top" href="../">Map tiles</a> by <a target="_top" href="http://stamen.com">Stamen Design</a>, under <a target="_top" href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a target="_top" href="http://openstreetmap.org">OpenStreetMap</a>, under <a target="_top" href="http://creativecommons.org/licenses/by-sa/3.0">CC BY SA</a>.
+            <a target="_top" href="./">Map tiles</a> by Shawn Allen at <a href="http://stamen.com">Stamen</a>. Data courtesy of <a href="http://fuf.net">FuF</a>, <a href="http://www.yellowcabsf.com">Yellow Cab</a> &amp; <a href="http://sf-police.org">SFPD</a>.
         </p>
 
-        <script type="text/javascript" src="../js/embed.js?track" defer></script>
+        <script type="text/javascript" src="../js/embed.js?data-attributes" defer></script>
+        <script type="text/javascript" src="trees-cabs-crime.js" defer></script>
     </body>
 </html>
 
