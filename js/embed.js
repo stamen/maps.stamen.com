@@ -1,4 +1,4 @@
-(function() {
+(function(exports) {
 
     function init() {
 
@@ -15,14 +15,32 @@
 
         setupZoomControls(main);
 
-        syncMapLinks(main, [document.getElementById("home-link")], function(parts) {
-            parts.unshift(providerName);
-        });
+        var zoom = parseInt(parent.getAttribute("data-zoom"));
+        if (!isNaN(zoom)) {
+            main.setZoom(zoom);
+        }
+
+        var center = parent.getAttribute("data-center");
+        if (center && center.length) {
+            var bits = center.split(",");
+            main.setCenter(new MM.Location(parseFloat(bits[0]), parseFloat(bits[1])));
+        }
+
+        var homeLink = document.getElementById("home-link");
+        if (homeLink) {
+            syncMapLinks(main, [homeLink], function(parts) {
+                parts.unshift(providerName);
+            });
+        }
 
         var hasher = new MM.Hash(main);
+
+        exports.MAP = main;
     }
 
-    init();
-    track();
+    window.onload = function() {
+        init();
+        track();
+    };
 
-})();
+})(this);
