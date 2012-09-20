@@ -47,10 +47,6 @@ MESSAGE;
 <html>
     <head>
         <title>maps.stamen.com</title>
-        <script type="text/javascript" src="js/vendor/modestmaps.min.js"></script>
-        <script type="text/javascript" src="js/vendor/reqwest.js"></script>
-        <script type="text/javascript" src="js/tile.stamen.js"></script>
-        <script type="text/javascript" src="js/vendor/google-code-prettify/prettify.js"></script>
         <style type="text/css">
             @import url(css/bootstrap/bootstrap.css);
             @import url(css/screen.css);
