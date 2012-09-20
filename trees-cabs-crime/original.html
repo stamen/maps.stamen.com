@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Trees, Cabs &amp; Crime + Toner Labels</title>
+    <style type="text/css">
+      html, body, #map {
+        height: 100%;
+        padding: 0;
+        margin: 0;
+      }
+
+      #fg {
+        opacity: .1;
+        filter: alpha(opacity=10);
+      }
+
+      #legend {
+        position: absolute;
+        z-index: 100;
+        top: 20px;
+        left: 20px;
+      }
+    </style>
+    <script src="http://code.modestmaps.com/v3.3.4/modestmaps.min.js"></script>
+    <script src="http://maps.stamen.com/js/tile.stamen.js"></script>
+    <script src="https://raw.github.com/modestmaps/modestmaps-ui/master/src/util.js"></script>
+    <script src="https://raw.github.com/modestmaps/modestmaps-ui/master/src/hash.js"></script>
+  </head>
+  <body>
+    <div id="map">
+      <img src="images/legend.png" id="legend">
+    </div>
+    <script defer>
+      var bg = new MM.TemplatedLayer("http://{S}.tiles.mapbox.com/v3/stamen.trees-cabs-crime/{Z}/{X}/{Y}.png", "a b c d".split(" ")),
+          fg = new MM.StamenTileLayer("toner-background"),
+          map = new MM.Map("map", [bg, fg]);
+      bg.parent.id = "bg";
+      fg.parent.id = "fg";
+      map.coordLimits = [
+        map.locationCoordinate(new MM.Location(37.833, -122.537)).zoomTo(10),
+        map.locationCoordinate(new MM.Location(37.684, -122.343)).zoomTo(18)
+      ];
+      map.setCenterZoom({lat: 37.7601, lon: -122.4386}, 13);
+      MMui.hash().map(map).add();
+    </script>
+  </body>
+</html>
