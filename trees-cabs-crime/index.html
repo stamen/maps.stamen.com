@@ -1,44 +1,17 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>maps.stamen.com / trees, cabs &amp; crime</title>
-        <meta name="description" content="Stamen's watercolor map style is lovingly crafted and free for the taking.">
+        <title>maps.stamen.com / trees-cabs-crime</title>
+        <meta name="description" content="Stamen's Trees, Cabs &amp; Crime map style is lovingly crafted and free for the taking.">
         <script type="text/javascript" src="../js/vendor/modestmaps.min.js"></script>
         <script type="text/javascript" src="../js/vendor/reqwest.min.js"></script>
         <script type="text/javascript" src="../js/tile.stamen.js?v1.2.0"></script>
-        <script type="text/javascript" src="../js/common.js"></script>
+        <script type="text/javascript" src="../js/common.js?sync-link-fix"></script>
         <style type="text/css">
             @import url(../css/bootstrap/bootstrap.css);
             @import url(../css/screen.css);
             @import url(../css/layer.css);
-
-            #toner-background {
-                        opacity: .1;
-                     -o-opacity: .1;
-                    -ms-opacity: .1;
-                   -moz-opacity: .1;
-                 -khtml-opacity: .1;
-                -webkit-opacity: .1;
-                filter: alpha(opacity=10);
-            }
-
-            #legend {
-                position: absolute;
-                z-index: 100;
-                top: 145px;
-                left: 60px;
-            }
-
-            .controls a {
-                background: #000;
-                color: #fff;
-            }
-
-            #current-provider { color: #fff !important; }
-            .trees { color: #0ff !important; }
-            .cabs  { color: #ff0 !important; }
-            .crime { color: #f0f !important; }
-
+            @import url(trees-cabs-crime.css);
         </style>
     </head>
     <body>
@@ -62,16 +35,14 @@
                 <a id="zoom-in" title="zoom in">+</a>
                 <a id="zoom-out" title="zoom out">&minus;</a>
             </div>
-            <!--
             <div id="embed" class="toggle controls">
                 <a id="embed-toggle" class="toggler" title="embed this map">&lt;embed&gt;</a>
-                <a id="make-image" title="make an image of this map">&lt;image&gt;</a>
+                <!-- <a id="make-image" title="make an image of this map">&lt;image&gt;</a> -->
                 <div id="embed-content" class="toggle-content" style="display: none;">
                     <p>Copy the HTML below to embed this map:</p>
                     <textarea id="embed-code" rows="3">&lt;iframe width="600" height="420" src="{url}"&gt;&lt;/iframe&gt;</textarea>
                 </div>
             </div>
-            -->
             <div id="feedback" class="toggle" style="display: none;">
                 <form target="_blank" method="POST" action="../feedback.php?style=trees-cabs-crime">
                     <input id="feedback-center" name="center" type="hidden">
@@ -88,14 +59,7 @@
         </div>
 
         <script type="text/javascript" src="../js/layer.js?data-attributes" defer></script>
-        <script type="text/javascript">
-            window.onload = function() {
-                var background = new MM.StamenTileLayer("toner-background");
-                background.parent.id = "toner-background";
-                MAP.addLayer(background);
-                MAP.draw();
-            };
-        </script>
+        <script type="text/javascript" src="trees-cabs-crime.js" defer></script>
     </body>
 </html>
 
