@@ -32,9 +32,11 @@
         parent.style.position = "absolute";
         main.autoSize = false;
 
-        var attribution = parent.appendChild(document.createElement("p"));
-        attribution.className = "attribution";
-        attribution.innerHTML = provider.attribution;
+        if (provider.attribution) {
+            var attribution = parent.querySelector(".attribution") || parent.appendChild(document.createElement("p"));
+            attribution.className = "attribution";
+            attribution.innerHTML = provider.attribution;
+        }
 
         setupZoomControls(main);
 
