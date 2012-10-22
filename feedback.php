@@ -1,5 +1,26 @@
 <?php
 
+try {
+    $config = parse_ini_file('config.ini', true, INI_SCANNER_RAW);
+} catch (Exception $err) {
+}
+
+// check reCAPTCHA
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && defined('config')) {
+    require_once('recaptchalib.php');
+    $resp = recaptcha_check_answer(
+        $config['recaptcha']['private_key'],
+        $_SERVER['REMOTE_ADDR'],
+        $_POST["recaptcha_challenge_field"],
+        $_POST["recaptcha_response_field"]
+    );
+
+    if (!$resp->is_valid) {
+        header("Content-type: text/plain");
+        die("The reCAPTCHA wasn't entered correctly. Please try again.");
+    }
+}
+
 $sent = false;
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' || $_GET['test'] == 'send') {
