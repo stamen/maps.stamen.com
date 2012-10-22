@@ -15,7 +15,7 @@
         <script type="text/javascript" src="js/vendor/modestmaps.min.js"></script>
         <script type="text/javascript" src="js/vendor/reqwest.min.js"></script>
         <script type="text/javascript" src="js/tile.stamen.js?v1.2.0"></script>
-        <script type="text/javascript" src="js/common.js?hashes"></script>
+        <script type="text/javascript" src="js/common.js?feedback"></script>
         <script type="text/javascript" src="js/vendor/google-code-prettify/prettify.js"></script>
         <style type="text/css">
             @import url(css/bootstrap/bootstrap.css);
@@ -274,7 +274,6 @@
 var layer = new MM.StamenTileLayer("toner");
 var map = new MM.Map("element_id", layer);
 map.setCenterZoom(new MM.Location(37.7, -122.4), 12);</pre>
-                                <!-- <script src="https://gist.github.com/1982587.js?file=modestmaps.js"></script> -->
                             </div>
                         </div>
                     </div>
@@ -292,7 +291,6 @@ var map = new L.Map("element_id", {
     zoom: 12
 });
 map.addLayer(layer);</pre>
-                                <!-- <script src="https://gist.github.com/1982587.js?file=leaflet.js"></script> -->
                             </div>
                         </div>
                     </div>
@@ -307,7 +305,6 @@ map.addLayer(layer);</pre>
 var layer = new OpenLayers.Layer.Stamen("toner");
 var map = new OpenLayers.Map("element_id");
 map.addLayer(layer);</pre>
-                                <!-- <script src="https://gist.github.com/1982587.js?file=openlayers.js"></script> -->
                             </div>
                         </div>
                     </div>
@@ -329,7 +326,6 @@ var map = new google.maps.Map(document.getElementById("element_id"), {
     }
 });
 map.mapTypes.set(layer, new google.maps.StamenMapType(layer));</pre>
-                                <!-- <script src="https://gist.github.com/1982587.js?file=google.js"></script> -->
                             </div>
                         </div>
                     </div>
@@ -366,7 +362,7 @@ map.mapTypes.set(layer, new google.maps.StamenMapType(layer));</pre>
 
         </div>
 
-        <script type="text/javascript" src="js/index.js?fullscreen" defer></script>
+        <script type="text/javascript" src="js/index.js?feedback" defer></script>
         <!-- google code prettify -->
         <script type="text/javascript" defer>prettyPrint();</script>
     </body>
