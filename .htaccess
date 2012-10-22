@@ -1,1 +1,4 @@
 Options +MultiViews
+<Files config.ini>
+    Deny from all
+</Files>
