@@ -343,7 +343,7 @@ a#toggle-feedback.active {
     position: absolute;
     left: 0;
     top: 0;
-    width: 280px;
+    width: 316px;
     color: #fff;
     background: black;
     padding: 10px;
@@ -360,5 +360,13 @@ a#toggle-feedback.active {
 
 #feedback form textarea {
     margin: 10px 0;
+}
+
+#feedback #recaptcha_widget_div {
+    margin-bottom: 10px;
+}
+
+#feedback .btn {
+    margin-bottom: 0 !important;
 }
 
