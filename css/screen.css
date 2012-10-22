@@ -362,7 +362,7 @@ a#toggle-feedback.active {
     margin: 10px 0;
 }
 
-#feedback #recaptcha_widget_div {
+#feedback #recaptcha {
     margin-bottom: 10px;
 }
 
