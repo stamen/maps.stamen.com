@@ -6,7 +6,7 @@ try {
 }
 
 // check reCAPTCHA
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && defined('config')) {
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($config)) {
     require_once('recaptchalib.php');
     $resp = recaptcha_check_answer(
         $config['recaptcha']['private_key'],
@@ -14,6 +14,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && defined('config')) {
         $_POST["recaptcha_challenge_field"],
         $_POST["recaptcha_response_field"]
     );
+
+    // echo "<pre>", print_r($resp, true), "</pre>";
+    // die();
 
     if (!$resp->is_valid) {
         header("Content-type: text/plain");
