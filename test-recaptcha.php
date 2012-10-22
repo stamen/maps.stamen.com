@@ -57,13 +57,7 @@
                     <textarea name="description"></textarea>
                     <p><small>A link to the current view will be included automatically.</small></p>
                     <p><label>Your email (optional): <input type="text" name="sender"></label></p>
-                    <?php
-                        require_once('recaptchalib.php');
-                        $config = parse_ini_file('config.ini', true, INI_SCANNER_RAW);
-                        // echo '<pre>'; print_r($config); echo '</pre>'; 
-                        $public_key = $config['recaptcha']['public_key'];
-                        echo recaptcha_get_html($public_key);
-                    ?>
+                    <div id="recaptcha"></div>
                     <p><input id="send-feedback" class="btn btn-success" type="submit" value="submit"></p>
                 </form>
             </div>

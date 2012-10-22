@@ -6,7 +6,7 @@
         <script type="text/javascript" src="../js/vendor/modestmaps.min.js"></script>
         <script type="text/javascript" src="../js/vendor/reqwest.min.js"></script>
         <script type="text/javascript" src="../js/tile.stamen.js?v1.2.0"></script>
-        <script type="text/javascript" src="../js/common.js?feedback"></script>
+        <script type="text/javascript" src="../js/common.js?recaptcha"></script>
         <style type="text/css">
             @import url(../css/bootstrap/bootstrap.css);
             @import url(../css/screen.css);
@@ -57,6 +57,7 @@
                     <textarea name="description"></textarea>
                     <p><small>A link to the current view will be included automatically.</small></p>
                     <p><label>Your email (optional): <input type="text" name="sender"></label></p>
+                    <div id="recaptcha"></div>
                     <p><input id="send-feedback" class="btn btn-success" type="submit" value="submit"></p>
                 </form>
             </div>
