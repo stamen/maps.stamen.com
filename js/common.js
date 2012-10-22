@@ -108,8 +108,15 @@ function setupFeedbackForm() {
         var feedback = document.getElementById("feedback"),
             styleInput = document.getElementById("feedback-style"),
             centerInput = document.getElementById("feedback-center");
+
+        var recaptchaScript = document.createElement("script");
+        recaptchaScript.src = "http://www.google.com/recaptcha/api/js/recaptcha_ajax.js";
+        feedback.appendChild(recaptchaScript);
+
         var toggle = createToggle(feedbackLink, feedback, function(showing) {
             if (showing) {
+                Recaptcha.create("6LeG99cSAAAAABiijTMo4wvz2nrO3PNWb88CQl6v", "recaptcha");
+
                 // update the center
                 var hash = location.hash.substr(1),
                     parts = hash.split("/");
