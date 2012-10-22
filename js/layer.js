@@ -96,40 +96,9 @@
             });
         }
 
-        var feedbackLink = document.getElementById("toggle-feedback"),
-            feedbackToggle;
-        if (feedbackLink) {
-            var feedback = document.getElementById("feedback"),
-                centerInput = document.getElementById("feedback-center");
-            feedbackToggle = createToggle(feedbackLink, feedback, function(showing) {
-                if (showing) {
-                    // update the center
-                    centerInput.value = location.hash.substr(1);
-
-                    var offset = getOffset(feedbackLink);
-                    // console.log("offset:", [offset.left, offset.top]);
-                    feedback.style.left = (offset.left - 9) + "px";
-                } else {
-                }
-            });
-        }
-
-        if (feedbackToggle || embedToggle) {
-            function hideToggles() {
-                if (feedbackToggle) feedbackToggle.hide();
-                if (embedToggle) embedToggle.hide();
-            }
-            // hide toggles on map mouse down
-            MM.addEvent(parent, "mousedown", hideToggles);
-            // hide toggles when the map is zoomed
-            // (mousedowns occur on #overlay, not the map)
-            main.addCallback("zoomed", hideToggles);
-            MM.addEvent(window, "keyup", function(e) {
-                if (e.keyCode === 27) {
-                    hideToggles();
-                }
-            });
-        }
+        var feedback = setupFeedbackForm();
+        MM.addEvent(main.parent, "mousedown", feedback.hide);
+        main.addCallback("zoomed", feedback.hide);
 
         var hasher = new MM.Hash(main);
 

@@ -107,39 +107,9 @@ var MAPS = {};
             document.getElementById("main-permalink")
         ]);
 
-        var feedbackLink = document.getElementById("toggle-feedback");
-        if (feedbackLink) {
-            var feedback = document.getElementById("feedback"),
-                styleInput = document.getElementById("feedback-style"),
-                centerInput = document.getElementById("feedback-center");
-            var feedbackToggle = createToggle(feedbackLink, feedback, function(showing) {
-                if (showing) {
-                    // update the center
-                    var hash = location.hash.substr(1),
-                        parts = hash.split("/"),
-                        provider = parts.shift();
-                    // update the style bit in the form action
-                    styleInput.value = provider;
-                    // updat the center input
-                    centerInput.value = parts.join("/");
-
-                    var offset = getOffset(feedbackLink);
-                    // console.log("offset:", [offset.left, offset.top]);
-                    feedback.style.left = (offset.left - 9) + "px";
-                } else {
-                }
-            });
-            function hideToggles() {
-                feedbackToggle.hide();
-            }
-            MM.addEvent(main.parent, "mousedown", hideToggles);
-            main.addCallback("zoomed", hideToggles);
-            MM.addEvent(window, "keyup", function(e) {
-                if (e.keyCode === 27) {
-                    hideToggles();
-                }
-            });
-        }
+        var feedback = setupFeedbackForm();
+        MM.addEvent(main.parent, "mousedown", feedback.hide);
+        main.addCallback("zoomed", feedback.hide);
 
         updateTitle(main, currentProvider);
 

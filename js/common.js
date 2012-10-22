@@ -102,6 +102,48 @@ function createToggle(link, target, callback) {
     return toggler;
 }
 
+function setupFeedbackForm() {
+    var feedbackLink = document.getElementById("toggle-feedback");
+    if (feedbackLink) {
+        var feedback = document.getElementById("feedback"),
+            styleInput = document.getElementById("feedback-style"),
+            centerInput = document.getElementById("feedback-center");
+        var toggle = createToggle(feedbackLink, feedback, function(showing) {
+            if (showing) {
+                // update the center
+                var hash = location.hash.substr(1),
+                    parts = hash.split("/");
+                if (parts.length === 4) {
+                    var provider = parts.shift();
+                    // update the style bit in the form action
+                    if (styleInput) {
+                        styleInput.value = provider;
+                    }
+                }
+                // updat the center input
+                centerInput.value = parts.join("/");
+
+                var offset = getOffset(feedbackLink);
+                // console.log("offset:", [offset.left, offset.top]);
+                feedback.style.left = (offset.left - 9) + "px";
+            } else {
+            }
+        });
+
+        MM.addEvent(window, "keyup", function(e) {
+            if (e.keyCode === 27) {
+                toggle.hide();
+            }
+        });
+        return toggle;
+    } else {
+        var form = {};
+        form.show = function() {};
+        form.hide = function() {};
+        return form;
+    }
+}
+
 // add browser-specific classes to the given element
 var addBrowserClasses = (function() {
     var ua = navigator.userAgent,
