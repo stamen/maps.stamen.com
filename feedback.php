@@ -5,6 +5,8 @@ try {
 } catch (Exception $err) {
 }
 
+$valid = true;
+
 // check reCAPTCHA
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($config)) {
     require_once('recaptchalib.php');
@@ -19,14 +21,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($config)) {
     // die();
 
     if (!$resp->is_valid) {
-        header("Content-type: text/plain");
-        die("The reCAPTCHA wasn't entered correctly. Please try again.");
+        $valid = false;
+        $message = "The reCAPTCHA wasn't entered correctly. Please try again.";
     }
 }
 
 $sent = false;
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST' || $_GET['test'] == 'send') {
+if ($valid && $_SERVER['REQUEST_METHOD'] == 'POST' || $_GET['test'] == 'send') {
     $style = array_key_exists('style', $_POST)
         ? $_POST['style']
         : $_GET['style'];
@@ -62,7 +64,7 @@ MESSAGE;
     } catch (Exception $error) {
         $message = $error;
     }
-} else {
+} elseif (empty($message)) {
     $message = "Please use the feedback forms on each map page to submit bug reports.";
 }
 
