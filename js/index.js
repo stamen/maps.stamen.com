@@ -165,7 +165,7 @@ var MAPS = {};
             // put the button into its submitting state
             searchButton.setAttribute("value", "Finding...");
             searchButton.setAttribute("class", "btn disabled");
-            // set up a function to rever the form to its original state
+            // set up a function to revert the form to its original state
             // (which executes whether there was an error or not)
             function revert() {
                 searchButton.setAttribute("class", "btn");
@@ -173,18 +173,23 @@ var MAPS = {};
             }
 
             var query = searchInput.value;
-            YahooPlaceSearch.geocode(query, function(places) {
+            MapQuestSearch.geocode(query, function(places) {   
                 revert();
                 // console.log("search results:", results);
-                // TODO: find the most relevant result?
+                // TODO: find the most relevant result? 
+                       
+                // Using Mapquest's MapUrl property to extract the best zoom for this response (sc)   
+                // TODO: possibly adjust the zoom or go a different route if this method isn't reliable
                 try {
-                    var result = places.place[0],
-                        northeast = result.boundingBox.northEast,
-                        southwest = result.boundingBox.southWest;
-                    main.setExtent([
-                        new MM.Location(northeast.latitude, northeast.longitude),
-                        new MM.Location(southwest.latitude, southwest.longitude)
-                    ]);
+                    var result = places[0].locations[0],  
+                        lat = result.latLng.lat,
+                        lng = result.latLng.lng,
+                        mapUrl = result.mapUrl,
+                        q = new QueryString(),
+                        mapUrlObj = q.parse(mapUrl);     
+                        
+                        main.setZoom(parseInt(mapUrlObj.zoom, 10)).setCenter({ lat: lat, lon: lng });
+
                 } catch (e) {
                     alert('Sorry, something went wrong when searching for "' + query + '".');
                 }

@@ -202,6 +202,33 @@ var YahooPlaceSearch = {
             error: error
         });
     }
+};  
+
+var MapQuestSearch = {
+    key: "Fmjtd%7Cluub2q61n5%2Crx%3Do5-9610g6",
+    url: "http://www.mapquestapi.com/geocoding/v1/address?location={q}&maxResults=1&key={k}",
+    geocode: function(query, success, error) {    
+        // adding key this way, to avoid in encoding problems (sc)
+        var sendUrl = MapQuestSearch.url.replace("{q}", encodeURIComponent(query)).replace("{k}",MapQuestSearch.key);
+        //furl = furl.replace("{k}",MapQuestSearch.key);
+        var data = {};
+        data.outFormat = "json"; 
+        return reqwest({
+            url: sendUrl,
+            type: "jsonp",
+            jsonpCallback: "callback",
+            data: data,
+            success: function(response) {
+                var results = response.results;
+                if (results) {
+                    success.call(null, results);
+                } else {
+                    error.call(null, "No results", response);
+                }
+            },
+            error: error
+        });
+    }
 };
 
 var QueryString = function(params) {
