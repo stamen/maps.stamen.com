@@ -173,30 +173,20 @@ var MAPS = {};
             }
 
             var query = searchInput.value;
-            MapQuestSearch.geocode(query, function(places) {   
+            StamenSearch.geocode({
+                q: query,
+                w: main.dimensions.x,
+                h: main.dimensions.y - document.getElementById("header").offsetHeight
+            }, function(err, results) {
                 revert();
-                // console.log("search results:", results);
-                // TODO: find the most relevant result? 
-                       
-                // Using Mapquest's MapUrl property to extract the best zoom for this response (sc)   
-                // TODO: possibly adjust the zoom or go a different route if this method isn't reliable
-                try {
-                    var result = places[0].locations[0],  
-                        lat = result.latLng.lat,
-                        lng = result.latLng.lng,
-                        mapUrl = result.mapUrl,
-                        q = new QueryString(),
-                        mapUrlObj = q.parse(mapUrl);     
-                        
-                        main.setZoom(parseInt(mapUrlObj.zoom, 10)).setCenter({ lat: lat, lon: lng });
 
-                } catch (e) {
-                    alert('Sorry, something went wrong when searching for "' + query + '".');
+                if (err || results.length === 0) {
+                    alert("Sorry, we couldn't find '" + query + "'.");
+                    return;
                 }
-                // main.panBy(-(main.dimensions.x - wrapper.offsetWidth) / 2, 0);
-            }, function(error) {
-                revert();
-                alert('Sorry, we couldn\'t find "' + query + '".');
+
+                main.setZoom(results[0].zoom)
+                    .setCenter({ lat: results[0].latitude, lon: results[0].longitude });
             });
 
             // cancel the submit event

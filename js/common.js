@@ -231,6 +231,25 @@ var MapQuestSearch = {
     }
 };
 
+var StamenSearch = {
+    url: "http://q.maps.stamen.com/?q={q}&w={w}&h={h}",
+    // url: "http://localhost:8080/?q={q}&w={w}&h={h}",
+    geocode: function(query, callback) {
+        var url = this.url.replace("{q}", encodeURIComponent(query.q))
+                          .replace("{w}", query.w)
+                          .replace("{h}", query.h);
+
+        return reqwest({
+            url: url,
+            type: "jsonp",
+            success: function(response) {
+                return callback(null, response);
+            },
+            error: callback
+        });
+    }
+};
+
 var QueryString = function(params) {
     if (params) {
         if (typeof params === "string") {

@@ -122,25 +122,20 @@
                 }
 
                 var query = searchInput.value;
-                YahooPlaceSearch.geocode(query, function(places) {
+                StamenSearch.geocode({
+                    q: query,
+                    w: main.dimensions.x,
+                    h: main.dimensions.y - document.getElementById("header").offsetHeight
+                }, function(err, results) {
                     revert();
-                    // console.log("search results:", results);
-                    // TODO: find the most relevant result?
-                    try {
-                        var result = places.place[0],
-                            northeast = result.boundingBox.northEast,
-                            southwest = result.boundingBox.southWest;
-                        main.setExtent([
-                            new MM.Location(northeast.latitude, northeast.longitude),
-                            new MM.Location(southwest.latitude, southwest.longitude)
-                        ]);
-                    } catch (e) {
-                        alert('Sorry, something went wrong when searching for "' + query + '".');
+
+                    if (err || results.length === 0) {
+                        alert("Sorry, we couldn't find '" + query + "'.");
+                        return;
                     }
-                    // main.panBy(-(main.dimensions.x - wrapper.offsetWidth) / 2, 0);
-                }, function(error) {
-                    revert();
-                    alert('Sorry, we couldn\'t find "' + query + '".');
+
+                    main.setZoom(results[0].zoom)
+                        .setCenter({ lat: results[0].latitude, lon: results[0].longitude });
                 });
 
                 // cancel the submit event
