@@ -1,0 +1,60 @@
+html, body {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+body {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 12px;
+    line-height: 15px;
+}
+
+a:link, a:visited, a:hover {
+    color: inherit;
+}
+
+#controls {
+    position: absolute;
+    z-index: 100;
+}
+
+#controls {
+    left: 10px;
+    top: 10px;
+            user-select: none;
+    -webkit-user-select: none;
+       -moz-user-select: none;
+        -ms-user-select: none;
+         -o-user-select: none;
+}
+
+#controls a {
+    font-size: 24px;
+    font-weight: bold;
+    display: block;
+    float: left;
+    text-align: center;
+    line-height: 30px;
+    width: 34px;
+    height: 34px;
+    cursor: pointer;
+    color: black;
+    background: yellow;
+    text-decoration: none;
+    margin-right: 8px;
+}
+
+.attribution {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    color: white;
+    background: black;
+    padding: 3px 5px 2px;
+    margin: 0;
+    z-index: 100;
+}

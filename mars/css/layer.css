@@ -1,0 +1,99 @@
+body {
+    position: relative;
+    overflow: hidden;
+}
+
+#map-main {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+}
+
+#stamen {
+    right: 0;
+}
+
+/* make them unselectable */
+#search, #controls {
+            user-select: none;
+    -webkit-user-select: none;
+       -moz-user-select: none;
+        -ms-user-select: none;
+         -o-user-select: none;
+}
+
+#header {
+    position: relative;
+    overflow: hidden;
+    z-index: 102;
+}
+
+#map-main {
+    z-index: 100;
+    background-color: transparent;
+    /* background-image: url(img/checker-light.png); */
+}
+
+#overlay {
+    position: relative;
+    z-index: 101;
+    top: 20px;
+    padding: 0 20px;
+    height: 0; /* make the rest of it unclickable */
+}
+
+#search {
+    /* so it doesn't capture mouse events */
+    width: 300px !important;
+}
+
+#controls {
+    position: relative;
+    /* so it doesn't capture mouse events */
+    height: 1px;
+}
+
+#embed {
+    position: absolute;
+    text-align: right;
+    top: 0;
+    right: 20px;
+}
+
+#embed-content {
+    clear: both;
+    width: 320px;
+    color: #fff !important;
+    background: #000;
+    padding: 10px;
+}
+
+#feedback {
+    top: -20px;
+}
+
+/* iPhone and smaller */
+@media only screen and (max-width : 600px) {
+    #header {
+        padding-top: 10px;
+    }
+
+    #stamen {
+        line-height: 80%;
+        position: relative;
+        margin: 0;
+        padding: 0;
+        left: auto;
+        right: auto;
+        bottom: auto;
+    }
+
+    #overlay {
+        top: 19px;
+    }
+
+    #search {
+        margin-bottom: 0;
+    }
+}
