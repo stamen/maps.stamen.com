@@ -173,6 +173,7 @@ var MAPS = {};
             }
 
             var query = searchInput.value;
+
             StamenSearch.geocode({
                 q: query,
                 w: main.dimensions.x,
