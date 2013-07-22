@@ -1,7 +1,7 @@
 (function(exports) {
 
 /*
- * tile.stamen.js v1.2.2
+ * tile.stamen.js v1.2.3
  */
 
 var SUBDOMAINS = " a. b. c. d.".split(" "),
@@ -12,7 +12,12 @@ var SUBDOMAINS = " a. b. c. d.".split(" "),
             "subdomains":   SUBDOMAINS.slice(),
             "minZoom":      minZoom,
             "maxZoom":      maxZoom,
-            "attribution":  ATTRIBUTION
+            "attribution":  [
+                'Map tiles by <a href="http://stamen.com">Stamen Design</a>, ',
+                'under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. ',
+                'Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, ',
+                'under <a href="http://creativecommons.org/licenses/by-sa/3.0">CC BY SA</a>.'
+            ].join("")
         };
     },
     PROVIDERS =  {
@@ -36,13 +41,7 @@ var SUBDOMAINS = " a. b. c. d.".split(" "),
                 '&amp; <a href="http://sf-police.org">SFPD</a>.'
             ].join(" ")
         }
-    },
-    ATTRIBUTION = [
-        'Map tiles by <a href="http://stamen.com">Stamen Design</a>, ',
-        'under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. ',
-        'Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, ',
-        'under <a href="http://creativecommons.org/licenses/by-sa/3.0">CC BY SA</a>.'
-    ].join("");
+    };
 
 // set up toner and terrain flavors
 setupFlavors("toner", ["hybrid", "labels", "lines", "background", "lite"]);
