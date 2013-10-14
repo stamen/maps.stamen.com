@@ -16,7 +16,9 @@
                         center: new L.LatLng(37.8, -122.4),
                         zoom: 10
                     });
-                    map.addLayer(new L.StamenTileLayer(layer));
+                    map.addLayer(new L.StamenTileLayer(layer, {
+                        detectRetina: true
+                    }));
                 }
             }
         </script>

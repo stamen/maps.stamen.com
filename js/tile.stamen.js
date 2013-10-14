@@ -127,18 +127,19 @@ if (typeof MM === "object") {
  */
 if (typeof L === "object") {
     L.StamenTileLayer = L.TileLayer.extend({
-        initialize: function(name) {
+        initialize: function(name, options) {
             var provider = getProvider(name),
                 url = provider.url.replace(/({[A-Z]})/g, function(s) {
                     return s.toLowerCase();
+                }),
+                opts = L.extend({}, options, {
+                    "minZoom":      provider.minZoom,
+                    "maxZoom":      provider.maxZoom,
+                    "subdomains":   provider.subdomains,
+                    "scheme":       "xyz",
+                    "attribution":  provider.attribution
                 });
-            L.TileLayer.prototype.initialize.call(this, url, {
-                "minZoom":      provider.minZoom,
-                "maxZoom":      provider.maxZoom,
-                "subdomains":   provider.subdomains,
-                "scheme":       "xyz",
-                "attribution":  provider.attribution
-            });
+            L.TileLayer.prototype.initialize.call(this, url, opts);
         }
     });
 }
