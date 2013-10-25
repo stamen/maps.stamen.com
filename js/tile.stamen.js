@@ -141,6 +141,13 @@ if (typeof L === "object") {
             });
         }
     });
+
+    /*
+     * Factory function for consistency with Leaflet conventions 
+     */
+    L.stamenTileLayer = function (options, source) {
+        return new L.StamenTileLayer(options, source);
+    };
 }
 
 /*
