@@ -142,6 +142,13 @@ if (typeof L === "object") {
             L.TileLayer.prototype.initialize.call(this, url, opts);
         }
     });
+
+    /*
+     * Factory function for consistency with Leaflet conventions 
+     */
+    L.stamenTileLayer = function (options, source) {
+        return new L.StamenTileLayer(options, source);
+    };
 }
 
 /*
