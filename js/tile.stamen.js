@@ -1,7 +1,7 @@
 (function(exports) {
 
 /*
- * tile.stamen.js v1.2.4
+ * tile.stamen.js v1.3.0
  */
 
 var SUBDOMAINS = "a. b. c. d.".split(" "),
