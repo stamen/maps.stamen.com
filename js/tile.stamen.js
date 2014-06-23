@@ -132,7 +132,7 @@ if (typeof L === "object") {
                 url = provider.url.replace(/({[A-Z]})/g, function(s) {
                     return s.toLowerCase();
                 }),
-                opts = L.extend({}, options, {
+                opts = L.Util.extend({}, options, {
                     "minZoom":      provider.minZoom,
                     "maxZoom":      provider.maxZoom,
                     "subdomains":   provider.subdomains,
