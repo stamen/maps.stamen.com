@@ -45,12 +45,14 @@ var SUBDOMAINS = "a. b. c. d.".split(" "),
 
 // set up toner and terrain flavors
 setupFlavors("toner", ["hybrid", "labels", "lines", "background", "lite"]);
-// toner 2010
-setupFlavors("toner", ["2010"]);
-// toner 2011 flavors
-setupFlavors("toner", ["2011", "2011-lines", "2011-labels", "2011-lite"]);
 setupFlavors("terrain", ["background"]);
 setupFlavors("terrain", ["labels", "lines"], "png");
+
+// toner 2010
+deprecate("toner", ["2010"]);
+
+// toner 2011 flavors
+deprecate("toner", ["2011", "2011-lines", "2011-labels", "2011-lite"]);
 
 /*
  * Export stamen.tile to the provided namespace.
@@ -59,6 +61,16 @@ exports.stamen = exports.stamen || {};
 exports.stamen.tile = exports.stamen.tile || {};
 exports.stamen.tile.providers = PROVIDERS;
 exports.stamen.tile.getProvider = getProvider;
+
+function deprecate(base, flavors) {
+    var provider = getProvider(base);
+
+    for (var i = 0; i < flavors.length; i++) {
+        var flavor = [base, flavors[i]].join("-");
+        PROVIDERS[flavor] = MAKE_PROVIDER(flavor, provider.type, provider.minZoom, provider.maxZoom);
+        PROVIDERS[flavor].deprecated = true;
+    }
+};
 
 /*
  * A shortcut for specifying "flavors" of a style, which are assumed to have the
@@ -77,7 +89,13 @@ function setupFlavors(base, flavors, type) {
  */
 function getProvider(name) {
     if (name in PROVIDERS) {
-        return PROVIDERS[name];
+        var provider = PROVIDERS[name];
+
+        if (provider.deprecated && console && console.warn) {
+            console.warn(name + " is a deprecated style; it will be redirected to its replacement. For performance improvements, please change your reference.");
+        }
+
+        return provider;
     } else {
         throw 'No such provider (' + name + ')';
     }
