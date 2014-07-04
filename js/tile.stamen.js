@@ -206,7 +206,7 @@ if (typeof OpenLayers === "object") {
                 "tileOptions": {
                     "crossOriginKeyword": null
                 },
-                "attribution": ATTRIBUTION
+                "attribution": provider.attribution
             }, options);
             return OpenLayers.Layer.OSM.prototype.initialize.call(this, name, hosts, options);
         }
