@@ -208,20 +208,25 @@ a:link, a:visited, a:active {
     padding-top: 2px;
 }
 
+#toner-attr,
 #attr {
     display: inline-block;
     background-color: #ffc;
     padding: 2px 8px 3px 8px;
 }
 
+#toner-attr-html,
 #attr-html {
     display: none;
 }
 
+#toner-attr-show-html,
 #attr-show-html {
     color: black !important;
     text-decoration: none;
 }
+
+#toner-attr-show-html span,
 #attr-show-html span {
     padding: 0 4px;
     text-decoration: underline;
