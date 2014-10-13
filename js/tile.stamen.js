@@ -54,22 +54,26 @@ deprecate("toner", ["2010"]);
 // toner 2011 flavors
 deprecate("toner", ["2011", "2011-lines", "2011-labels", "2011-lite"]);
 
-[
+var odbl = [
     "toner",
     "toner-hybrid",
     "toner-labels",
     "toner-lines",
     "toner-background",
     "toner-lite"
-].forEach(function(x) {
-    PROVIDERS[x].retina = true;
-    PROVIDERS[x].attribution = [
+];
+
+for (var i = 0; i < odbl.length; i++) {
+    var key = odbl[i];
+
+    PROVIDERS[key].retina = true;
+    PROVIDERS[key].attribution = [
         'Map tiles by <a href="http://stamen.com/">Stamen Design</a>, ',
         'under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. ',
         'Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, ',
         'under <a href="http://www.openstreetmap.org/copyright">ODbL</a>.'
     ].join("");
-});
+}
 
 /*
  * Export stamen.tile to the provided namespace.
