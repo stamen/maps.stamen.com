@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>maps.stamen.com</title>
+    <link rel="stylesheet" href="//cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
+    <link rel="stylesheet" href="css/Control.MiniMap.css" />
+    <style type="text/css">
+      html, body { width: 100%; height: 100%; margin: 0; }
+      #map {
+        width: 100%;
+        height: 100%;
+      }
+
+      .leaflet-top > .leaflet-control-minimap {
+        top: 100px;
+      }
+
+      .leaflet-bottom > .leaflet-control-minimap {
+        bottom: 100px;
+      }
+
+      .leaflet-right > .leaflet-control-minimap {
+        right: 100px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="map"></div>
+
+    <script src="//cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+    <script src="js/vendor/L.Map.Sync.js"></script>
+    <script src="js/vendor/Control.MiniMap.js"></script>
+
+    <script type="text/javascript">
+      var center = [37.7706, -122.3782];
+
+      var stamenOptions = {
+        attribution:
+          'Map tiles by <a href="http://stamen.com">Stamen Design</a>, ' +
+          '<a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; ' +
+          'Map data OpenStreetmap',
+        subdomains: 'abcd',
+        minZoom: 0,
+        maxZoom: 20,
+      };
+
+      var tonerLite = L.tileLayer('http://{s}.tile.stamen.com/toner-lite/{z}/{x}/{y}@2x.png', stamenOptions);
+
+      var map = L.map('map', {
+        layers: [tonerLite],
+        center: center,
+        zoom: 9,
+        scrollWheelZoom: false
+      });
+
+      // TODO introducing a 2nd mini map breaks both of them
+      // var miniMap = new L.Control.MiniMap(L.tileLayer('http://{s}.tile.stamen.com/terrain/{z}/{x}/{y}.jpg'), {
+      //   zoomLevelOffset: 0,
+      //   width: 250,
+      //   height: 250,
+      //   position: 'topright',
+      //   aimingRectOptions: {
+      //     stroke: false,
+      //     fill: false
+      //   }
+      // }).addTo(map);
+
+      // var miniMap = new L.Control.MiniMap(L.tileLayer('http://{s}.tile.stamen.com/watercolor/{z}/{x}/{y}.jpg'), {
+      // var miniMap = new L.Control.MiniMap(L.tileLayer('http://{s}.tile.stamen.com/terrain/{z}/{x}/{y}.jpg'), {
+      var miniMap = new L.Control.MiniMap(L.tileLayer('http://{s}.tile.stamen.com/toner/{z}/{x}/{y}@2x.png'), {
+        zoomLevelOffset: 0,
+        width: 350,
+        height: 350,
+        position: 'bottomright',
+        aimingRectOptions: {
+          stroke: false,
+          fill: false
+        },
+        shadowRectOptions: {
+          stroke: false,
+          fill: false
+        }
+      }).addTo(map);
+    </script>
+  </body>
+</html>
