@@ -250,7 +250,14 @@ var MAPS = {};
                 provider = getProvider(el.getAttribute("data-provider")),
                 center = parseCenter(el.getAttribute("data-center")),
                 zoom = parseInt(el.getAttribute("data-zoom")),
-                map = new L.map(el, {scrollWheelZoom: false});
+                map = L.map(el, {scrollWheelZoom: false,
+                                        keyboard: false,
+                                        zoomControl: false,
+                                        dragging: false,
+                                        touchZoom: false,
+                                        doubleClickZoom: false,
+                                        boxZoom: false,
+                                        attributionControl: false});
 
             map.addLayer(provider);
             map.setView(center, zoom);
