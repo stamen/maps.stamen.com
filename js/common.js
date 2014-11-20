@@ -397,8 +397,8 @@ var HAS_HASHCHANGE = (function() {
     })();
 
 L.Hash = function(map) {
-    this.onMapMove = L.bind(this.onMapMove, this);
-    this.onHashChange = L.bind(this.onHashChange, this);
+    this.onMapMove = L.Util.bind(this.onMapMove, this);
+    this.onHashChange = L.Util.bind(this.onHashChange, this);
     if (map) {
         this.init(map);
     }
@@ -442,7 +442,7 @@ L.Hash.prototype = {
         this.map = map;
         //this.map.addCallback("drawn", this.onMapMove);
         var self = this;
-        this.map.on('viewreset', function(){
+        this.map.on('viewreset move', function(){
             self.onMapMove(self.map);
 
         });

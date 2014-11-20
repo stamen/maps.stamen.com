@@ -6,31 +6,35 @@
 
         var doc = document.documentElement;
         function getSize() {
-            return new MM.Point(doc.clientWidth, doc.clientHeight);
+            return new L.point(doc.clientWidth, doc.clientHeight);
         }
 
         var parent = document.getElementById("map-main"),
             size = getSize(),
             providerName = parent.getAttribute("data-provider"),
-            provider = new MM.StamenTileLayer(providerName);
+            provider = getProvider(providerName);
 
         // setupProviderSelector(providerName, "../");
 
         function resize() {
-            try {
-                size = getSize();
-                if (main) main.setSize(size);
-            } catch (e) {
-            }
-            // console.log("resize:", [size.x, size.y]);
+            var size = getSize();
+            parent.style.height = size.y + "px";
+            parent.style.width = size.x + "px";
+            if (!main) return;
+            main.invalidateSize(false);
         }
-        MM.addEvent(window, "resize", resize);
+        window.addEventListener("resize", resize);
 
         // our main map
-        var main = new MM.Map(parent, provider, size,
-            [new MM.DragHandler(), new MM.DoubleClickHandler(), new MM.TouchHandler()]);
+        var main =  L.map(parent, {
+            scrollWheelZoom: false,
+            layers: [provider],
+            zoomControl: false,
+            attributionControl: false,
+            trackResize: false
+        });
+
         parent.style.position = "absolute";
-        main.autoSize = false;
 
         if (provider.attribution) {
             var attribution = parent.querySelector(".attribution") || parent.appendChild(document.createElement("p"));
@@ -40,10 +44,11 @@
 
         setupZoomControls(main);
 
-        var didSetLimits = provider.setCoordLimits(main);
+        //var didSetLimits = provider.setCoordLimits(main);
 
         // set the initial map position
-        main.setCenterZoom(new MM.Location(37.7706, -122.3782), 12);
+        main.setView(new L.latLng(37.7706, -122.3782), 12);
+        resize();
 
         var zoom = parseInt(parent.getAttribute("data-zoom"));
         if (!isNaN(zoom)) {
@@ -83,10 +88,11 @@
             var round = function(n) {
                 return Math.ceil(n / 500) * 500;
             };
-            MM.addEvent(imgLink, "mouseover", function() {
+            imgLink.addEventListener("mouseover", function() {
+                var size = main.getSize();
                 var hash = location.hash.substr(1),
-                    width = round(main.dimensions.x),
-                    height = round(main.dimensions.y);
+                    width = round(size.x),
+                    height = round(size.y);
                 this.href = [
                     "http://maps.stamen.com/m2i/",
                     "#" + providerName, "/",
@@ -97,51 +103,49 @@
         }
 
         var feedback = setupFeedbackForm();
-        MM.addEvent(main.parent, "mousedown", feedback.hide);
-        main.addCallback("zoomed", feedback.hide);
+        main._container.addEventListener("mousedown", feedback.hide);
+        main.on("zoomend", feedback.hide);
 
-        var hasher = new MM.Hash(main);
+        var hasher = new L.Hash(main);
 
         // set up form element references
-        var searchForm = document.getElementById("search");
-        if (searchForm) {
-            var searchInput = document.getElementById("search-location"),
-                searchButton = document.getElementById("search-submit");
-            // listen for the submit event
-            MM.addEvent(searchForm, "submit", function(e) {
-                // remember the old search text
-                var oldSearchText = searchButton.getAttribute("value");
-                // put the button into its submitting state
-                searchButton.setAttribute("value", "Finding...");
-                searchButton.setAttribute("class", "btn disabled");
-                // set up a function to rever the form to its original state
-                // (which executes whether there was an error or not)
-                function revert() {
-                    searchButton.setAttribute("class", "btn");
-                    searchButton.setAttribute("value", oldSearchText);
+        var searchForm = document.getElementById("search"),
+            searchInput = document.getElementById("search-location"),
+            searchButton = document.getElementById("search-submit");
+        // listen for the submit event
+        searchForm.addEventListener("submit", function(e) {
+            // remember the old search text
+            var oldSearchText = searchButton.getAttribute("value");
+            // put the button into its submitting state
+            searchButton.setAttribute("value", "Finding...");
+            searchButton.setAttribute("class", "btn disabled");
+            // set up a function to revert the form to its original state
+            // (which executes whether there was an error or not)
+            function revert() {
+                searchButton.setAttribute("class", "btn");
+                searchButton.setAttribute("value", oldSearchText);
+            }
+
+            var query = searchInput.value;
+            var size = main.getSize();
+            StamenSearch.geocode({
+                q: query,
+                w: size.x,
+                h: size.y - document.getElementById("header").offsetHeight
+            }, function(err, results) {
+                revert();
+
+                if (err || results.length === 0) {
+                    alert("Sorry, we couldn't find '" + query + "'.");
+                    return;
                 }
 
-                var query = searchInput.value;
-                StamenSearch.geocode({
-                    q: query,
-                    w: main.dimensions.x,
-                    h: main.dimensions.y - document.getElementById("header").offsetHeight
-                }, function(err, results) {
-                    revert();
-
-                    if (err || results.length === 0) {
-                        alert("Sorry, we couldn't find '" + query + "'.");
-                        return;
-                    }
-
-                    main.setZoom(results[0].zoom)
-                        .setCenter({ lat: results[0].latitude, lon: results[0].longitude });
-                });
-
-                // cancel the submit event
-                return MM.cancelEvent(e);
+                main.setView([results[0].latitude, results[0].longitude], results[0].zoom);
             });
-        }
+
+            // cancel the submit event
+            return cancelEvent(e);
+        });
 
         exports.MAP = main;
     }
