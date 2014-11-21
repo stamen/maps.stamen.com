@@ -3,7 +3,6 @@
 // TODO: wrap these in a namespace
 
 
-
 var mediaQuery = "(-webkit-min-device-pixel-ratio: 1.5),\
                   (min--moz-device-pixel-ratio: 1.5),\
                   (-o-min-device-pixel-ratio: 3/2),\
@@ -12,6 +11,17 @@ var mediaQuery = "(-webkit-min-device-pixel-ratio: 1.5),\
 // TODO: this probably should be in StamenTileLayer
 // ie: {@2x: true}
 var retinaSupportedProviders = ["toner"];
+
+function providerSupportsRetina(name) {
+    for (var provider in retinaSupportedProviders) {
+        // partial matches pass
+        // this is to allow for variants, ie.: toner-lite, toner-labels
+        if (retinaSupportedProviders[provider].indexOf(name) > -1) {
+            return true;
+        }
+    }
+    return false;
+}
 
 function isRetina() {
     function getParameterByName(name) {
@@ -30,10 +40,11 @@ function isRetina() {
 function getProvider(layer) {
     var lyr = new L.StamenTileLayer(layer);
 
-    if (isRetina() && retinaSupportedProviders.indexOf(layer) > -1) {
-      // replace the last "." with "@2x."
+    if (isRetina() && providerSupportsRetina(layer)) {
+        // replace the last "." with "@2x."
         lyr._url = lyr._url.replace(/\.(?!.*\.)/, "@2x.")
     }
+
     return lyr;
 }
 
