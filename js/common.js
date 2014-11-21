@@ -423,9 +423,11 @@ var HAS_HASHCHANGE = (function() {
 L.Hash = function(map) {
     this.onMapMove = L.Util.bind(this.onMapMove, this);
     this.onHashChange = L.Util.bind(this.onHashChange, this);
+
     if (map) {
         this.init(map);
     }
+
 };
 
 L.Hash.prototype = {
@@ -560,6 +562,7 @@ L.Hash.prototype = {
 L.QueryHash = function(map, onQueryChange) {
     this.query = new QueryString();
     this.onQueryChange = onQueryChange;
+
     L.Hash.call(this, map);
 };
 
@@ -607,6 +610,7 @@ var ProviderHash = function(map, providerName, setProvider, overwriteInvalidHash
     this.providerName = providerName;
     this.setProvider = setProvider;
     this.overwriteInvalidHashes = overwriteInvalidHashes !== false;
+
     L.Hash.call(this, map);
 };
 
@@ -659,6 +663,7 @@ ProviderHash.prototype = {
 
     overwriteInvalidHashes: true,
     update: function() {
+
         var hash = location.hash;
         if (hash === this.lastHash) {
             // console.info("(no change)");

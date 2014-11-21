@@ -11,8 +11,9 @@ var MAPS = {};
         });
     }
 
-    function init() {
+    var defaultCoordinates = "/12/37.7706/-122.3782";
 
+    function init() {
         // setupProviderSelector();
 
         var providerLabel = document.getElementById("current-provider"),
@@ -27,6 +28,7 @@ var MAPS = {};
             zoomControl: false,
             attributionControl: false
         });
+
         main.addLayer(getProvider(currentProvider));
         //doImageErrors(main);
 
@@ -125,13 +127,37 @@ var MAPS = {};
         main.on("move", updateSubMaps);
 
         // set the initial map position
-        main.setView(new L.latLng(37.7706, -122.3782), 12);
+        //
+
+        // set provider randomly if one wasn't specified in the URL hash
+        if (!location.hash) {
+            var index = ~~(Math.random() * allProviders.length),
+                randomProvider = allProviders[index];
+            // console.log("random provider:", randomProvider);
+            location.replace("#" + randomProvider);
+        }
+
+        if (!location.hash) {
+            var index = ~~(Math.random() * allProviders.length),
+                randomProvider = allProviders[index];
+            // console.log("random provider:", randomProvider);
+            location.replace("#" + randomProvider + defaultCoordinates);
+        } else if(location.hash.split("/").length !== 4) {
+            var p = location.hash.split("/")[0];
+            location.replace("#" + (p.charAt(0) == "#" ? p.slice(1) : p) + defaultCoordinates);
+        }
+
+       // main.setView(new L.latLng(37.7706, -122.3782), 12);
 
         // sets initial center so other functions,
         // can calculate offset on "move"
-        main.on("movestart", function(){
-            this.offsetStart = this.latLngToLayerPoint(this.getCenter());
+        main.on("load", function(){
+            main.off("load");
+            main.on("movestart", function(){
+                this.offsetStart = this.latLngToLayerPoint(this.getCenter());
+            });
         });
+
 
         function updateTitle(map, provider) {
             // update the link in the clicked sub-map
@@ -155,13 +181,7 @@ var MAPS = {};
 
         updateTitle(main, currentProvider);
 
-        // set provider randomly if one wasn't specified in the URL hash
-        if (!location.hash) {
-            var index = ~~(Math.random() * allProviders.length),
-                randomProvider = allProviders[index];
-            // console.log("random provider:", randomProvider);
-            location.replace("#" + randomProvider);
-        }
+
 
         // and set up listening for the browser's location hash
         var hasher = new ProviderHash(main, currentProvider, function(provider) {
