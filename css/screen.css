@@ -443,3 +443,23 @@ a#toggle-feedback.active {
     *zoom: 1;
 }
 
+#maps-sub #embed {
+    position: absolute;
+    text-align: right;
+    top: 20px;
+    right: 0px;
+    z-index: 9999;
+    display: none;
+}
+
+#embed-content {
+    clear: both;
+    width: 320px;
+    color: #fff !important;
+    background: #000;
+    padding: 10px;
+}
+
+#embed.controls a {
+    float: right;
+}

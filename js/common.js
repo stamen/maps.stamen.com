@@ -239,6 +239,7 @@ function setupFeedbackForm() {
     }
 }
 
+
 // add browser-specific classes to the given element
 var addBrowserClasses = (function() {
     var ua = navigator.userAgent,
