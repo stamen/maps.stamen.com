@@ -2,7 +2,7 @@
 // Common functions
 // TODO: wrap these in a namespace
 
-
+var defaultCoordinates = "12/37.7706/-122.3782";
 var mediaQuery = "(-webkit-min-device-pixel-ratio: 1.5),\
                   (min--moz-device-pixel-ratio: 1.5),\
                   (-o-min-device-pixel-ratio: 3/2),\
@@ -433,9 +433,12 @@ L.Hash = function(map) {
 L.Hash.prototype = {
     map: null,
     lastHash: null,
+    isLoaded: false,
 
     parseHash: function(hash) {
+
         var args = hash.split("/");
+        console.log(args)
         if (args.length == 3) {
             var zoom = parseInt(args[0], 10),
                 lat = parseFloat(args[1]),
@@ -454,6 +457,9 @@ L.Hash.prototype = {
     },
 
     formatHash: function(map) {
+        if (!this.isLoaded) {
+            return "#" + "/12/37.7706/-122.3782";
+        }
         var center = map.getCenter(),
             zoom = map.getZoom(),
             precision = Math.max(0, Math.ceil(Math.log(zoom) / Math.LN2));
@@ -468,10 +474,14 @@ L.Hash.prototype = {
         this.map = map;
         //this.map.addCallback("drawn", this.onMapMove);
         var self = this;
-        this.map.on('viewreset move', function(){
-            self.onMapMove(self.map);
+        this.map.on('load', function(){
+            self.isLoaded = true;
+            self.map.on('viewreset move', function(){
+                self.onMapMove(self.map);
 
-        });
+            });
+        })
+
         // reset the hash
         this.lastHash = null;
         this.onHashChange();
@@ -503,6 +513,7 @@ L.Hash.prototype = {
 
     movingMap: false,
     update: function() {
+        console.log("update")
         var hash = location.hash;
         if (hash === this.lastHash) {
             // console.info("(no change)");
@@ -510,6 +521,7 @@ L.Hash.prototype = {
         }
         var sansHash = hash.substr(1),
             parsed = this.parseHash(sansHash);
+        console.log(parsed)
         if (parsed) {
             // console.log("parsed:", parsed.zoom, parsed.center.toString());
             this.movingMap = true;

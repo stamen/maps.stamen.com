@@ -11,8 +11,6 @@ var MAPS = {};
         });
     }
 
-    var defaultCoordinates = "/12/37.7706/-122.3782";
-
     function init() {
         // setupProviderSelector();
 
@@ -132,15 +130,13 @@ var MAPS = {};
             // set provider randomly if one wasn't specified in the URL hash
             var index = ~~(Math.random() * allProviders.length),
                 randomProvider = allProviders[index];
-            location.replace("#" + randomProvider + defaultCoordinates);
+            location.replace("#" + randomProvider + "/" + defaultCoordinates);
 
         } else if(location.hash.split("/").length !== 4) {
             var p = location.hash.split("/")[0];
-            location.replace("#" + (p.charAt(0) == "#" ? p.slice(1) : p) + defaultCoordinates);
+            location.replace("#" + (p.charAt(0) == "#" ? p.slice(1) : p) + "/" + defaultCoordinates);
         }
 
-
-        //main.setView(new L.latLng(37.7706, -122.3782), 12);
 
         // sets initial center so other functions,
         // can calculate offset on "move"

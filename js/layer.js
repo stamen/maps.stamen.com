@@ -1,5 +1,7 @@
 (function(exports) {
 
+
+
     function init() {
 
         addBrowserClasses(document.body);
@@ -47,7 +49,12 @@
         //var didSetLimits = provider.setCoordLimits(main);
 
         // set the initial map position
-        main.setView(new L.latLng(37.7706, -122.3782), 12);
+        if (!location.hash || location.hash.split("/").length !== 3) {
+            // set provider randomly if one wasn't specified in the URL hash
+            location.replace("#" + defaultCoordinates);
+
+        }
+
         resize();
 
         var zoom = parseInt(parent.getAttribute("data-zoom"));
@@ -58,7 +65,7 @@
         var center = parent.getAttribute("data-center");
         if (center && center.length) {
             var bits = center.split(",");
-            main.setCenter(new MM.Location(parseFloat(bits[0]), parseFloat(bits[1])));
+            main.setView(new L.latLng(parseFloat(bits[0]), parseFloat(bits[1])), main.getZoom());
         }
 
         syncMapLinks(main, [document.getElementById("home-link")], function(parts) {
@@ -107,7 +114,6 @@
         main.on("zoomend", feedback.hide);
 
         var hasher = new L.Hash(main);
-
         // set up form element references
         var searchForm = document.getElementById("search"),
             searchInput = document.getElementById("search-location"),
