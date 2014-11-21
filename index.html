@@ -11,15 +11,26 @@
         <meta property="og:image" content="http://maps.stamen.com/images/fb-watercolor.png">
         <meta property="og:image" content="http://maps.stamen.com/images/fb-toner.png">
         <meta property="og:image" content="http://maps.stamen.com/images/fb-terrain.png">
-        <script type="text/javascript" src="js/vendor/modestmaps.min.js"></script>
+
+        <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+        <script type="text/javascript" src="js/polyfills.js"></script>
         <script type="text/javascript" src="js/vendor/reqwest.min.js"></script>
         <script type="text/javascript" src="js/tile.stamen.js?v1.3.0"></script>
         <script type="text/javascript" src="js/common.js?recaptcha"></script>
         <script type="text/javascript" src="js/vendor/google-code-prettify/prettify.js"></script>
+
+        <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
         <style type="text/css">
             @import url(css/bootstrap/bootstrap.css);
             @import url(css/screen.css?white-maps);
         </style>
+
+        <!--[if IE 9]>
+        <style>
+
+        </style>
+        <![endif]-->
+
     </head>
     <body>
         <div id="header" class="navbar">
@@ -36,10 +47,15 @@
             <div id="map-main" class="map switch" data-provider="toner">
                 <div id="bottom">
                     <div class="container">
-                        <h2 id="main-title"><a id="main-permalink" class="permalink" href="#"><span class="provider-name"></span><span class="icon">&#x21F2;</span></a></h2>
+                        <!--<h2 id="main-title"><a id="main-permalink" class="permalink" href="#"><span class="provider-name"></span><span class="icon">&#x21F2;</span></a></h2>-->
+                        <h2 id="main-title">
+                            <a href="" id="main-permalink" class="permalink"><span class="provider-name"></span><span>&#x21F2;</span></a>
+                        </h2>
                     </div>
                 </div>
             </div>
+
+
             <div id="maps-sub" class="container">
                 <form id="search" action="#">
                     <p>
@@ -47,9 +63,29 @@
                     <input id="search-submit" class="btn" type="submit" value="Find">
                     </p>
                 </form>
+
+                <div id="embed" class="toggle controls">
+                    <a id="embed-toggle" class="toggler" title="embed this map">&lt;embed&gt;</a>
+                    <a id="make-image" title="make an image of this map">&lt;image&gt;</a>
+                    <div id="embed-content" class="toggle-content" style="display: none;">
+                        <p>Copy the HTML below to embed this map:</p>
+                        <textarea id="embed-code" rows="3">&lt;iframe width="600" height="420" src="{url}"&gt;&lt;/iframe&gt;</textarea>
+                    </div>
+                </div>
+
                 <div id="controls" class="controls">
-                    <a id="zoom-in" title="zoom in">+</a>
-                    <a id="zoom-out" title="zoom out">&minus;</a>
+                    <a id="zoom-in" title="zoom in">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                            <path d="M19 13h-6v6h-2v-6h-6v-2h6v-6h2v6h6v2z"/>
+                            <path d="M0 0h24v24h-24z" fill="none"/>
+                        </svg>
+                    </a>
+                    <a id="zoom-out" title="zoom out">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                            <path d="M19 13h-14v-2h14v2z"/>
+                            <path d="M0 0h24v24h-24z" fill="none"/>
+                        </svg>
+                    </a>
                 </div>
                 <div id="map-sub2" class="map switch" data-provider="terrain"><h3><a class="provider-name" href="#terrain">Terrain</a></h3></div>
                 <div id="map-sub3" class="map switch" data-provider="watercolor"><h3><a class="provider-name" href="#watercolor">Watercolor</a></h3></div>
@@ -81,16 +117,16 @@
             data.</p>
 
             <div id="tiles-toner" class="tiles row">
-                <a href="toner/#14/37.8024/-122.2645" class="map span3" 
+                <a href="toner/#14/37.8024/-122.2645" class="map span3"
                     data-provider="toner"
                     data-center="37.8024,-122.2645"
                     data-zoom="14"></a>
                 <div class="span6">
                     <h3><a class="hashish" href="toner/">Toner</a></h3>
 
-                    <p>These high-contrast B+W (black and white) maps are 
+                    <p>These high-contrast B+W (black and white) maps are
                     featured in our Dotspotting project. They are perfect for data
-                    mashups and exploring river meanders and coastal zones. 
+                    mashups and exploring river meanders and coastal zones.
                     Available in six flavors:
                     <a class="hashish" href="toner/">standard toner</a>,
                     <a class="hashish" href="toner-hybrid/">hybrid</a>,
@@ -119,7 +155,7 @@
 
                     <p>Orient yourself with our terrain maps, featuring hill shading
                     and natural vegetation colors. These maps showcase advanced
-                    labeling and linework generalization of dual-carriageway roads. 
+                    labeling and linework generalization of dual-carriageway roads.
                     Terrain was developed in collaboration with Gem Spear and Nelson Minar.
                     Available in four flavors:
                     <a class="hashish" href="terrain/">standard terrain</a>,
@@ -144,7 +180,7 @@
                     data-zoom="9"></a>
                 <div class="span6">
                     <h3><a class="hashish" href="watercolor/">Watercolor</a></h3>
-                    <p>Reminiscent of hand drawn maps, our watercolor maps apply 
+                    <p>Reminiscent of hand drawn maps, our watercolor maps apply
                     raster effect area washes and organic edges over a paper texture
                     to add warm pop to any map. Watercolor was inspired by the
                     <a href="http://www.kickstarter.com/projects/bicycleportraits/bicycle-portraits-a-photographic-book-part-iii-fin">Bicycle Portraits project</a>.
@@ -179,15 +215,15 @@
                     </ul>
                 </div>
             </div>
-            
+
             <div id="mars" class="tiles row">
                 <a href="mars/" class="span3"><img
                     src="images/mars-thumbnail.png" alt="Mars!"></a>
                 <div class="span6">
                     <h3><a href="mars/">Mars</a>??</h3>
-                    <p>Yes, Mars. The Mars Orbiter Laser Altimeter, or MOLA, is an 
-					instrument on the Mars Global Surveyor (MGS), a spacecraft that 
-					was launched on November 7, 1996.  The MOLA dataset also 
+                    <p>Yes, Mars. The Mars Orbiter Laser Altimeter, or MOLA, is an
+					instrument on the Mars Global Surveyor (MGS), a spacecraft that
+					was launched on November 7, 1996.  The MOLA dataset also
 					contains height data, which we've made into a 3D contour map.</p>
 
                     <p><strong>Requires a WebGL-enabled browser, such as <a href="http://google.com/chrome">Google Chrome</a>.</strong></p>
@@ -198,7 +234,7 @@
                         <li><a href="http://mola.gsfc.nasa.gov/">MOLA at NASA</a></li>
                     </ul>
                 </div>
-            </div>            
+            </div>
 
             <div id="trees-cabs-crime" class="tiles row">
                 <a href="trees-cabs-crime/" class="map span3"
@@ -208,7 +244,7 @@
                 <div class="span6">
                     <h3><a href="trees-cabs-crime/">Trees, Cabs &amp; Crime</a></h3>
                     <p>Trees, Cabs &amp; Crime started off as a weekend hack
-                    and ended up in the Venice Biennale. This map 
+                    and ended up in the Venice Biennale. This map
                     combines three data sets (street tree locations, taxi cab
                     GPS positions, and crime reports) with
                     subtractive blending to reveal halftones hidden in the
@@ -229,7 +265,7 @@
                 <div id="license" class="row">
                     <h4 class="span2"><a
                             href="http://creativecommons.org/licenses/by/3.0"><img
-                        src="http://i.creativecommons.org/l/by/3.0/88x31.png"
+                        src="https://licensebuttons.net/l/by/3.0/88x31.png"
                         alt="CC-BY License"></a></h4>
                     <div class="span10">
                         <p><em>Except otherwise noted, each of these map tile sets are &copy; Stamen Design, under a <a href="http://creativecommons.org/licenses/by/3.0">Creative Commons Attribution (CC BY 3.0)</a> license.</em></p>
@@ -253,7 +289,11 @@
                                 source = document.getElementById("toner-attr"),
                                 target = document.getElementById("toner-attr-html"),
                                 showing = false;
-                            MM.addEvent(link, "click", function(e) {
+
+
+                            link.addEventListener("click", function(e){
+                                e.preventDefault();
+
                                 showing = !showing;
                                 if (showing) {
                                     target.value = source.innerHTML;
@@ -263,7 +303,8 @@
                                 } else {
                                     target.style.display = "none";
                                 }
-                                return MM.cancelEvent(e);
+
+                                return false;
                             });
                         })();
                         </script>
@@ -279,7 +320,10 @@
                                 source = document.getElementById("attr"),
                                 target = document.getElementById("attr-html"),
                                 showing = false;
-                            MM.addEvent(link, "click", function(e) {
+
+                            link.addEventListener("click", function(e){
+                                e.preventDefault();
+
                                 showing = !showing;
                                 if (showing) {
                                     target.value = source.innerHTML;
@@ -289,8 +333,10 @@
                                 } else {
                                     target.style.display = "none";
                                 }
-                                return MM.cancelEvent(e);
+
+                                return false;
                             });
+
                         })();
                         </script>
                         <p>If you roll your own tiles from another source you will still need to credit &ldquo;Map data by OpenStreetMap, under ODbL.&rdquo;
@@ -344,7 +390,7 @@ map.addLayer(layer);</pre>
 
                     <div id="usage-openlayers">
                         <h4><a href="http://openlayers.org/">OpenLayers</a></h4>
-                        <div class="row"> 
+                        <div class="row">
                             <p class="span4">OpenLayers is a hefty and featureful mapping library for use with a variety of GIS applications.
                                 View the <a href="test/openlayers.html">example</a>.</p>
                             <div class="span8">

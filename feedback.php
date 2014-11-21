@@ -52,7 +52,7 @@ Bug report from ${sender} ($ip):
 
 http://maps.stamen.com/${style}/#${center}
 
--- 
+--
 feedback form @ $form_url
 MESSAGE;
 
@@ -100,7 +100,7 @@ MESSAGE;
             <h2>Houston, we have a problem:</h2>
             <p class="alert alert-danger"><?php echo htmlspecialchars($message); ?></p>
             <p>If you think there&rsquo;s something wrong on our end, please
-            <a href="mailto:maps@stamen.com">email us</a> and 
+            <a href="mailto:maps@stamen.com">email us</a> and
             let us know what you were doing when you ran into the issue.
             Sorry about the mess!</p>
             <p>&mdash; your friends at <a href="http://stamen.com">Stamen</a></p>

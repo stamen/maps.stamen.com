@@ -7,11 +7,16 @@
             provider = getProvider(providerName);
 
         // our main map
-        var main = new MM.Map(parent, provider, null,
-            [new MM.DragHandler(), new MM.DoubleClickHandler(), new MM.TouchHandler()]);
+        var main =  L.map(parent, {
+            scrollWheelZoom: false,
+            layers: [provider],
+            zoomControl: false,
+            attributionControl: false,
+            trackResize: true
+        });
 
         // set the initial map position
-        main.setCenterZoom(new MM.Location(37.7706, -122.3782), 12);
+        main.setView(new L.latLng(37.7706, -122.3782), 12);
 
         setupZoomControls(main);
 
@@ -23,7 +28,7 @@
         var center = parent.getAttribute("data-center");
         if (center && center.length) {
             var bits = center.split(",");
-            main.setCenter(new MM.Location(parseFloat(bits[0]), parseFloat(bits[1])));
+            main.setView(new L.latLng(parseFloat(bits[0]), parseFloat(bits[1])), main.getZoom());
         }
 
         var homeLink = document.getElementById("home-link");

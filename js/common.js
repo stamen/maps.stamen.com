@@ -1,14 +1,71 @@
+// Maps.stamen.com
+// Common functions
+// TODO: wrap these in a namespace
+
+var defaultCoordinates = "12/37.7706/-122.3782";
+var mediaQuery = "(-webkit-min-device-pixel-ratio: 1.5),\
+                  (min--moz-device-pixel-ratio: 1.5),\
+                  (-o-min-device-pixel-ratio: 3/2),\
+                  (min-resolution: 1.5dppx)";
+
+// TODO: this probably should be in StamenTileLayer
+// ie: {@2x: true}
+var retinaSupportedProviders = ["toner"];
+
+function providerSupportsRetina(name) {
+    for (var provider in retinaSupportedProviders) {
+        // partial matches pass
+        // this is to allow for variants, ie.: toner-lite, toner-labels
+        if (retinaSupportedProviders[provider].indexOf(name) > -1) {
+            return true;
+        }
+    }
+    return false;
+}
+
+function isRetina() {
+    function getParameterByName(name) {
+        name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+        var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+            results = regex.exec(location.search);
+        return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+    }
+
+    return getParameterByName("retina") ||
+        window.devicePixelRatio > 1 ||
+        (window.matchMedia && window.matchMedia(mediaQuery).matches);
+}
 
 // returns the map provider for a given TileStache layer name
 function getProvider(layer) {
-    return new MM.StamenTileLayer(layer);
+    var lyr = new L.StamenTileLayer(layer);
+
+    if (isRetina() && providerSupportsRetina(layer)) {
+        // replace the last "." with "@2x."
+        lyr._url = lyr._url.replace(/\.(?!.*\.)/, "@2x.")
+    }
+
+    return lyr;
+}
+
+function cancelEvent(e) {
+    e.cancelBubble = true;
+    e.cancel = true;
+    e.returnValue = false;
+    if (e.stopPropagation) { e.stopPropagation(); }
+    if (e.preventDefault) { e.preventDefault(); }
+    return false;
 }
 
 // cancels all double-click events on the supplied element
 function preventDoubleClick(el) {
+    /*
     MM.addEvent(el, "dblclick", function(e) {
         return MM.cancelEvent(e);
     });
+    */
+
+    el.addEventListener("dblclick", cancelEvent);
 }
 
 // set up zoom controls for the given map (assumed one per page,
@@ -18,16 +75,17 @@ function setupZoomControls(map) {
         zoomOut = document.getElementById("zoom-out");
 
     preventDoubleClick(zoomIn);
-    MM.addEvent(zoomIn, "click", function(e) {
-        try { map.zoomIn(); } catch (err) { }
-        return MM.cancelEvent(e);
-    });
     preventDoubleClick(zoomOut);
-    MM.addEvent(zoomOut, "click", function(e) {
-        try { map.zoomOut(); } catch (err) { }
-        return MM.cancelEvent(e);
+
+    zoomIn.addEventListener("click", function(e){
+        try { map.zoomIn(); } catch (err) { }
+        return cancelEvent(e);
     });
 
+    zoomOut.addEventListener("click", function(e){
+        try { map.zoomOut(); } catch (err) { }
+        return cancelEvent(e);
+    });
 }
 
 function syncMapLinks(map, links, modifyHashParts) {
@@ -40,13 +98,28 @@ function syncMapLinks(map, links, modifyHashParts) {
             precision = Math.max(0, Math.ceil(Math.log(zoom) / Math.LN2)),
             parts = [zoom,
                 center.lat.toFixed(precision),
-                center.lon.toFixed(precision)
+                center.lng.toFixed(precision)
             ];
         if (modifyHashParts) {
             modifyHashParts.call(null, parts);
         }
         return parts.join("/");
     }
+    map.on("viewreset", function(e){
+        clearTimeout(timeout);
+        timeout = setTimeout(function() {
+            var hash = formatHash();
+            for (var i = 0; i < len; i++) {
+                var link = links[i];
+                if (!link) continue;
+                var href = link.href || "",
+                    uri = link.href.split("#").shift();
+                link.href = [uri, hash].join("#");
+            }
+        }, delay);
+    });
+
+    /*
     map.addCallback("drawn", function() {
         clearTimeout(timeout);
         timeout = setTimeout(function() {
@@ -60,6 +133,7 @@ function syncMapLinks(map, links, modifyHashParts) {
             }
         }, delay);
     });
+    */
 }
 
 // get the pixel offset of an element from the top left of its offset parent
@@ -89,17 +163,23 @@ function createToggle(link, target, callback) {
             }
             callback.call(target, showing);
         };
-
-    MM.addEvent(link, "click", function(e) {
+    link.addEventListener("click", function(e) {
         toggler.toggle();
-        return MM.cancelEvent(e);
+        return cancelEvent(e);
     });
+
 
     toggler.toggle = function() { toggler(!showing); };
     toggler.show = function() { toggler(true); };
     toggler.hide = function() { toggler(false); };
 
     return toggler;
+}
+
+
+// only works for the method at https://developers.google.com/recaptcha/docs/display#render_param
+function onRecaptchaLoad() {
+    //console.log("RE LOADED")
 }
 
 function setupFeedbackForm() {
@@ -109,13 +189,20 @@ function setupFeedbackForm() {
             styleInput = document.getElementById("feedback-style"),
             centerInput = document.getElementById("feedback-center");
 
+
         var recaptchaScript = document.createElement("script");
         recaptchaScript.src = "http://www.google.com/recaptcha/api/js/recaptcha_ajax.js";
+
+        //recaptchaScript.src = "https://www.google.com/recaptcha/api.js?onload=onRecaptchaLoad&render=explicit";
         feedback.appendChild(recaptchaScript);
 
         var toggle = createToggle(feedbackLink, feedback, function(showing) {
             if (showing) {
                 Recaptcha.create("6LeG99cSAAAAABiijTMo4wvz2nrO3PNWb88CQl6v", "recaptcha");
+
+                /*grecaptcha.render("recaptcha", {
+                    sitekey: "6LeG99cSAAAAABiijTMo4wvz2nrO3PNWb88CQl6v"
+                });*/
 
                 // update the center
                 var hash = location.hash.substr(1),
@@ -137,11 +224,12 @@ function setupFeedbackForm() {
             }
         });
 
-        MM.addEvent(window, "keyup", function(e) {
+        window.addEventListener("keyup", function(e) {
             if (e.keyCode === 27) {
                 toggle.hide();
             }
         });
+
         return toggle;
     } else {
         var form = {};
@@ -150,6 +238,7 @@ function setupFeedbackForm() {
         return form;
     }
 }
+
 
 // add browser-specific classes to the given element
 var addBrowserClasses = (function() {
@@ -316,13 +405,181 @@ QueryString.prototype = {
 };
 
 
-MM.QueryHash = function(map, onQueryChange) {
-    this.query = new QueryString();
-    this.onQueryChange = onQueryChange;
-    MM.Hash.call(this, map);
+
+function extendClass(child, parent) {
+    for (var property in parent.prototype) {
+        if (typeof child.prototype[property] == "undefined") {
+            child.prototype[property] = parent.prototype[property];
+        }
+    }
+    return child;
 };
 
-MM.QueryHash.prototype = {
+var HAS_HASHCHANGE = (function() {
+        var doc_mode = window.documentMode;
+        return ('onhashchange' in window) &&
+            (doc_mode === undefined || doc_mode > 7);
+    })();
+
+L.Hash = function(map) {
+    this.onMapMove = L.Util.bind(this.onMapMove, this);
+    this.onHashChange = L.Util.bind(this.onHashChange, this);
+
+    if (map) {
+        this.init(map);
+    }
+
+};
+
+L.Hash.prototype = {
+    map: null,
+    lastHash: null,
+    isLoaded: false,
+
+    parseHash: function(hash) {
+
+        var args = hash.split("/");
+        console.log(args)
+        if (args.length == 3) {
+            var zoom = parseInt(args[0], 10),
+                lat = parseFloat(args[1]),
+                lon = parseFloat(args[2]);
+            if (isNaN(zoom) || isNaN(lat) || isNaN(lon)) {
+                return false;
+            } else {
+                return {
+                    center: L.latLng(lat, lon),
+                    zoom: zoom
+                };
+            }
+        } else {
+            return false;
+        }
+    },
+
+    formatHash: function(map) {
+        if (!this.isLoaded) {
+            return "#" + "/12/37.7706/-122.3782";
+        }
+        var center = map.getCenter(),
+            zoom = map.getZoom(),
+            precision = Math.max(0, Math.ceil(Math.log(zoom) / Math.LN2));
+
+        return "#" + [zoom,
+            center.lat.toFixed(precision),
+            center.lng.toFixed(precision)
+        ].join("/");
+    },
+
+    init: function(map) {
+        this.map = map;
+        //this.map.addCallback("drawn", this.onMapMove);
+        var self = this;
+        this.map.on('load', function(){
+            self.isLoaded = true;
+            self.map.on('viewreset move', function(){
+                self.onMapMove(self.map);
+
+            });
+        })
+
+        // reset the hash
+        this.lastHash = null;
+        this.onHashChange();
+
+        if (!this.isListening) {
+            this.startListening();
+        }
+    },
+
+    remove: function() {
+        this.map = null;
+        if (this.isListening) {
+            this.stopListening();
+        }
+    },
+
+    onMapMove: function(map) {
+        // bail if we're moving the map (updating from a hash),
+        // or if the map has no zoom set
+        if (this.movingMap || this.map.zoom === 0) {
+            return false;
+        }
+        var hash = this.formatHash(map);
+        if (this.lastHash != hash) {
+            location.replace(hash);
+            this.lastHash = hash;
+        }
+    },
+
+    movingMap: false,
+    update: function() {
+        console.log("update")
+        var hash = location.hash;
+        if (hash === this.lastHash) {
+            // console.info("(no change)");
+            return;
+        }
+        var sansHash = hash.substr(1),
+            parsed = this.parseHash(sansHash);
+        console.log(parsed)
+        if (parsed) {
+            // console.log("parsed:", parsed.zoom, parsed.center.toString());
+            this.movingMap = true;
+            this.map.setView(parsed.center, parsed.zoom, {});
+            this.movingMap = false;
+        } else {
+            // console.warn("parse error; resetting:", this.map.getCenter(), this.map.getZoom());
+            this.onMapMove(this.map);
+        }
+    },
+
+    // defer hash change updates every 100ms
+    changeDefer: 100,
+    changeTimeout: null,
+    onHashChange: function() {
+        // throttle calls to update() so that they only happen every
+        // `changeDefer` ms
+        if (!this.changeTimeout) {
+            var that = this;
+            this.changeTimeout = setTimeout(function() {
+                that.update();
+                that.changeTimeout = null;
+            }, this.changeDefer);
+        }
+    },
+
+    isListening: false,
+    hashChangeInterval: null,
+    startListening: function() {
+        if (HAS_HASHCHANGE) {
+            window.addEventListener("hashchange", this.onHashChange, false);
+        } else {
+            clearInterval(this.hashChangeInterval);
+            this.hashChangeInterval = setInterval(this.onHashChange, 50);
+        }
+        this.isListening = true;
+    },
+
+    stopListening: function() {
+        if (HAS_HASHCHANGE) {
+            window.removeEventListener("hashchange", this.onHashChange);
+        } else {
+            clearInterval(this.hashChangeInterval);
+        }
+        this.isListening = false;
+    }
+};
+
+
+L.QueryHash = function(map, onQueryChange) {
+    this.query = new QueryString();
+    this.onQueryChange = onQueryChange;
+
+    L.Hash.call(this, map);
+};
+
+L.QueryHash.prototype = {
     query: null,
     parseHash: function(hash) {
         var qs = "";
@@ -331,18 +588,20 @@ MM.QueryHash.prototype = {
             hash = parts[0];
             qs = parts[1];
         }
-        var parsed = MM.Hash.prototype.parseHash.call(this, hash);
+        var parsed = L.Hash.prototype.parseHash.call(this, hash);
         if (parsed) {
             this.query.params = this.onQueryChange.call(this, this.query.parse(qs));
         }
         return parsed;
     },
     formatHash: function(hash) {
-        return MM.Hash.prototype.formatHash.call(this, hash) + this.query.toString();
+        return L.Hash.prototype.formatHash.call(this, hash) + this.query.toString();
     }
 };
 
-MM.extend(MM.QueryHash, MM.Hash);
+extendClass(L.QueryHash, L.Hash);
+
+
 
 /**
  * The ProviderHash is a class that looks for a provider name at the beginning
@@ -364,7 +623,8 @@ var ProviderHash = function(map, providerName, setProvider, overwriteInvalidHash
     this.providerName = providerName;
     this.setProvider = setProvider;
     this.overwriteInvalidHashes = overwriteInvalidHashes !== false;
-    MM.Hash.call(this, map);
+
+    L.Hash.call(this, map);
 };
 
 ProviderHash.prototype = {
@@ -384,7 +644,7 @@ ProviderHash.prototype = {
             }
             var provider = parts.shift();
             var parsed = parts.length
-                ? MM.Hash.prototype.parseHash.call(this, parts.join("/"))
+                ? L.Hash.prototype.parseHash.call(this, parts.join("/"))
                 : {center: this.map.getCenter(), zoom: this.map.getZoom()};
             if (parsed) {
                 // console.log("parsed hash:", provider, parsed);
@@ -410,12 +670,13 @@ ProviderHash.prototype = {
      * slash-delimited element in the URL.
      */
     formatHash: function(hash) {
-        var format = MM.Hash.prototype.formatHash.call(this, hash);
+        var format = L.Hash.prototype.formatHash.call(this, hash);
         return "#" + this.providerName + "/" + format.substr(1);
     },
 
     overwriteInvalidHashes: true,
     update: function() {
+
         var hash = location.hash;
         if (hash === this.lastHash) {
             // console.info("(no change)");
@@ -426,7 +687,7 @@ ProviderHash.prototype = {
         if (parsed) {
             // console.log("parsed:", parsed.zoom, parsed.center.toString());
             this.movingMap = true;
-            this.map.setCenterZoom(parsed.center, parsed.zoom);
+            this.map.setView(parsed.center, parsed.zoom);
             this.movingMap = false;
         } else {
             // console.warn("parse error; resetting:", this.map.getCenter(), this.map.getZoom());
@@ -437,7 +698,8 @@ ProviderHash.prototype = {
     }
 };
 
-MM.extend(ProviderHash, MM.Hash);
+extendClass(ProviderHash, L.Hash);
+
 
 var _gaq;
 // Google Analytics tracking

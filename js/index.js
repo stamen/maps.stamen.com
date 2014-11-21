@@ -2,14 +2,16 @@
 var MAPS = {};
 (function() {
 
+    //TODO: convert this over to Leaflet.
+    //      not entirely sure it's currently being used (seanc | 11202014)
     function doImageErrors(map) {
+        return;
         map.layers[0].requestManager.addCallback("requesterror", function(_, img) {
             // img.src = "images/tile-404.gif";
         });
     }
 
     function init() {
-
         // setupProviderSelector();
 
         var providerLabel = document.getElementById("current-provider"),
@@ -19,9 +21,14 @@ var MAPS = {};
         var allProviders = [currentProvider];
 
         // our main map
-        var main = MAPS.main = new MM.Map("map-main", getProvider(currentProvider), null,
-            [new MM.DragHandler(), new MM.DoubleClickHandler(), new MM.TouchHandler()]);
-        // doImageErrors(main);
+        var main = MAPS.main = L.map("map-main", {
+            scrollWheelZoom: false,
+            zoomControl: false,
+            attributionControl: false
+        });
+
+        main.addLayer(getProvider(currentProvider));
+        //doImageErrors(main);
 
         mapsByProvider[currentProvider] = main;
 
@@ -36,15 +43,39 @@ var MAPS = {};
             var el = subParents[i],
                 // the provider is based on the data-provider HTML attribute
                 provider = el.getAttribute("data-provider"),
-                // FIXME: these maps are not interactive
-                map = new MM.Map(el, getProvider(provider), null, [new MM.DragHandler()]);
-            map.addCallback("panned", function(_map, offset) {
+
+                // Only allowing for dragging
+                map = L.map(el, {scrollWheelZoom: false,
+                        keyboard: false,
+                        zoomControl: false,
+                        dragging: true,
+                        touchZoom: false,
+                        doubleClickZoom: false,
+                        boxZoom: false,
+                        attributionControl: false});
+
+                map.addLayer(getProvider(provider));
+
+
+            map.on("dragstart", function(e){
+                this.offsetStart = this.latLngToLayerPoint(this.getCenter());
+            });
+
+            map.on("drag dragend", function(e){
+                var c = this.latLngToLayerPoint(this.getCenter());
+                var dx = c.x - this.offsetStart.x ,
+                    dy = c.y - this.offsetStart.y;
+                _map = this;
                 if (!main.panning) {
                     _map.panning = true;
-                    main.panBy(offset[0], offset[1]);
+                    main.panBy([dx,dy], {animate: false});
                     _map.panning = false;
                 }
+
+                this.offsetStart = c;
+
             });
+
             // add it to the list
             allProviders.push(provider);
             // doImageErrors(map);
@@ -55,23 +86,28 @@ var MAPS = {};
         // sync sub-maps to the main map's center using their
         // relative positions on screen
         function updateSubMaps() {
-            var mainWidth = main.dimensions.x,
+            var size = main.getSize(),
+                mainWidth = size.x,
                 wrapperWidth = wrapper.offsetWidth,
                 wrapperTop = wrapper.offsetTop,
                 offsetX = mainWidth - (mainWidth - wrapperWidth) / 2;
             for (var i = 0; i < subs.length; i++) {
                 var sub = subs[i],
-                    point = new MM.Point(0, 0);
-                point.x = offsetX - sub.dimensions.x / 2;
-                point.y = wrapperTop + sub.parent.offsetTop + sub.dimensions.y / 2;
-                sub.setCenterZoom(main.pointLocation(point), main.getZoom());
+                    point = new L.point(0, 0),
+                    sz = sub.getSize();
+                point.x = offsetX - sz.x / 2;
+                point.y = wrapperTop + sub._container.offsetTop + sz.y / 2;
+                sub.setView(main.containerPointToLatLng(point), main.getZoom(), {animate: false});
             }
         }
 
         setupZoomControls(main);
 
+        // TODO: Figure out if this pan callback is needed?
         // pan the sub-maps when the main map is panned
-        main.addCallback("panned", function(_map, offset) {
+        /*
+        main.on("moveend", function(e){
+            offset = [0,0];
             if (main.panning) return;
             main.panning = true;
             for (var i = 0; i < subs.length; i++) {
@@ -82,22 +118,45 @@ var MAPS = {};
             }
             main.panning = false;
         });
+        */
 
         // and for all other map redraw events, re-sync them
-        main.addCallback("zoomed", updateSubMaps);
-        main.addCallback("extentset", updateSubMaps);
-        main.addCallback("centered", updateSubMaps);
+        main.on("zoomend", updateSubMaps);
+        main.on("move", updateSubMaps);
+
 
         // set the initial map position
-        main.setCenterZoom(new MM.Location(37.7706, -122.3782), 12);
+        if (!location.hash) {
+            // set provider randomly if one wasn't specified in the URL hash
+            var index = ~~(Math.random() * allProviders.length),
+                randomProvider = allProviders[index];
+            location.replace("#" + randomProvider + "/" + defaultCoordinates);
+
+        } else if(location.hash.split("/").length !== 4) {
+            var p = location.hash.split("/")[0];
+            location.replace("#" + (p.charAt(0) == "#" ? p.slice(1) : p) + "/" + defaultCoordinates);
+        }
+
+
+        // sets initial center so other functions,
+        // can calculate offset on "move"
+        main.on("load", function(){
+            main.off("load");
+            main.on("movestart", function(){
+                this.offsetStart = this.latLngToLayerPoint(this.getCenter());
+            });
+        });
+
 
         function updateTitle(map, provider) {
             // update the link in the clicked sub-map
-            var node = map.parent.querySelector(".provider-name");
+            var node = map._container.querySelector(".provider-name");
             node.innerHTML = provider.substr(0, 1).toUpperCase() + provider.substr(1);
             var link = node.href
                 ? node
                 : node.parentNode;
+
+
             link.href = (link.className.indexOf("permalink") > -1)
                 ? provider + "/"
                 : "#" + provider;
@@ -108,32 +167,86 @@ var MAPS = {};
         ]);
 
         var feedback = setupFeedbackForm();
-        MM.addEvent(main.parent, "mousedown", feedback.hide);
-        main.addCallback("zoomed", feedback.hide);
+        main._container.addEventListener("mousedown", feedback.hide);
+        main.on("zoomend", feedback.hide);
+
+        var embedAndImage = function(){
+            var __ = {};
+
+            var embedLink = document.getElementById("embed-toggle"),
+                embedToggle;
+            if (embedLink) {
+                var embed = document.getElementById("embed-content"),
+                    textarea = document.getElementById("embed-code"),
+                    template = textarea.value;
+                embedToggle = createToggle(embedLink, embed, function(showing) {
+                    if (showing) {
+                        var url = location.href.split("#");
+                        url.splice(1, 0, "embed#");
+                        textarea.value = template.replace("{url}", url.join(""));
+                        textarea.focus();
+                        textarea.select();
+                    } else {
+                    }
+                });
+            }
+
+            var imgLink = document.getElementById("make-image");
+            if (imgLink) {
+                var round = function(n) {
+                    return Math.ceil(n / 500) * 500;
+                };
+                imgLink.addEventListener("mouseover", function() {
+                    var size = main.getSize();
+                    var hash = location.hash.substr(1),
+                        width = round(size.x),
+                        height = round(size.y);
+                    this.href = [
+                        "http://maps.stamen.com/m2i/",
+                        "#" + currentProvider, "/",
+                        width, ":", height, "/",
+                        hash
+                    ].join("");
+                });
+            };
+
+
+            __.update = function() {
+
+            };
+
+            return __;
+
+        }
+
+        embedAndImage();
+
+
 
         updateTitle(main, currentProvider);
 
-        // set provider randomly if one wasn't specified in the URL hash
-        if (!location.hash) {
-            var index = ~~(Math.random() * allProviders.length),
-                randomProvider = allProviders[index];
-            // console.log("random provider:", randomProvider);
-            location.replace("#" + randomProvider);
-        }
+
 
         // and set up listening for the browser's location hash
         var hasher = new ProviderHash(main, currentProvider, function(provider) {
+
             if (!provider || !(provider in mapsByProvider)) {
                 return false;
             }
+
             // if the provider has changed...
             if (provider != currentProvider) {
                 // grab the provider from the corresponding map
                 var source = mapsByProvider[provider],
-                    target = main;
+                    target = main,
+                    sourceLayer = getProvider(currentProvider),
+                    targetLayer = getProvider(provider);
                 // swap layers
-                source.setLayerAt(0, getProvider(currentProvider));
-                target.setLayerAt(0, getProvider(provider));
+                if (source.hasLayer(sourceLayer)) source.removeLayer(sourceLayer);
+                if (target.hasLayer(targetLayer)) target.removeLayer(targetLayer);
+
+                source.addLayer(sourceLayer, true);
+                target.addLayer(targetLayer, true);
 
                 updateTitle(source, currentProvider);
                 updateTitle(target, provider);
@@ -159,7 +272,7 @@ var MAPS = {};
             searchInput = document.getElementById("search-location"),
             searchButton = document.getElementById("search-submit");
         // listen for the submit event
-        MM.addEvent(searchForm, "submit", function(e) {
+        searchForm.addEventListener("submit", function(e) {
             // remember the old search text
             var oldSearchText = searchButton.getAttribute("value");
             // put the button into its submitting state
@@ -173,11 +286,11 @@ var MAPS = {};
             }
 
             var query = searchInput.value;
-
+            var size = main.getSize();
             StamenSearch.geocode({
                 q: query,
-                w: main.dimensions.x,
-                h: main.dimensions.y - document.getElementById("header").offsetHeight
+                w: size.x,
+                h: size.y - document.getElementById("header").offsetHeight
             }, function(err, results) {
                 revert();
 
@@ -186,12 +299,11 @@ var MAPS = {};
                     return;
                 }
 
-                main.setZoom(results[0].zoom)
-                    .setCenter({ lat: results[0].latitude, lon: results[0].longitude });
+                main.setView([results[0].latitude, results[0].longitude], results[0].zoom);
             });
 
             // cancel the submit event
-            return MM.cancelEvent(e);
+            return cancelEvent(e);
         });
 
         // create static mini-maps for each of these elements
@@ -202,14 +314,23 @@ var MAPS = {};
                 provider = getProvider(el.getAttribute("data-provider")),
                 center = parseCenter(el.getAttribute("data-center")),
                 zoom = parseInt(el.getAttribute("data-zoom")),
-                map = new MM.Map(el, provider, null, []);
-            map.setCenterZoom(center, zoom);
+                map = L.map(el, {scrollWheelZoom: false,
+                                        keyboard: false,
+                                        zoomControl: false,
+                                        dragging: false,
+                                        touchZoom: false,
+                                        doubleClickZoom: false,
+                                        boxZoom: false,
+                                        attributionControl: false});
+
+            map.addLayer(provider);
+            map.setView(center, zoom);
             MAPS.minis.push(map);
         }
 
         var hashish = document.querySelectorAll("a.hashish");
         for (var i = 0; i < hashish.length; i++) {
-            MM.addEvent(hashish[i], "mouseover", function(e) {
+            hashish[i].addEventListener("mouseover", function(e) {
                 var link = e.srcElement || e.target,
                     parts = link.href.split("#"),
                     suffix = location.hash.split("/").slice(1).join("/");
@@ -218,12 +339,12 @@ var MAPS = {};
         }
     }
 
-    // parse a string into an MM.Location instance
+    // parse a string into an L.LatLng instance
     function parseCenter(str) {
         var parts = str.split(/,\s*/),
             lat = parseFloat(parts[0]),
-            lon = parseFloat(parts[1]);
-        return new MM.Location(lat, lon);
+            lng = parseFloat(parts[1]);
+        return L.latLng(lat, lng);
     }
 
     init();

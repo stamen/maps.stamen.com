@@ -3,7 +3,7 @@
     <head>
         <title>maps.stamen.com / toner</title>
         <meta name="description" content="Stamen's toner map style is lovingly crafted and free for the taking.">
-        <script type="text/javascript" src="js/vendor/modestmaps.min.js"></script>
+        <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
         <script type="text/javascript" src="js/vendor/reqwest.min.js"></script>
         <script type="text/javascript" src="js/tile.stamen.js?v1.2.0"></script>
         <script type="text/javascript" src="js/common.js"></script>
@@ -12,6 +12,7 @@
             @import url(css/screen.css);
             @import url(css/layer.css);
         </style>
+        <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
     </head>
     <body>
         <div id="header" class="navbar">
