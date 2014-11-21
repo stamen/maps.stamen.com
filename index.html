@@ -25,6 +25,15 @@
             @import url(css/screen.css?white-maps);
         </style>
 
+        <!--[if IE 9]>
+        <style>
+            #sc-test button,
+            #main-title .icon {
+                line-height: 35px;
+            }
+        </style>
+        <![endif]-->
+
     </head>
     <body>
         <div id="header" class="navbar">
@@ -41,7 +50,10 @@
             <div id="map-main" class="map switch" data-provider="toner">
                 <div id="bottom">
                     <div class="container">
-                        <h2 id="main-title"><a id="main-permalink" class="permalink" href="#"><span class="provider-name"></span><span class="icon">&#x21F2;</span></a></h2>
+                        <!--<h2 id="main-title"><a id="main-permalink" class="permalink" href="#"><span class="provider-name"></span><span class="icon">&#x21F2;</span></a></h2>-->
+                        <h2 id="main-title">
+                            <a href="" id="main-permalink" class="permalink"><span class="provider-name"></span><span>&#x21F2;</span></a>
+                        </h2>
                     </div>
                 </div>
             </div>
@@ -53,8 +65,18 @@
                     </p>
                 </form>
                 <div id="controls" class="controls">
-                    <a id="zoom-in" title="zoom in">+</a>
-                    <a id="zoom-out" title="zoom out">&minus;</a>
+                    <a id="zoom-in" title="zoom in">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                            <path d="M19 13h-6v6h-2v-6h-6v-2h6v-6h2v6h6v2z"/>
+                            <path d="M0 0h24v24h-24z" fill="none"/>
+                        </svg>
+                    </a>
+                    <a id="zoom-out" title="zoom out">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                            <path d="M19 13h-14v-2h14v2z"/>
+                            <path d="M0 0h24v24h-24z" fill="none"/>
+                        </svg>
+                    </a>
                 </div>
                 <div id="map-sub2" class="map switch" data-provider="terrain"><h3><a class="provider-name" href="#terrain">Terrain</a></h3></div>
                 <div id="map-sub3" class="map switch" data-provider="watercolor"><h3><a class="provider-name" href="#watercolor">Watercolor</a></h3></div>
