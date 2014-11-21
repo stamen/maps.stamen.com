@@ -165,6 +165,12 @@ function createToggle(link, target, callback) {
     return toggler;
 }
 
+
+// only works for the method at https://developers.google.com/recaptcha/docs/display#render_param
+function onRecaptchaLoad() {
+    //console.log("RE LOADED")
+}
+
 function setupFeedbackForm() {
     var feedbackLink = document.getElementById("toggle-feedback");
     if (feedbackLink) {
@@ -172,13 +178,20 @@ function setupFeedbackForm() {
             styleInput = document.getElementById("feedback-style"),
             centerInput = document.getElementById("feedback-center");
 
+
         var recaptchaScript = document.createElement("script");
         recaptchaScript.src = "http://www.google.com/recaptcha/api/js/recaptcha_ajax.js";
+
+        //recaptchaScript.src = "https://www.google.com/recaptcha/api.js?onload=onRecaptchaLoad&render=explicit";
         feedback.appendChild(recaptchaScript);
 
         var toggle = createToggle(feedbackLink, feedback, function(showing) {
             if (showing) {
                 Recaptcha.create("6LeG99cSAAAAABiijTMo4wvz2nrO3PNWb88CQl6v", "recaptcha");
+
+                /*grecaptcha.render("recaptcha", {
+                    sitekey: "6LeG99cSAAAAABiijTMo4wvz2nrO3PNWb88CQl6v"
+                });*/
 
                 // update the center
                 var hash = location.hash.substr(1),
