@@ -126,28 +126,21 @@ var MAPS = {};
         main.on("zoomend", updateSubMaps);
         main.on("move", updateSubMaps);
 
+
         // set the initial map position
-        //
-
-        // set provider randomly if one wasn't specified in the URL hash
         if (!location.hash) {
+            // set provider randomly if one wasn't specified in the URL hash
             var index = ~~(Math.random() * allProviders.length),
                 randomProvider = allProviders[index];
-            // console.log("random provider:", randomProvider);
-            location.replace("#" + randomProvider);
-        }
-
-        if (!location.hash) {
-            var index = ~~(Math.random() * allProviders.length),
-                randomProvider = allProviders[index];
-            // console.log("random provider:", randomProvider);
             location.replace("#" + randomProvider + defaultCoordinates);
+
         } else if(location.hash.split("/").length !== 4) {
             var p = location.hash.split("/")[0];
             location.replace("#" + (p.charAt(0) == "#" ? p.slice(1) : p) + defaultCoordinates);
         }
 
-       // main.setView(new L.latLng(37.7706, -122.3782), 12);
+
+        //main.setView(new L.latLng(37.7706, -122.3782), 12);
 
         // sets initial center so other functions,
         // can calculate offset on "move"
