@@ -16,13 +16,15 @@ var MAPS = {};
 
         var providerLabel = document.getElementById("current-provider"),
             currentProvider = "toner",
+            availableProviders = ["toner","terrain","watercolor"],
             mapsByProvider = MAPS.byProvider = {};
+
 
         // set the initial map position
         if (!location.hash) {
             // set provider randomly if one wasn't specified in the URL hash
-            var index = ~~(Math.random() * allProviders.length),
-                randomProvider = allProviders[index];
+            var index = ~~(Math.random() * availableProviders.length),
+                randomProvider = availableProviders[index];
 
             currentProvider = randomProvider;
             location.replace("#" + randomProvider + "/" + defaultCoordinates);
@@ -38,7 +40,7 @@ var MAPS = {};
             }
         }
 
-        console.log("Current Provider: ", currentProvider)
+        console.log("Current Provider: ", currentProvider);
         var allProviders = [currentProvider];
 
         // our main map
