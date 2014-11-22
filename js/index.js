@@ -31,13 +31,14 @@ var MAPS = {};
             var p = location.hash.split("/")[0];
             p = (p.charAt(0) == "#") ? p.slice(1) : p;
 
-            if ((p in mapsByProvider)) currentProvider = p;
+            if ((p in stamen.tile.providers)) currentProvider = p;
 
             if(location.hash.split("/").length !== 4) {
                 location.replace("#" + currentProvider + "/" + defaultCoordinates);
             }
         }
 
+        console.log("Current Provider: ", currentProvider)
         var allProviders = [currentProvider];
 
         // our main map
