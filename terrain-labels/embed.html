@@ -13,8 +13,18 @@
     </head>
     <body id="map" data-provider="terrain-labels">
         <div id="controls" class="controls">
-            <a id="zoom-in" title="zoom in">+</a>
-            <a id="zoom-out" title="zoom out">&minus;</a>
+            <a id="zoom-in" title="zoom in">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                    <path d="M19 13h-6v6h-2v-6h-6v-2h6v-6h2v6h6v2z"/>
+                    <path d="M0 0h24v24h-24z" fill="none"/>
+                </svg>
+            </a>
+            <a id="zoom-out" title="zoom out">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                    <path d="M19 13h-14v-2h14v2z"/>
+                    <path d="M0 0h24v24h-24z" fill="none"/>
+                </svg>
+            </a>
         </div>
         <p class="attribution">
             <a id="home-link" target="_top" href="../">Map tiles</a> by <a target="_top" href="http://stamen.com">Stamen Design</a>, under <a target="_top" href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a target="_top" href="http://openstreetmap.org">OpenStreetMap</a>, under <a target="_top" href="http://creativecommons.org/licenses/by-sa/3.0">CC BY SA</a>.

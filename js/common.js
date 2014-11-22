@@ -439,7 +439,6 @@ L.Hash.prototype = {
     parseHash: function(hash) {
 
         var args = hash.split("/");
-        console.log(args)
         if (args.length == 3) {
             var zoom = parseInt(args[0], 10),
                 lat = parseFloat(args[1]),
