@@ -18,6 +18,26 @@ var MAPS = {};
             currentProvider = "toner",
             mapsByProvider = MAPS.byProvider = {};
 
+        // set the initial map position
+        if (!location.hash) {
+            // set provider randomly if one wasn't specified in the URL hash
+            var index = ~~(Math.random() * allProviders.length),
+                randomProvider = allProviders[index];
+
+            currentProvider = randomProvider;
+            location.replace("#" + randomProvider + "/" + defaultCoordinates);
+
+        } else {
+            var p = location.hash.split("/")[0];
+            p = (p.charAt(0) == "#") ? p.slice(1) : p;
+
+            if ((p in mapsByProvider)) currentProvider = p;
+
+            if(location.hash.split("/").length !== 4) {
+                location.replace("#" + currentProvider + "/" + defaultCoordinates);
+            }
+        }
+
         var allProviders = [currentProvider];
 
         // our main map
@@ -27,10 +47,13 @@ var MAPS = {};
             attributionControl: false
         });
 
+
+
         main.addLayer(getProvider(currentProvider));
         //doImageErrors(main);
 
         mapsByProvider[currentProvider] = main;
+
 
         // keep a reference to the sub-map wrapper to figure out
         // positioning stuff
@@ -38,6 +61,7 @@ var MAPS = {};
             subs = MAPS.sub = [],
             // then grab all the sub-map element references
             subParents = wrapper.querySelectorAll(".map");
+
         // create a map for each sub-map element
         for (var i = 0; i < subParents.length; i++) {
             var el = subParents[i],
@@ -53,6 +77,13 @@ var MAPS = {};
                         doubleClickZoom: false,
                         boxZoom: false,
                         attributionControl: false});
+
+
+                // TODO: is there a better way
+                if (provider === currentProvider) {
+                    provider = "toner";
+                    updateTitle(map, provider);
+                }
 
                 map.addLayer(getProvider(provider));
 
@@ -124,18 +155,6 @@ var MAPS = {};
         main.on("zoomend", updateSubMaps);
         main.on("move", updateSubMaps);
 
-
-        // set the initial map position
-        if (!location.hash) {
-            // set provider randomly if one wasn't specified in the URL hash
-            var index = ~~(Math.random() * allProviders.length),
-                randomProvider = allProviders[index];
-            location.replace("#" + randomProvider + "/" + defaultCoordinates);
-
-        } else if(location.hash.split("/").length !== 4) {
-            var p = location.hash.split("/")[0];
-            location.replace("#" + (p.charAt(0) == "#" ? p.slice(1) : p) + "/" + defaultCoordinates);
-        }
 
 
         // sets initial center so other functions,
@@ -221,11 +240,7 @@ var MAPS = {};
 
         embedAndImage();
 
-
-
         updateTitle(main, currentProvider);
-
-
 
         // and set up listening for the browser's location hash
         var hasher = new ProviderHash(main, currentProvider, function(provider) {

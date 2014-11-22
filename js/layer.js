@@ -50,9 +50,7 @@
 
         // set the initial map position
         if (!location.hash || location.hash.split("/").length !== 3) {
-            // set provider randomly if one wasn't specified in the URL hash
             location.replace("#" + defaultCoordinates);
-
         }
 
         resize();
