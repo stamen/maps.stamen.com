@@ -31,7 +31,7 @@ var MAPS = {};
             var p = location.hash.split("/")[0];
             p = (p.charAt(0) == "#") ? p.slice(1) : p;
 
-            currentProvider = p;
+            if ((p in mapsByProvider)) currentProvider = p;
 
             if(location.hash.split("/").length !== 4) {
                 location.replace("#" + currentProvider + "/" + defaultCoordinates);
