@@ -31,7 +31,7 @@ a:link, a:visited, a:hover {
         -ms-user-select: none;
          -o-user-select: none;
 }
-
+/*
 #controls a {
     font-size: 24px;
     font-weight: bold;
@@ -46,6 +46,25 @@ a:link, a:visited, a:hover {
     background: yellow;
     text-decoration: none;
     margin-right: 8px;
+}*/
+.controls a {
+    cursor: pointer;
+    font-weight: bold;
+    color: black;
+    background: yellow;
+    text-decoration: none;
+    padding: 6px;
+    display: block;
+    float: left;
+    margin-right: 8px;
+
+    line-height: 1;
+    height: auto;
+}
+
+.controls a svg {
+    display: inline-block;
+    vertical-align: top;
 }
 
 .attribution {
