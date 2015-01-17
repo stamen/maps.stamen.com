@@ -259,9 +259,10 @@ var MAPS = {};
                     target = main,
                     sourceLayer = getProvider(currentProvider),
                     targetLayer = getProvider(provider);
-                // swap layers
-                if (source.hasLayer(sourceLayer)) source.removeLayer(sourceLayer);
-                if (target.hasLayer(targetLayer)) target.removeLayer(targetLayer);
+
+                // clear layers from both maps
+                source.eachLayer(source.removeLayer, source);
+                target.eachLayer(target.removeLayer, target);
 
                 source.addLayer(sourceLayer, true);
                 target.addLayer(targetLayer, true);
