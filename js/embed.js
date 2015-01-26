@@ -42,8 +42,6 @@
             });
         }
 
-        var hasher = new MM.Hash(main);
-
         exports.MAP = main;
     }
 
