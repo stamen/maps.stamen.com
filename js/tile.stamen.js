@@ -176,8 +176,7 @@ if (typeof L === "object") {
                     "maxZoom":      provider.maxZoom,
                     "subdomains":   provider.subdomains,
                     "scheme":       "xyz",
-                    "attribution":  provider.attribution,
-                    sa_id:          name
+                    "attribution":  provider.attribution
                 });
             L.TileLayer.prototype.initialize.call(this, url, opts);
         }

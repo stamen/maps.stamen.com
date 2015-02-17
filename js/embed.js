@@ -12,11 +12,7 @@
             layers: [provider],
             zoomControl: false,
             attributionControl: false,
-            trackResize: true,
-            // Maptiks tracking code
-            track_id: "b67e9b8c-1408-44ff-b788-63dee4906de9",
-            // Maptiks label
-            sa_id: "Embed: " + providerName
+            trackResize: true
         });
 
         // set the initial map position
