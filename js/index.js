@@ -47,7 +47,11 @@ var MAPS = {};
         var main = MAPS.main = L.map("map-main", {
             scrollWheelZoom: false,
             zoomControl: false,
-            attributionControl: false
+            attributionControl: false,
+            // Maptiks tracking code
+            track_id: "b67e9b8c-1408-44ff-b788-63dee4906de9",
+            // Maptiks label
+            sa_id: "Main Map"
         });
 
 
@@ -72,14 +76,20 @@ var MAPS = {};
                 provider = el.getAttribute("data-provider"),
 
                 // Only allowing for dragging
-                map = L.map(el, {scrollWheelZoom: false,
-                        keyboard: false,
-                        zoomControl: false,
-                        dragging: true,
-                        touchZoom: false,
-                        doubleClickZoom: false,
-                        boxZoom: false,
-                        attributionControl: false});
+                map = L.map(el, {
+                    scrollWheelZoom: false,
+                    keyboard: false,
+                    zoomControl: false,
+                    dragging: true,
+                    touchZoom: false,
+                    doubleClickZoom: false,
+                    boxZoom: false,
+                    attributionControl: false,
+                    // Maptiks tracking code
+                    track_id: "b67e9b8c-1408-44ff-b788-63dee4906de9",
+                    // Maptiks label
+                    sa_id: "Inset " + (i + 1)
+                });
 
 
                 // TODO: is there a better way
@@ -259,9 +269,10 @@ var MAPS = {};
                     target = main,
                     sourceLayer = getProvider(currentProvider),
                     targetLayer = getProvider(provider);
-                // swap layers
-                if (source.hasLayer(sourceLayer)) source.removeLayer(sourceLayer);
-                if (target.hasLayer(targetLayer)) target.removeLayer(targetLayer);
+
+                // clear layers from both maps
+                source.eachLayer(source.removeLayer, source);
+                target.eachLayer(target.removeLayer, target);
 
                 source.addLayer(sourceLayer, true);
                 target.addLayer(targetLayer, true);
@@ -332,14 +343,20 @@ var MAPS = {};
                 provider = getProvider(el.getAttribute("data-provider")),
                 center = parseCenter(el.getAttribute("data-center")),
                 zoom = parseInt(el.getAttribute("data-zoom")),
-                map = L.map(el, {scrollWheelZoom: false,
-                                        keyboard: false,
-                                        zoomControl: false,
-                                        dragging: false,
-                                        touchZoom: false,
-                                        doubleClickZoom: false,
-                                        boxZoom: false,
-                                        attributionControl: false});
+                map = L.map(el, {
+                    scrollWheelZoom: false,
+                    keyboard: false,
+                    zoomControl: false,
+                    dragging: false,
+                    touchZoom: false,
+                    doubleClickZoom: false,
+                    boxZoom: false,
+                    attributionControl: false,
+                    // Maptiks tracking code
+                    track_id: "b67e9b8c-1408-44ff-b788-63dee4906de9",
+                    // Maptiks label
+                    sa_id: "Static " + el.getAttribute("data-provider")
+                });
 
             map.addLayer(provider);
             map.setView(center, zoom);

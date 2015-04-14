@@ -13,6 +13,7 @@
         <meta property="og:image" content="http://maps.stamen.com/images/fb-terrain.png">
 
         <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+        <script src="//cdn.maptiks.com/maptiks-leaflet.min.js"></script>
         <script type="text/javascript" src="js/polyfills.js"></script>
         <script type="text/javascript" src="js/vendor/reqwest.min.js"></script>
         <script type="text/javascript" src="js/tile.stamen.js?v1.3.0"></script>
@@ -139,7 +140,7 @@
                 </div>
                 <div class="span3">
                     <ul>
-                        <li><a href="https://github.com/Citytracking/toner">Fork on Github</a></li>
+                        <li><a href="https://github.com/stamen/toner-carto">Fork on GitHub</a></li>
                         <li><a href="http://content.stamen.com/dotspotting_toner_cartography_available_for_download">Read about it</a></li>
                     </ul>
                 </div>
@@ -449,6 +450,7 @@ map.mapTypes.set(layer, new google.maps.StamenMapType(layer));</pre>
                     <code>https://stamen-tiles-{S}.a.ssl.fastly.net</code></p>
                     <p>JavaScript can be loaded from
                     <code>https://stamen-maps.a.ssl.fastly.net/js/tile.stamen.js</code>.</p>
+                    <p>If you need protocol-agnostic URLs, use <code>//stamen-tiles-{s}.a.ssl.fastly.net/</code>, as that endpoint will work for both SSL and non-SSL connections.</p>
                 </div>
 
             </div>

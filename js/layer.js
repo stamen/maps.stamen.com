@@ -33,7 +33,11 @@
             layers: [provider],
             zoomControl: false,
             attributionControl: false,
-            trackResize: false
+            trackResize: false,
+            // Maptiks tracking code
+            track_id: "b67e9b8c-1408-44ff-b788-63dee4906de9",
+            // Maptiks label
+            sa_id: "Full screen: " + providerName
         });
 
         parent.style.position = "absolute";
