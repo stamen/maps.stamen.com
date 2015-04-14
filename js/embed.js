@@ -1,6 +1,7 @@
 (function(exports) {
 
     function init() {
+        if (typeof L === 'undefined') throw new Error('Leaflet not found!');
 
         var parent = document.getElementById("map"),
             providerName = parent.getAttribute("data-provider"),
@@ -20,9 +21,14 @@
         });
 
         // set the initial map position
-        main.setView(new L.latLng(37.7706, -122.3782), 12);
+        var centerAndZoom = L.Hash.prototype.parseHash(document.location.hash);
+        if (centerAndZoom) {
+            main.setView(centerAndZoom.center, centerAndZoom.zoom);
+        } else {
+            main.setView(new L.latLng(37.7706, -122.3782), 12);
+        }
 
-        setupZoomControls(main);
+        if (typeof setupZoomControls === 'function') setupZoomControls(main);
 
         var zoom = parseInt(parent.getAttribute("data-zoom"));
         if (!isNaN(zoom)) {
@@ -36,7 +42,7 @@
         }
 
         var homeLink = document.getElementById("home-link");
-        if (homeLink) {
+        if (homeLink && typeof syncMapLinks === 'function') {
             syncMapLinks(main, [homeLink], function(parts) {
                 parts.unshift(providerName);
             });
@@ -47,7 +53,7 @@
 
     window.onload = function() {
         init();
-        track();
+        if (typeof track === 'function' ) track();
     };
 
 })(this);

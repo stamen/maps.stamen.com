@@ -437,6 +437,7 @@ L.Hash.prototype = {
     isLoaded: false,
 
     parseHash: function(hash) {
+        if (hash.charAt(0) === '#') hash = hash.slice(1);
 
         var args = hash.split("/");
         if (args.length == 3) {
