@@ -184,7 +184,7 @@ if (typeof L === "object") {
     });
 
     /*
-     * Factory function for consistency with Leaflet conventions 
+     * Factory function for consistency with Leaflet conventions
      */
     L.stamenTileLayer = function (options, source) {
         return new L.StamenTileLayer(options, source);
@@ -240,6 +240,21 @@ if (typeof OpenLayers === "object") {
  * <https://developers.google.com/maps/documentation/javascript/>
  */
 if (typeof google === "object" && typeof google.maps === "object") {
+
+    // Extending Google class based on a post by Bogart Salzberg of Portland Webworks,
+    // http://www.portlandwebworks.com/blog/extending-googlemapsmap-object
+    google.maps.ImageMapType = (function(_constructor){
+        var f = function() {
+            if (!arguments.length) {
+                return;
+            }
+            _constructor.apply(this, arguments);
+        }
+        f.prototype = _constructor.prototype;
+        return f;
+    })(google.maps.ImageMapType);
+
+
     google.maps.StamenMapType = function(name) {
         var provider = getProvider(name),
             subdomains = provider.subdomains;
@@ -262,8 +277,10 @@ if (typeof google === "object" && typeof google.maps === "object") {
             "maxZoom":  provider.maxZoom
         });
     };
+
     // FIXME: is there a better way to extend classes in Google land?
-    google.maps.StamenMapType.prototype = new google.maps.ImageMapType("_");
+    // Possibly fixed, see above ^^^ | SC
+    google.maps.StamenMapType.prototype = new google.maps.ImageMapType;
 }
 
 })(typeof exports === "undefined" ? this : exports);
