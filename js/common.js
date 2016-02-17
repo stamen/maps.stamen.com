@@ -339,6 +339,59 @@ var StamenSearch = {
     }
 };
 
+var MapzenSearch = {
+    key: "search-_f26cpg",
+    url: "https://search.mapzen.com/v1/search?text={q}&api_key={k}&size=1",
+    geocode: function(query, callback) {
+        var url = this.url.replace("{q}", encodeURIComponent(query.q))
+                          .replace("{k}", this.key);
+
+        return reqwest({
+            url: url,
+            type: "json",
+            success: function(response) {
+                if (response.features.length === 0) {
+                  return callback();
+                }
+
+                var zoom;
+
+                switch (response.features[0].properties.layer) {
+                case "neighborhood":
+                  zoom = 14;
+                  break;
+
+                case "locality":
+                  zoom = 12;
+                  break;
+
+                case "region":
+                  zoom = 8;
+                  break;
+
+                case "country":
+                  zoom = 6;
+                  break;
+
+                default:
+                  zoom = 10;
+                }
+
+                var results = [
+                  {
+                    latitude: response.features[0].geometry.coordinates[1],
+                    longitude: response.features[0].geometry.coordinates[0],
+                    zoom: zoom
+                  }
+                ];
+
+                return callback(null, results);
+            },
+            error: callback
+        });
+    }
+};
+
 var QueryString = function(params) {
     if (params) {
         if (typeof params === "string") {

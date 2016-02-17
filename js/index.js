@@ -316,10 +316,8 @@ var MAPS = {};
 
             var query = searchInput.value;
             var size = main.getSize();
-            StamenSearch.geocode({
-                q: query,
-                w: size.x,
-                h: size.y - document.getElementById("header").offsetHeight
+            MapzenSearch.geocode({
+                q: query
             }, function(err, results) {
                 revert();
 
