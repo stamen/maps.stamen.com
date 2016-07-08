@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>maps.stamen.com / terrain</title>
+        <meta name="description" content="Stamen's terrain map style is lovingly crafted and free for the taking.">
+        <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+        <script src="//cdn.maptiks.com/maptiks-leaflet.min.js"></script>
+        <script type="text/javascript" src="../../js/vendor/reqwest.min.js"></script>
+        <script type="text/javascript" src="../../js/tile.stamen.js?v1.3.0"></script>
+        <script type="text/javascript" src="../../js/common.js?recaptcha"></script>
+
+        <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
+        <style type="text/css">
+            @import url(../../css/bootstrap/bootstrap.css);
+            @import url(../../css/screen.css);
+            @import url(../../css/layer.css);
+        </style>
+    </head>
+    <body>
+        <div id="header" class="navbar">
+            <div class="navbar-inner">
+                <h1 id="tiles" class="brand"><a id="home-link" href="http://maps.stamen.com/">maps.stamen.com</a> / <span id="current-provider">terrain</span></h1>
+                <a id="stamen" class="brand" href="http://stamen.com">stamen</a>
+            </div>
+        </div>
+
+        <div id="map-main" class="map" data-provider="terrain-classic">
+            <p class="attribution">
+                <a id="home-link" target="_top" href="http://maps.stamen.com/">Map tiles</a> by <a target="_top" href="http://stamen.com">Stamen Design</a>, under <a target="_top" href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data © <a target="_top" href="http://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>.
+            </p>
+        </div>
+
+        <div id="overlay">
+            <form id="search">
+                <p>
+                <input id="search-location" class="span3" type="text" placeholder="Type a location">
+                <input id="search-submit" class="btn" type="submit" value="Find">
+                </p>
+            </form>
+            <div id="controls" class="controls">
+                <a id="zoom-in" title="zoom in">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                        <path d="M19 13h-6v6h-2v-6h-6v-2h6v-6h2v6h6v2z"/>
+                        <path d="M0 0h24v24h-24z" fill="none"/>
+                    </svg>
+                </a>
+                <a id="zoom-out" title="zoom out">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                        <path d="M19 13h-14v-2h14v2z"/>
+                        <path d="M0 0h24v24h-24z" fill="none"/>
+                    </svg>
+                </a>
+            </div>
+            <div id="embed" class="toggle controls">
+                <a id="embed-toggle" class="toggler" title="embed this map">&lt;embed&gt;</a>
+                <a id="make-image" title="make an image of this map">&lt;image&gt;</a>
+                <div id="embed-content" class="toggle-content" style="display: none;">
+                    <p>Copy the HTML below to embed this map:</p>
+                    <textarea id="embed-code" rows="3">&lt;iframe width="600" height="420" src="{url}"&gt;&lt;/iframe&gt;</textarea>
+                </div>
+            </div>
+        </div>
+
+        <script type="text/javascript" src="../../js/layer.js?20130425" defer></script>
+    </body>
+</html>
