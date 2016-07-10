@@ -16,7 +16,7 @@ function providerSupportsRetina(name) {
     for (var provider in retinaSupportedProviders) {
         // partial matches pass
         // this is to allow for variants, ie.: toner-lite, toner-labels
-        if (retinaSupportedProviders[provider].indexOf(name) > -1) {
+        if (name.indexOf(retinaSupportedProviders[provider]) > -1) {
             return true;
         }
     }
