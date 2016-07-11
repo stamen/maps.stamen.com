@@ -416,22 +416,12 @@ a#toggle-feedback.active {
     background: black;
     padding: 10px;
     padding-top: 0;
+    border: 4px solid #fff;
+    border-top: 0;
 }
 
-#feedback form,
-#feedback form p {
-    margin: 0;
-}
-#feedback form label {
-    color: #aaa;
-}
-
-#feedback form textarea {
-    margin: 10px 0;
-}
-
-#feedback #recaptcha {
-    margin-bottom: 10px;
+#feedback h4 {
+    color: #fff;
 }
 
 #feedback .btn {

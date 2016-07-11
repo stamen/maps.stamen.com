@@ -185,37 +185,10 @@ function onRecaptchaLoad() {
 function setupFeedbackForm() {
     var feedbackLink = document.getElementById("toggle-feedback");
     if (feedbackLink) {
-        var feedback = document.getElementById("feedback"),
-            styleInput = document.getElementById("feedback-style"),
-            centerInput = document.getElementById("feedback-center");
-
-
-        var recaptchaScript = document.createElement("script");
-        recaptchaScript.src = "http://www.google.com/recaptcha/api/js/recaptcha_ajax.js";
-
-        //recaptchaScript.src = "https://www.google.com/recaptcha/api.js?onload=onRecaptchaLoad&render=explicit";
-        feedback.appendChild(recaptchaScript);
+        var feedback = document.getElementById("feedback");
 
         var toggle = createToggle(feedbackLink, feedback, function(showing) {
             if (showing) {
-                Recaptcha.create("6LeG99cSAAAAABiijTMo4wvz2nrO3PNWb88CQl6v", "recaptcha");
-
-                /*grecaptcha.render("recaptcha", {
-                    sitekey: "6LeG99cSAAAAABiijTMo4wvz2nrO3PNWb88CQl6v"
-                });*/
-
-                // update the center
-                var hash = location.hash.substr(1),
-                    parts = hash.split("/");
-                if (parts.length === 4) {
-                    var provider = parts.shift();
-                    // update the style bit in the form action
-                    if (styleInput) {
-                        styleInput.value = provider;
-                    }
-                }
-                // updat the center input
-                centerInput.value = parts.join("/");
 
                 var offset = getOffset(feedbackLink);
                 // console.log("offset:", [offset.left, offset.top]);

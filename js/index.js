@@ -40,7 +40,7 @@ var MAPS = {};
             }
         }
 
-        console.log("Current Provider: ", currentProvider);
+        //console.log("Current Provider: ", currentProvider);
         var allProviders = [currentProvider];
 
         // our main map
