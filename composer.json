@@ -1,0 +1,12 @@
+
+{
+  "require" : {
+    "braintree/braintree_php" : "3.6.1",
+    "php": ">=5.2.1",
+    "vlucas/phpdotenv": "2.1.0"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "3.7.*",
+    "ext-curl": "*"
+  }
+}

@@ -1,2 +1,6 @@
 .*.swp
 config.ini
+
+*.phar
+.env
+vendor

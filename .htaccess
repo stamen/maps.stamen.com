@@ -1,4 +1,11 @@
 Options +MultiViews
+
+# Hide config.ini from evil doers
 <Files config.ini>
+    Deny from all
+</Files>
+
+# Hide .env from evil doers
+<Files .env>
     Deny from all
 </Files>

@@ -1,3 +1,53 @@
+<?php
+    session_start();
+    require_once("./vendor/autoload.php");
+
+    if(file_exists(__DIR__ . "/.env")) {
+        $dotenv = new Dotenv\Dotenv(__DIR__ . "/");
+        $dotenv->load();
+    }
+
+    Braintree\Configuration::environment(getenv('BT_ENVIRONMENT'));
+    Braintree\Configuration::merchantId(getenv('BT_MERCHANT_ID'));
+    Braintree\Configuration::publicKey(getenv('BT_PUBLIC_KEY'));
+    Braintree\Configuration::privateKey(getenv('BT_PRIVATE_KEY'));
+
+    if (isset($_SESSION["errors"]) || isset($_SESSION["success"]))  {
+        if (isset($_SESSION["errors"])) {
+            $alertKlass = "alert-error";
+            $alertHeader = "Transaction Error!";
+            $alertMessage = $_SESSION["errors"];
+
+            unset($_SESSION["errors"]);
+        } else if ($_SESSION["success"]) {
+            $transaction = Braintree\Transaction::find($_SESSION["success"]);
+
+            $transactionSuccessStatuses = [
+                Braintree\Transaction::AUTHORIZED,
+                Braintree\Transaction::AUTHORIZING,
+                Braintree\Transaction::SETTLED,
+                Braintree\Transaction::SETTLING,
+                Braintree\Transaction::SETTLEMENT_CONFIRMED,
+                Braintree\Transaction::SETTLEMENT_PENDING,
+                Braintree\Transaction::SUBMITTED_FOR_SETTLEMENT
+            ];
+
+            if (in_array($transaction->status, $transactionSuccessStatuses)) {
+                $isSuccessful = 1;
+                $alertKlass = "alert-success";
+                $alertHeader = "Success!";
+                $alertMessage = "Thank you for your donation.";
+            } else {
+                $alertKlass = "alert-error";
+                $alertHeader = "Transaction Failed";
+                $alertMessage = "Your transaction has a status of " . $transaction->status;
+            }
+
+            unset($_SESSION["success"]);
+        }
+    }
+?>
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -12,28 +62,54 @@
         <meta property="og:image" content="http://maps.stamen.com/images/fb-toner.png">
         <meta property="og:image" content="http://maps.stamen.com/images/fb-terrain.png">
 
-        <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
-        <script src="//cdn.maptiks.com/maptiks-leaflet.min.js"></script>
-        <script type="text/javascript" src="js/polyfills.js"></script>
-        <script type="text/javascript" src="js/vendor/reqwest.min.js"></script>
-        <script type="text/javascript" src="js/tile.stamen.js?v1.3.0"></script>
-        <script type="text/javascript" src="js/common.js?recaptcha"></script>
-        <script type="text/javascript" src="js/vendor/google-code-prettify/prettify.js"></script>
-
         <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
         <style type="text/css">
             @import url(css/bootstrap/bootstrap.css);
             @import url(css/screen.css?white-maps);
         </style>
 
-        <!--[if IE 9]>
-        <style>
-
-        </style>
-        <![endif]-->
-
     </head>
     <body>
+    <?php if (isset($alertKlass)): ?>
+        <div class="notice-wrapper alert alert-block <?php echo($alertKlass)?>">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+
+            <h3><?php echo($alertHeader)?></h3>
+            <span class="notice-message"><?php echo($alertMessage)?></span>
+
+            <?php if (isset($isSuccessful) && $isSuccessful): ?>
+                <article>
+                    <section>
+                        <h4>Transaction Details</h4>
+                        <table cellpadding="0" cellspacing="0">
+                            <tbody>
+                                <tr>
+                                    <td>id</td>
+                                    <td><?php echo($transaction->id)?></td>
+                                </tr>
+
+                                <tr>
+                                    <td>amount</td>
+                                    <td>$<?php echo($transaction->amount)?></td>
+                                </tr>
+
+                                <tr>
+                                    <td>status</td>
+                                    <td><?php echo($transaction->status)?></td>
+                                </tr>
+
+                                <tr>
+                                    <td>created_at</td>
+                                    <td><?php echo($transaction->createdAt->format('Y-m-d H:i:s'))?></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </section>
+                </article>
+            <?php endif; ?>
+        </div>
+    <?php endif; ?>
+
         <div id="header" class="navbar">
             <div class="navbar-inner">
                 <div class="container">
@@ -116,147 +192,171 @@
             These maps are presented here for your enjoyment and use wherever
             you display <a href="http://openstreetmap.org">OpenStreetMap</a>
             data.</p>
+            <div class="row">
+                <div id="donate" class="sidebar span3">
+                    <h2>Donate</h2>
+                    <div class="bordered">
+                        <p><strong>maps.stamen.com</strong> remains free (and ad-free), serves upwards of 600 million tiles a month, and takes us hundreds of hours, and thousands of dollars, to sustain.</p>
+                        <p>If you find any value or joy in these maps, or if you rely on them for your work or play, please consider a donation in any amount.</p>
+                        <!-- <button class="btn">Give Now</button> -->
 
-            <div id="tiles-toner" class="tiles row">
-                <a href="toner/#14/37.8024/-122.2645" class="map span3"
-                    data-provider="toner"
-                    data-center="37.8024,-122.2645"
-                    data-zoom="14"></a>
-                <div class="span6">
-                    <h3><a class="hashish" href="toner/">Toner</a></h3>
 
-                    <p>These high-contrast B+W (black and white) maps are
-                    featured in our Dotspotting project. They are perfect for data
-                    mashups and exploring river meanders and coastal zones.
-                    Available in six flavors:
-                    <a class="hashish" href="toner/">standard toner</a>,
-                    <a class="hashish" href="toner-hybrid/">hybrid</a>,
-                    <a class="hashish" href="toner-labels/">labels</a>,
-                    <a class="hashish" href="toner-lines/">lines</a>,
-                    <a class="hashish" href="toner-background/">background</a>,
-                    and <a class="hashish" href="toner-lite/">lite</a>.</p>
+                        <form method="post" id="payment-form" action="<?php echo(dirname($_SERVER['PHP_SELF']))?>/checkout.php">
+                            <section>
+                                <div class="bt-drop-in-wrapper">
+                                    <div id="bt-dropin"></div>
+                                </div>
 
-                    <p><strong>Available worldwide.</strong></p>
+                                <label for="amount" class="donate-label">
+                                    <span class="input-label">Amount</span>
+                                    <div class="input-wrapper amount-wrapper">
+                                        <input id="amount" name="amount" type="tel" min="1" placeholder="Amount" value="10">
+                                    </div>
+                                </label>
+                            </section>
+
+                            <button class="btn" type="submit"><span>Give Now</span></button>
+                        </form>
+
+                    </div>
+
                 </div>
-                <div class="span3">
-                    <ul>
-                        <li><a href="https://github.com/stamen/toner-carto">Fork on GitHub</a></li>
-                        <li><a href="http://content.stamen.com/dotspotting_toner_cartography_available_for_download">Read about it</a></li>
-                    </ul>
-                </div>
-            </div>
+                <div class="span9">
+                    <div id="tiles-toner" class="tiles row">
+                        <a href="toner/#14/37.8024/-122.2645" class="map span3"
+                            data-provider="toner"
+                            data-center="37.8024,-122.2645"
+                            data-zoom="14"></a>
+                        <div class="span6">
+                            <h3><a class="hashish" href="toner/">Toner</a></h3>
 
-            <div id="tiles-terrain" class="tiles row">
-                <a href="terrain/#11/36.3716/-121.7322" class="map span3"
-                    data-provider="terrain"
-                    data-center="36.3716,-121.7322"
-                    data-zoom="11"></a>
-                <div class="span6">
-                    <h3><a class="hashish" href="terrain/">Terrain</a></h3>
+                            <p>These high-contrast B+W (black and white) maps are
+                            featured in our Dotspotting project. They are perfect for data
+                            mashups and exploring river meanders and coastal zones.
+                            Available in six flavors:
+                            <a class="hashish" href="toner/">standard toner</a>,
+                            <a class="hashish" href="toner-hybrid/">hybrid</a>,
+                            <a class="hashish" href="toner-labels/">labels</a>,
+                            <a class="hashish" href="toner-lines/">lines</a>,
+                            <a class="hashish" href="toner-background/">background</a>,
+                            and <a class="hashish" href="toner-lite/">lite</a>.</p>
 
-                    <p>Orient yourself with our terrain maps, featuring hill shading
-                    and natural vegetation colors. These maps showcase advanced
-                    labeling and linework generalization of dual-carriageway roads.
-                    Terrain was developed in collaboration with Gem Spear and Nelson Minar.
-                    Available in four flavors:
-                    <a class="hashish" href="terrain/">standard terrain</a>,
-                    <a class="hashish" href="terrain-labels/">labels</a>,
-                    <a class="hashish" href="terrain-lines/">lines</a>,
-                    and <a class="hashish" href="terrain-background/">background</a>.</p>
+                            <p><strong>Available worldwide.</strong></p>
 
-                    <p><strong>Available in the USA only.</strong></p>
-                </div>
-                <div class="span3">
-                    <ul>
-                        <li><a href="https://github.com/Citytracking/Terrain">Fork on Github</a></li>
-                        <li><a href="http://mike.teczno.com/notes/osm-us-terrain-layer/foreground.html">Read about it</a></li>
-                    </ul>
-                </div>
-            </div>
+                            <ul>
+                                <li><a href="https://github.com/stamen/toner-carto">Fork on GitHub</a></li>
+                                <li><a href="http://content.stamen.com/dotspotting_toner_cartography_available_for_download">Read about it</a></li>
+                            </ul>
+                        </div>
+                    </div>
 
-            <div id="tiles-watercolor" class="tiles row">
-                <a href="watercolor/#10/37.7682/-122.4451" class="map span3"
-                    data-provider="watercolor"
-                    data-center="37.7682,-122.4451"
-                    data-zoom="9"></a>
-                <div class="span6">
-                    <h3><a class="hashish" href="watercolor/">Watercolor</a></h3>
-                    <p>Reminiscent of hand drawn maps, our watercolor maps apply
-                    raster effect area washes and organic edges over a paper texture
-                    to add warm pop to any map. Watercolor was inspired by the
-                    <a href="http://www.kickstarter.com/projects/bicycleportraits/bicycle-portraits-a-photographic-book-part-iii-fin">Bicycle Portraits project</a>.
-                    Thanks to <a href="http://otherthings.com/blog/">Cassidy Curtis</a> for his early advice.</p>
+                    <div id="tiles-terrain" class="tiles row">
+                        <a href="terrain/#11/36.3716/-121.7322" class="map span3"
+                            data-provider="terrain"
+                            data-center="36.3716,-121.7322"
+                            data-zoom="11"></a>
+                        <div class="span6">
+                            <h3><a class="hashish" href="terrain/">Terrain</a></h3>
 
-                    <p><strong>Available worldwide.</strong></p>
-                </div>
-                <div class="span3">
-                    <ul>
-                        <li><a href="http://citytracking.org/talking-maps/">Read about it</a></li>
-                    </ul>
-                </div>
-            </div>
+                            <p>Orient yourself with our terrain maps, featuring hill shading
+                            and natural vegetation colors. These maps showcase advanced
+                            labeling and linework generalization of dual-carriageway roads.
+                            Terrain was developed in collaboration with Gem Spear and Nelson Minar.
+                            Available in four flavors:
+                            <a class="hashish" href="terrain/">standard terrain</a>,
+                            <a class="hashish" href="terrain-labels/">labels</a>,
+                            <a class="hashish" href="terrain-lines/">lines</a>,
+                            and <a class="hashish" href="terrain-background/">background</a>.</p>
 
-            <div id="burningmap" class="tiles row">
-                <a href="burningmap/#10/37.7682/-122.4451" class="span3"><img
-                    src="images/burningmap.gif" alt="Really hot heatmaps"></a>
-                <div class="span6">
-                    <h3><a class="hashish" href="burningmap/">Burning Map</a></h3>
-                    <p>The roof, the roof, the roof is on fire! These "heat
-                    maps" use <a href="toner-lines/">toner-lines</a> as the
-                    foundation on which to draw fiery animations. It's our way
-                    of showing that maps don't have to lie still on the screen
-                    anymore, and that we can use the whole world as a canvas
-                    for interaction and movement.</p>
+                            <p><strong>Available in the USA only.</strong></p>
 
-                    <p><strong>Requires a WebGL-enabled browser, such as <a href="http://google.com/chrome">Google Chrome</a>.</strong></p>
-                </div>
-                <div class="span3">
-                    <ul>
-                        <li><a href="http://content.stamen.com/announcing_burningmap">Read about it</a></li>
-                    </ul>
-                </div>
-            </div>
+                            <ul>
+                                <li><a href="https://github.com/Citytracking/Terrain">Fork on Github</a></li>
+                                <li><a href="http://mike.teczno.com/notes/osm-us-terrain-layer/foreground.html">Read about it</a></li>
+                            </ul>
+                        </div>
+                    </div>
 
-            <div id="mars" class="tiles row">
-                <a href="mars/" class="span3"><img
-                    src="images/mars-thumbnail.png" alt="Mars!"></a>
-                <div class="span6">
-                    <h3><a href="mars/">Mars</a>??</h3>
-                    <p>Yes, Mars. The Mars Orbiter Laser Altimeter, or MOLA, is an
-					instrument on the Mars Global Surveyor (MGS), a spacecraft that
-					was launched on November 7, 1996.  The MOLA dataset also
-					contains height data, which we've made into a 3D contour map.</p>
+                    <div id="tiles-watercolor" class="tiles row">
+                        <a href="watercolor/#10/37.7682/-122.4451" class="map span3"
+                            data-provider="watercolor"
+                            data-center="37.7682,-122.4451"
+                            data-zoom="9"></a>
+                        <div class="span6">
+                            <h3><a class="hashish" href="watercolor/">Watercolor</a></h3>
+                            <p>Reminiscent of hand drawn maps, our watercolor maps apply
+                            raster effect area washes and organic edges over a paper texture
+                            to add warm pop to any map. Watercolor was inspired by the
+                            <a href="http://www.kickstarter.com/projects/bicycleportraits/bicycle-portraits-a-photographic-book-part-iii-fin">Bicycle Portraits project</a>.
+                            Thanks to <a href="http://otherthings.com/blog/">Cassidy Curtis</a> for his early advice.</p>
 
-                    <p><strong>Requires a WebGL-enabled browser, such as <a href="http://google.com/chrome">Google Chrome</a>.</strong></p>
-                </div>
-                <div class="span3">
-                    <ul>
-                        <!-- <li><a href="#">Read about it</a></li> -->
-                        <li><a href="http://mola.gsfc.nasa.gov/">MOLA at NASA</a></li>
-                    </ul>
-                </div>
-            </div>
+                            <p><strong>Available worldwide.</strong></p>
 
-            <div id="trees-cabs-crime" class="tiles row">
-                <a href="trees-cabs-crime/" class="map span3"
-                    data-provider="trees-cabs-crime"
-                    data-center="37.770,-122.425"
-                    data-zoom="13"></a>
-                <div class="span6">
-                    <h3><a href="trees-cabs-crime/">Trees, Cabs &amp; Crime</a></h3>
-                    <p>Trees, Cabs &amp; Crime started off as a weekend hack
-                    and ended up in the Venice Biennale. This map
-                    combines three data sets (street tree locations, taxi cab
-                    GPS positions, and crime reports) with
-                    subtractive blending to reveal halftones hidden in the
-                    urban fabric of San Francisco.</p>
+                            <ul>
+                                <li><a href="http://citytracking.org/talking-maps/">Read about it</a></li>
+                            </ul>
+                        </div>
+                    </div>
 
-                    <p><strong>Available in San Francisco, California.</strong></p>
-                </div>
-                <div class="span3">
-                    <ul>
-                        <li><a href="http://content.stamen.com/trees-cabs-crime_in_venice">Read about it</a></li>
-                    </ul>
+                    <div id="burningmap" class="tiles row">
+                        <a href="burningmap/#10/37.7682/-122.4451" class="span3"><img
+                            src="images/burningmap.gif" alt="Really hot heatmaps"></a>
+                        <div class="span6">
+                            <h3><a class="hashish" href="burningmap/">Burning Map</a></h3>
+                            <p>The roof, the roof, the roof is on fire! These "heat
+                            maps" use <a href="toner-lines/">toner-lines</a> as the
+                            foundation on which to draw fiery animations. It's our way
+                            of showing that maps don't have to lie still on the screen
+                            anymore, and that we can use the whole world as a canvas
+                            for interaction and movement.</p>
+
+                            <p><strong>Requires a WebGL-enabled browser, such as <a href="http://google.com/chrome">Google Chrome</a>.</strong></p>
+
+                            <ul>
+                                <li><a href="http://content.stamen.com/announcing_burningmap">Read about it</a></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div id="mars" class="tiles row">
+                        <a href="mars/" class="span3"><img
+                            src="images/mars-thumbnail.png" alt="Mars!"></a>
+                        <div class="span6">
+                            <h3><a href="mars/">Mars</a>??</h3>
+                            <p>Yes, Mars. The Mars Orbiter Laser Altimeter, or MOLA, is an
+        					instrument on the Mars Global Surveyor (MGS), a spacecraft that
+        					was launched on November 7, 1996.  The MOLA dataset also
+        					contains height data, which we've made into a 3D contour map.</p>
+
+                            <p><strong>Requires a WebGL-enabled browser, such as <a href="http://google.com/chrome">Google Chrome</a>.</strong></p>
+                            <ul>
+                                <!-- <li><a href="#">Read about it</a></li> -->
+                                <li><a href="http://mola.gsfc.nasa.gov/">MOLA at NASA</a></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div id="trees-cabs-crime" class="tiles row">
+                        <a href="trees-cabs-crime/" class="map span3"
+                            data-provider="trees-cabs-crime"
+                            data-center="37.770,-122.425"
+                            data-zoom="13"></a>
+                        <div class="span6">
+                            <h3><a href="trees-cabs-crime/">Trees, Cabs &amp; Crime</a></h3>
+                            <p>Trees, Cabs &amp; Crime started off as a weekend hack
+                            and ended up in the Venice Biennale. This map
+                            combines three data sets (street tree locations, taxi cab
+                            GPS positions, and crime reports) with
+                            subtractive blending to reveal halftones hidden in the
+                            urban fabric of San Francisco.</p>
+
+                            <p><strong>Available in San Francisco, California.</strong></p>
+
+                            <ul>
+                                <li><a href="http://content.stamen.com/trees-cabs-crime_in_venice">Read about it</a></li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -466,9 +566,40 @@ map.mapTypes.set(layer, new google.maps.StamenMapType(layer));</pre>
 
         </div>
 
+        <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+        <script src="//cdn.maptiks.com/maptiks-leaflet.min.js"></script>
+        <script type="text/javascript" src="js/polyfills.js"></script>
+        <script type="text/javascript" src="js/vendor/reqwest.min.js"></script>
+        <script type="text/javascript" src="js/tile.stamen.js?v1.3.0"></script>
+        <script type="text/javascript" src="js/common.js?recaptcha"></script>
+        <script type="text/javascript" src="js/vendor/google-code-prettify/prettify.js"></script>
+        <script src="https://js.braintreegateway.com/js/braintree-2.26.0.min.js"></script>
+
+        <script type="text/javascript" src="js/donate.js"></script>
         <script type="text/javascript" src="js/index.js?20130425" defer></script>
         <!-- google code prettify -->
-        <script type="text/javascript" defer>prettyPrint();</script>
+        <script type="text/javascript" defer>
+            prettyPrint();
+
+            var checkout = new Donate({
+                formID: 'payment-form'
+            });
+
+            // donate form
+            var client_token = "<?php echo(Braintree\ClientToken::generate()); ?>";
+            braintree.setup(client_token, "dropin", {
+                container: "bt-dropin"
+            });
+
+            // close btns
+            var closeButtons = document.querySelectorAll('button.close');
+            for (var i = 0; i<closeButtons.length; i++) {
+                closeButtons[i].addEventListener('click', function(e) {
+                    var alert = this.closest('.notice-wrapper');
+                    alert.parentNode.removeChild(alert);
+                });
+            }
+        </script>
     </body>
 </html>
 
