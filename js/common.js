@@ -10,7 +10,7 @@ var mediaQuery = "(-webkit-min-device-pixel-ratio: 1.5),\
 
 // TODO: this probably should be in StamenTileLayer
 // ie: {@2x: true}
-var retinaSupportedProviders = ["toner", "terrain"];
+var retinaSupportedProviders = ["toner", "terrain", "terrain-classic"];
 
 function providerSupportsRetina(name) {
     for (var provider in retinaSupportedProviders) {
