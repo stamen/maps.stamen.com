@@ -44,7 +44,7 @@ var SUBDOMAINS = "a. b. c. d.".split(" "),
         }
     };
 
-PROVIDERS["terrain-classic"].url = "http://{$S}tile.stamen.com/terrain/{Z}/{X}/{Y}.png";
+PROVIDERS["terrain-classic"].url = "http://{S}tile.stamen.com/terrain/{Z}/{X}/{Y}.png";
 
 // set up toner and terrain flavors
 setupFlavors("toner", ["hybrid", "labels", "lines", "background", "lite"]);
