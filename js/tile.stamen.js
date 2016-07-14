@@ -23,6 +23,7 @@ var SUBDOMAINS = "a. b. c. d.".split(" "),
     PROVIDERS =  {
         "toner":        MAKE_PROVIDER("toner", "png", 0, 20),
         "terrain":      MAKE_PROVIDER("terrain", "png", 0, 18),
+        "terrain-classic": MAKE_PROVIDER("terrain-classic", "png", 0, 18),
         "watercolor":   MAKE_PROVIDER("watercolor", "jpg", 1, 18),
         "trees-cabs-crime": {
             "url": "http://{S}.tiles.mapbox.com/v3/stamen.trees-cabs-crime/{Z}/{X}/{Y}.png",
@@ -42,6 +43,8 @@ var SUBDOMAINS = "a. b. c. d.".split(" "),
             ].join(" ")
         }
     };
+
+PROVIDERS["terrain-classic"].url = "http://{$S}tile.stamen.com/terrain/{Z}/{X}/{Y}.png";
 
 // set up toner and terrain flavors
 setupFlavors("toner", ["hybrid", "labels", "lines", "background", "lite"]);
@@ -63,7 +66,8 @@ var odbl = [
     "terrain",
     "terrain-background",
     "terrain-lines",
-    "terrain-labels"
+    "terrain-labels",
+    "terrain-classic"
 ];
 
 for (var i = 0; i < odbl.length; i++) {
