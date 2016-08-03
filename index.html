@@ -51,6 +51,7 @@
                         <!--<h2 id="main-title"><a id="main-permalink" class="permalink" href="#"><span class="provider-name"></span><span class="icon">&#x21F2;</span></a></h2>-->
                         <h2 id="main-title">
                             <a href="" id="main-permalink" class="permalink"><span class="provider-name"></span><span>&#x21F2;</span></a>
+                            <a class="donate-link" title="donate" href="https://stamen.com/opensource/#donate" target="_blank">donate</a>
                         </h2>
                     </div>
                 </div>
@@ -91,19 +92,22 @@
                 <div id="map-sub2" class="map switch" data-provider="terrain"><h3><a class="provider-name" href="#terrain">Terrain</a></h3></div>
                 <div id="map-sub3" class="map switch" data-provider="watercolor"><h3><a class="provider-name" href="#watercolor">Watercolor</a></h3></div>
                 <div id="feedback" class="toggle" style="display: none;">
-                    <form id="feedback-form" target="_blank" method="POST" action="feedback.php">
-                        <input id="feedback-center" name="center" type="hidden">
-                        <input id="feedback-style" name="style" type="hidden">
-                        <p><strong>Not looking right?</strong>
-                        <a href="http://citytracking.org/some-known-bugs-and-whats-to-do/">See here for more info.</a><br>
-                        You can help us track down problems by sending us a
-                        brief description of what&rsquo;s wrong:</p>
-                        <textarea name="description"></textarea>
-                        <p><small>A link to the current view will be included automatically.</small></p>
-                        <p><label>Your email (optional): <input type="text" name="sender"></label></p>
-                        <div id="recaptcha"></div>
-                        <p><input id="send-feedback" class="btn btn-success" type="submit" value="submit"></p>
-                    </form>
+                    <div>
+                        <p><strong>Not looking right?</strong> <a href="http://citytracking.org/some-known-bugs-and-whats-to-do/">See here for more info.</a></p>
+                        <p>You can help us track down problems by creating an <a href="https://github.com/stamen/maps.stamen.com/issues/new">issue</a> in the <a href="https://github.com/stamen/maps.stamen.com">maps.stamen.com</a> repo.</a></p>
+
+                        <h4>When submitting a new issue, please:</h4>
+                        <ul>
+                            <li>Make sure there isn't an issue already submitted.</li>
+                            <li>Include in the description:
+                                <ol>
+                                <li>Current maps.stamen.com URL</li>
+                                <li>A detailed description of the problem</li>
+                                <li>Screenshots would be great too!</li>
+                                </ol>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
