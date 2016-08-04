@@ -62,18 +62,22 @@
                 </div>
             </div>
             <div id="feedback" class="toggle" style="display: none;">
-                <form target="_blank" method="POST" action="../feedback.php?style=toner-lines">
-                    <input id="feedback-center" name="center" type="hidden">
-                    <p><strong>Not looking right?</strong>
-                    <a href="http://citytracking.org/some-known-bugs-and-whats-to-do/">See here for more info.</a><br>
-                    You can help us track down problems by sending us a
-                    brief description of what&rsquo;s wrong:</p>
-                    <textarea name="description"></textarea>
-                    <p><small>A link to the current view will be included automatically.</small></p>
-                    <p><label>Your email (optional): <input type="text" name="sender"></label></p>
-                    <div id="recaptcha"></div>
-                    <p><input id="send-feedback" class="btn btn-success" type="submit" value="submit"></p>
-                </form>
+                <div>
+                    <p><strong>Not looking right?</strong></p>
+                    <p>You can help us track down problems by creating an <a href="https://github.com/stamen/toner-carto/issues/new">issue</a> in the <a href="https://github.com/stamen/toner-carto">toner-carto</a> repo.</a></p>
+
+                    <h4>When submitting a new issue, please:</h4>
+                    <ul>
+                        <li>Make sure there isn't an issue already submitted.</li>
+                        <li>Include in the description:
+                            <ol>
+                            <li>Current maps.stamen.com URL</li>
+                            <li>A detailed description of the problem</li>
+                            <li>Screenshots would be great too!</li>
+                            </ol>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
 
