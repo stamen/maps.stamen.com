@@ -313,7 +313,7 @@ var StamenSearch = {
 };
 
 var MapzenSearch = {
-    key: "search-_f26cpg",
+    key: "mapzen-3BNiUqo",
     url: "https://search.mapzen.com/v1/search?text={q}&api_key={k}&size=1",
     geocode: function(query, callback) {
         var url = this.url.replace("{q}", encodeURIComponent(query.q))
