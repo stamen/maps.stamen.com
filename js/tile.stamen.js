@@ -262,8 +262,12 @@ if (typeof google === "object" && typeof google.maps === "object") {
     })(google.maps.ImageMapType);
 
 
-    google.maps.StamenMapType = function(name) {
-        var provider = getProvider(name),
+    google.maps.StamenMapType = function(provider_name, options) {
+        if(options) {
+            options = {}
+        }
+        
+        var provider = getProvider(provider_name),
             subdomains = provider.subdomains;
         return google.maps.ImageMapType.call(this, {
             "getTileUrl": function(coord, zoom) {
@@ -279,9 +283,9 @@ if (typeof google === "object" && typeof google.maps === "object") {
                     .replace("{Y}", y);
             },
             "tileSize": new google.maps.Size(256, 256),
-            "name":     name,
-            "minZoom":  provider.minZoom,
-            "maxZoom":  provider.maxZoom
+            "name":     options.name || provider_name,
+            "minZoom":  options.minZoom || provider.minZoom,
+            "maxZoom":  options.maxZoom || provider.maxZoom
         });
     };
 
