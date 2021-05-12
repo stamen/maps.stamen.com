@@ -114,9 +114,9 @@
 
         <div id="content" class="container content">
             <p id="desc">For over a decade, Stamen has been exploring
-            <a href="http://stamen.com/cartography">cartography</a>
-            with our <a href="http://stamen.com/clients">clients</a>
-            and in <a href="http://stamen.com/projects">research</a>.
+            cartography
+            with our <a href="http://stamen.com/work">clients</a>
+            and in research.
             These maps are presented here for your enjoyment and use wherever
             you display <a href="http://openstreetmap.org">OpenStreetMap</a>
             data.</p>
@@ -145,7 +145,7 @@
                 <div class="span3">
                     <ul>
                         <li><a href="https://github.com/stamen/toner-carto">Fork on GitHub</a></li>
-                        <li><a href="http://content.stamen.com/dotspotting_toner_cartography_available_for_download">Read about it</a></li>
+                        <li><a href="https://hi.stamen.com/a-new-knight-grant-new-toner-new-infrastructure-8869fc74af39">Read about it</a></li>
                     </ul>
                 </div>
             </div>
@@ -173,7 +173,7 @@
                 <div class="span3">
                     <ul>
                         <li><a href="https://github.com/stamen/terrain-classic">Fork on Github</a></li>
-                        <li><a href="http://mike.teczno.com/notes/osm-us-terrain-layer/foreground.html">Read about it</a></li>
+                        <li><a href="https://hi.stamen.com/say-hello-to-global-stamen-terrain-maps-c195b3bb71e0">Read about it</a></li>
                     </ul>
                 </div>
             </div>
@@ -195,7 +195,7 @@
                 </div>
                 <div class="span3">
                     <ul>
-                        <li><a href="http://citytracking.org/talking-maps/">Read about it</a></li>
+                        <li><a href="https://hi.stamen.com/watercolor-process-3dd5135861fe">Read about it</a></li>
                     </ul>
                 </div>
             </div>
@@ -216,7 +216,7 @@
                 </div>
                 <div class="span3">
                     <ul>
-                        <li><a href="http://content.stamen.com/announcing_burningmap">Read about it</a></li>
+                        <li><a href="https://hi.stamen.com/announcing-burningmap-5cccb7789150">Read about it</a></li>
                     </ul>
                 </div>
             </div>
@@ -259,7 +259,7 @@
                 </div>
                 <div class="span3">
                     <ul>
-                        <li><a href="http://content.stamen.com/trees-cabs-crime_in_venice">Read about it</a></li>
+                        <li><a href="https://hi.stamen.com/trees-cabs-crime-in-the-venice-biennale-968ea4983177">Read about it</a></li>
                     </ul>
                 </div>
             </div>
@@ -346,7 +346,7 @@
                         </script>
                         <p>If you roll your own tiles from another source you will still need to credit &ldquo;Map data by OpenStreetMap, under ODbL.&rdquo;
                         And if you <em>do</em> use these maps elsewhere, please post a tweet to <a href="http://twitter.com/stamen">@stamen</a>!</p>
-                        <p><a href="http://www.openstreetmap.org/copyright">Isn't OSM data provided under the ODbL now?</a> Yes, but the data used in our some of our map tiles pre-dates the license change, so it remains CC BY SA until it's refreshed.</p>
+                        <p><a href="http://www.openstreetmap.org/copyright">Isn't OSM data provided under the ODbL now?</a> Yes, but the data used in our some of our Watercolor map tiles pre-dates the license change, so it remains CC BY SA until it's refreshed.</p>
                     </div>
                 </div>
 
@@ -357,29 +357,15 @@
                             <p>To use these tiles, just include
                             <a href="js/tile.stamen.js?v1.3.0">our JavaScript</a>
                             alongside your favorite mapping library:</p>
-                            <pre class="prettyprint">&lt;script type="text/javascript" src="http://maps.stamen.com/js/tile.stamen.js?v1.3.0"&gt;&lt;/script&gt;</pre>
+                            <pre class="prettyprint">&lt;script type="text/javascript" src="https://stamen-maps.a.ssl.fastly.net/js/tile.stamen.js?v1.3.0"&gt;&lt;/script&gt;</pre>
                             <p>Then, follow the instructions below for your preferred library:</p>
                         </div>
                     </div>
 
-                    <div id="usage-modestmaps">
-                        <h4><a href="http://github.com/modestmaps/modestmaps-js">ModestMaps</a></h4>
-                        <div class="row">
-                            <p class="span4">ModestMaps is a no-frills mapping library by Stamen and friends.
-                                View the <a href="test/modestmaps.html">example</a>.</p>
-                            <div class="span8">
-                                <pre class="prettyprint">// replace "toner" here with "terrain" or "watercolor"
-var layer = new MM.StamenTileLayer("toner");
-var map = new MM.Map("element_id", layer);
-map.setCenterZoom(new MM.Location(37.7, -122.4), 12);</pre>
-                            </div>
-                        </div>
-                    </div>
-
                     <div id="usage-leaflet">
-                        <h4><a href="http://leaflet.cloudmade.com/">Leaflet</a></h4>
+                        <h4><a href="http://leafletjs.com/">Leaflet</a></h4>
                         <div class="row">
-                            <p class="span4">Leaflet is a lightweight and easy-to-use library by <a href="http://cloudmade.com">Cloudmade</a>.
+                            <p class="span4">Leaflet is a lightweight and easy-to-use mapping library</a>.
                                 View the <a href="test/leaflet.html">example</a>.</p>
                             <div class="span8">
                                 <pre class="prettyprint">// replace "toner" here with "terrain" or "watercolor"
@@ -407,27 +393,6 @@ map.addLayer(layer);</pre>
                         </div>
                     </div>
 
-                    <div id="usage-google">
-                        <h4><a href="http://code.google.com/apis/maps/documentation/javascript/">Google Maps</a></h4>
-                        <div class="row">
-                            <p class="span4">The Google Maps API is ubiquitous and feature-rich, but requires an <a href="#">API key</a> and may <a href="http://code.google.com/apis/maps/faq.html#usage_pricing">cost money</a> if your usage exceeds 25,000 map views per day.
-                                View the <a href="test/google.html">example</a>.</p>
-                            <div class="span8">
-                                <pre class="prettyprint">// replace "toner" here with "terrain" or "watercolor"
-var layer = "toner";
-var map = new google.maps.Map(document.getElementById("element_id"), {
-    center: new google.maps.LatLng(37.7, -122.4),
-    zoom: 12,
-    mapTypeId: layer,
-    mapTypeControlOptions: {
-        mapTypeIds: [layer]
-    }
-});
-map.mapTypes.set(layer, new google.maps.StamenMapType(layer));</pre>
-                            </div>
-                        </div>
-                    </div>
-
                 </div>
 
                 <div class="usage" id="usage-elsehwere">
@@ -435,19 +400,11 @@ map.mapTypes.set(layer, new google.maps.StamenMapType(layer));</pre>
                     <p>Many applications and libraries understand the notion of map URL templates.
                     These are ours:</p>
                     <ul>
-                        <li><tt>http://tile.stamen.com/toner/{z}/{x}/{y}.png</tt></li>
-                        <li><tt>http://tile.stamen.com/terrain/{z}/{x}/{y}.jpg</tt></li>
-                        <li><tt>http://tile.stamen.com/watercolor/{z}/{x}/{y}.jpg</tt></li>
+                        <li><tt>https://stamen-tiles.a.ssl.fastly.net/toner/{z}/{x}/{y}.png</tt></li>
+                        <li><tt>https://stamen-tiles.a.ssl.fastly.net/terrain/{z}/{x}/{y}.jpg</tt></li>
+                        <li><tt>https://stamen-tiles.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.jpg</tt></li>
                     </ul>
-                </div>
-
-                <div class="usage" id="usage-ssl">
-                    <h3>SSL</h3>
-                    <p>If you'd like to display these map tiles on a website
-                    that requires HTTPS, use our tile SSL endpoint by replacing
-                    <code>http://tile.stamen.com</code> with
-                    <code>https://stamen-tiles.a.ssl.fastly.net</code>.
-                    Multiple subdomains can be also be used:
+		    <p>Multiple subdomains can be also be used:
                     <code>https://stamen-tiles-{S}.a.ssl.fastly.net</code></p>
                     <p>JavaScript can be loaded from
                     <code>https://stamen-maps.a.ssl.fastly.net/js/tile.stamen.js</code>.</p>
@@ -459,13 +416,13 @@ map.mapTypes.set(layer, new google.maps.StamenMapType(layer));</pre>
             <div id="footer" class="row light">
                 <p class="span9 light">Thank you to <a href="https://geocode.earth">geocode.earth</a> for powering our search box.</p>
                 <p id="credit" class="span9 light">These tiles are made available as part of the
-                <a href="http://citytracking.org">CityTracking</a> project,
+                <a href="http://github.com/Citytracking">CityTracking</a> project,
                 funded by the <a href="http://www.knightfoundation.org/">Knight Foundation</a>,
                 in which Stamen is building web services and
                 <a href="http://github.com/Citytracking">open source tools</a>
                 to display public data in easy-to-understand, highly visual ways.</p>
                 <div id="logo" class="span3">
-                    <a href="http://citytracking.org"><img src="images/citytracking-logo.png" alt="CityTracking"></a>
+                    <a href="http://github.com/Citytracking"><img src="images/citytracking-logo.png" alt="CityTracking"></a>
                 </div>
             </div>
 
