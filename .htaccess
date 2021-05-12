@@ -2,3 +2,8 @@ Options +MultiViews
 <Files config.ini>
     Deny from all
 </Files>
+
+<FilesMatch "\.(html|js|css|png|gif|jpg)$">
+Header set Cache-Control "public,max-age=300"
+Header set Surrogate-Control "max-age=86400"
+</FilesMatch>
