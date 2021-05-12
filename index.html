@@ -362,20 +362,6 @@
                         </div>
                     </div>
 
-                    <div id="usage-modestmaps">
-                        <h4><a href="http://github.com/modestmaps/modestmaps-js">ModestMaps</a></h4>
-                        <div class="row">
-                            <p class="span4">ModestMaps is a no-frills mapping library by Stamen and friends.
-                                View the <a href="test/modestmaps.html">example</a>.</p>
-                            <div class="span8">
-                                <pre class="prettyprint">// replace "toner" here with "terrain" or "watercolor"
-var layer = new MM.StamenTileLayer("toner");
-var map = new MM.Map("element_id", layer);
-map.setCenterZoom(new MM.Location(37.7, -122.4), 12);</pre>
-                            </div>
-                        </div>
-                    </div>
-
                     <div id="usage-leaflet">
                         <h4><a href="http://leafletjs.com/">Leaflet</a></h4>
                         <div class="row">
@@ -403,27 +389,6 @@ map.addLayer(layer);</pre>
 var layer = new OpenLayers.Layer.Stamen("toner");
 var map = new OpenLayers.Map("element_id");
 map.addLayer(layer);</pre>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div id="usage-google">
-                        <h4><a href="http://code.google.com/apis/maps/documentation/javascript/">Google Maps</a></h4>
-                        <div class="row">
-                            <p class="span4">The Google Maps API is ubiquitous and feature-rich, but requires an <a href="#">API key</a> and may <a href="http://code.google.com/apis/maps/faq.html#usage_pricing">cost money</a> if your usage exceeds 25,000 map views per day.
-                                View the <a href="test/google.html">example</a>.</p>
-                            <div class="span8">
-                                <pre class="prettyprint">// replace "toner" here with "terrain" or "watercolor"
-var layer = "toner";
-var map = new google.maps.Map(document.getElementById("element_id"), {
-    center: new google.maps.LatLng(37.7, -122.4),
-    zoom: 12,
-    mapTypeId: layer,
-    mapTypeControlOptions: {
-        mapTypeIds: [layer]
-    }
-});
-map.mapTypes.set(layer, new google.maps.StamenMapType(layer));</pre>
                             </div>
                         </div>
                     </div>
