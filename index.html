@@ -301,9 +301,14 @@
                         <h4><a href="http://leafletjs.com/">Leaflet</a></h4>
                         <div class="row">
                             <p class="span4">Leaflet is a lightweight and easy-to-use mapping library</a>.
-                                View the <a href="test/leaflet.html">example</a>.</p>
+                                View the <a href="test/leaflet.html">example</a>.
+                                <br /><br />
+                                Or you can use the built-in Stamen layers in the <a href="https://github.com/leaflet-extras/leaflet-providers">Leaflet-providers</a> library.
+				View the <a href="https://leaflet-extras.github.io/leaflet-providers/preview/">demo</a>.</p>
                             <div class="span8">
-                                <pre class="prettyprint">// replace "toner" here with "terrain" or "watercolor"
+                                <pre class="prettyprint">// Leaflet sample code
+
+// replace "toner" here with "terrain" or "watercolor"
 var layer = new L.StamenTileLayer("toner");
 var map = new L.Map("element_id", {
     center: new L.LatLng(37.7, -122.4),
@@ -317,10 +322,14 @@ map.addLayer(layer);</pre>
                     <div id="usage-openlayers">
                         <h4><a href="http://openlayers.org/">OpenLayers</a></h4>
                         <div class="row">
-                            <p class="span4">OpenLayers is a hefty and featureful mapping library for use with a variety of GIS applications.
-                                View the <a href="test/openlayers.html">example</a>.</p>
+                            <p class="span4">OpenLayers is a hefty and featureful mapping library for use with a variety of GIS applications. Our JavaScript library is useful for older version of OpenLayers (version 2 or earlier).
+                                View the <a href="test/openlayers.html">example</a>.
+			    <br><br>For newer versions of OpenLayers, use the built-in <a href="https://openlayers.org/en/latest/apidoc/module-ol_source_Stamen-Stamen.html">Stamen layer source</a>.
+				View the <a href="https://openlayers.org/en/latest/examples/stamen.html">demo</a>.</p>
                             <div class="span8">
-                                <pre class="prettyprint">// replace "toner" here with "terrain" or "watercolor"
+                                <pre class="prettyprint">// OpenLayers v2 sample code
+
+// replace "toner" here with "terrain" or "watercolor"
 var layer = new OpenLayers.Layer.Stamen("toner");
 var map = new OpenLayers.Map("element_id");
 map.addLayer(layer);</pre>
