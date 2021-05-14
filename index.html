@@ -200,70 +200,6 @@
                 </div>
             </div>
 
-            <div id="burningmap" class="tiles row">
-                <a href="burningmap/#10/37.7682/-122.4451" class="span3"><img
-                    src="images/burningmap.gif" alt="Really hot heatmaps"></a>
-                <div class="span6">
-                    <h3><a class="hashish" href="burningmap/">Burning Map</a></h3>
-                    <p>The roof, the roof, the roof is on fire! These "heat
-                    maps" use <a href="toner-lines/">toner-lines</a> as the
-                    foundation on which to draw fiery animations. It's our way
-                    of showing that maps don't have to lie still on the screen
-                    anymore, and that we can use the whole world as a canvas
-                    for interaction and movement.</p>
-
-                    <p><strong>Requires a WebGL-enabled browser, such as <a href="http://google.com/chrome">Google Chrome</a>.</strong></p>
-                </div>
-                <div class="span3">
-                    <ul>
-                        <li><a href="https://hi.stamen.com/announcing-burningmap-5cccb7789150">Read about it</a></li>
-                    </ul>
-                </div>
-            </div>
-
-            <div id="mars" class="tiles row">
-                <a href="mars/" class="span3"><img
-                    src="images/mars-thumbnail.png" alt="Mars!"></a>
-                <div class="span6">
-                    <h3><a href="mars/">Mars</a>??</h3>
-                    <p>Yes, Mars. The Mars Orbiter Laser Altimeter, or MOLA, is an
-					instrument on the Mars Global Surveyor (MGS), a spacecraft that
-					was launched on November 7, 1996.  The MOLA dataset also
-					contains height data, which we've made into a 3D contour map.</p>
-
-                    <p><strong>Requires a WebGL-enabled browser, such as <a href="http://google.com/chrome">Google Chrome</a>.</strong></p>
-                </div>
-                <div class="span3">
-                    <ul>
-                        <!-- <li><a href="#">Read about it</a></li> -->
-                        <li><a href="http://mola.gsfc.nasa.gov/">MOLA at NASA</a></li>
-                    </ul>
-                </div>
-            </div>
-
-            <div id="trees-cabs-crime" class="tiles row">
-                <a href="trees-cabs-crime/" class="map span3"
-                    data-provider="trees-cabs-crime"
-                    data-center="37.770,-122.425"
-                    data-zoom="13"></a>
-                <div class="span6">
-                    <h3><a href="trees-cabs-crime/">Trees, Cabs &amp; Crime</a></h3>
-                    <p>Trees, Cabs &amp; Crime started off as a weekend hack
-                    and ended up in the Venice Biennale. This map
-                    combines three data sets (street tree locations, taxi cab
-                    GPS positions, and crime reports) with
-                    subtractive blending to reveal halftones hidden in the
-                    urban fabric of San Francisco.</p>
-
-                    <p><strong>Available in San Francisco, California.</strong></p>
-                </div>
-                <div class="span3">
-                    <ul>
-                        <li><a href="https://hi.stamen.com/trees-cabs-crime-in-the-venice-biennale-968ea4983177">Read about it</a></li>
-                    </ul>
-                </div>
-            </div>
-
             <div id="howto">
                 <h2>How to Use These Tiles Elsewhere</h2>
 
@@ -275,7 +211,7 @@
                     <div class="span10">
                         <p><em>Except otherwise noted, each of these map tile sets are &copy; Stamen Design, under a <a href="http://creativecommons.org/licenses/by/3.0">Creative Commons Attribution (CC BY 3.0)</a> license.</em></p>
                         <p>We&rsquo;d love to see these maps used around the web, so we&rsquo;ve included some brief instructions to help you use them in the mapping system of your choice.
-                        These maps are available free of charge. If you use the tiles we host here, please use this attribution:</p>
+                        These maps are available free of charge. If you use these tiles, you must use this attribution:</p>
                     </div>
                 </div>
 
@@ -344,9 +280,8 @@
 
                         })();
                         </script>
-                        <p>If you roll your own tiles from another source you will still need to credit &ldquo;Map data by OpenStreetMap, under ODbL.&rdquo;
-                        And if you <em>do</em> use these maps elsewhere, please post a tweet to <a href="http://twitter.com/stamen">@stamen</a>!</p>
-                        <p><a href="http://www.openstreetmap.org/copyright">Isn't OSM data provided under the ODbL now?</a> Yes, but the data used in our some of our Watercolor map tiles pre-dates the license change, so it remains CC BY SA until it's refreshed.</p>
+			<p>And if you <em>do</em> use these maps elsewhere, please post a tweet to <a href="http://twitter.com/stamen">@stamen</a>!</p>
+                        <p>"<a href="http://www.openstreetmap.org/copyright">Isn't OSM data provided under the ODbL now?</a>" Yes, but the data used in our Watercolor map tiles pre-dates the license change, so it remains CC BY SA for that tileset until it's refreshed.</p>
                     </div>
                 </div>
 
@@ -366,9 +301,14 @@
                         <h4><a href="http://leafletjs.com/">Leaflet</a></h4>
                         <div class="row">
                             <p class="span4">Leaflet is a lightweight and easy-to-use mapping library</a>.
-                                View the <a href="test/leaflet.html">example</a>.</p>
+                                View the <a href="test/leaflet.html">example</a>.
+                                <br /><br />
+                                Or you can use the built-in Stamen layers in the <a href="https://github.com/leaflet-extras/leaflet-providers">Leaflet-providers</a> library.
+				View the <a href="https://leaflet-extras.github.io/leaflet-providers/preview/">demo</a>.</p>
                             <div class="span8">
-                                <pre class="prettyprint">// replace "toner" here with "terrain" or "watercolor"
+                                <pre class="prettyprint">// Leaflet sample code
+
+// replace "toner" here with "terrain" or "watercolor"
 var layer = new L.StamenTileLayer("toner");
 var map = new L.Map("element_id", {
     center: new L.LatLng(37.7, -122.4),
@@ -382,10 +322,14 @@ map.addLayer(layer);</pre>
                     <div id="usage-openlayers">
                         <h4><a href="http://openlayers.org/">OpenLayers</a></h4>
                         <div class="row">
-                            <p class="span4">OpenLayers is a hefty and featureful mapping library for use with a variety of GIS applications.
-                                View the <a href="test/openlayers.html">example</a>.</p>
+                            <p class="span4">OpenLayers is a hefty and featureful mapping library for use with a variety of GIS applications. Our JavaScript library is useful for older version of OpenLayers (version 2 or earlier).
+                                View the <a href="test/openlayers.html">example</a>.
+			    <br><br>For newer versions of OpenLayers, use the built-in <a href="https://openlayers.org/en/latest/apidoc/module-ol_source_Stamen-Stamen.html">Stamen layer source</a>.
+				View the <a href="https://openlayers.org/en/latest/examples/stamen.html">demo</a>.</p>
                             <div class="span8">
-                                <pre class="prettyprint">// replace "toner" here with "terrain" or "watercolor"
+                                <pre class="prettyprint">// OpenLayers v2 sample code
+
+// replace "toner" here with "terrain" or "watercolor"
 var layer = new OpenLayers.Layer.Stamen("toner");
 var map = new OpenLayers.Map("element_id");
 map.addLayer(layer);</pre>
@@ -397,7 +341,8 @@ map.addLayer(layer);</pre>
 
                 <div class="usage" id="usage-elsehwere">
                     <h3>Elsewhere</h3>
-                    <p>Many applications and libraries understand the notion of map URL templates.
+		    <p>Instead of using our JavaScript library, you can refer to the tile URLs directly.</p>
+		    <p>Many applications and libraries understand the notion of map URL templates.
                     These are ours:</p>
                     <ul>
                         <li><tt>https://stamen-tiles.a.ssl.fastly.net/toner/{z}/{x}/{y}.png</tt></li>
