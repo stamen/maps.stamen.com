@@ -61,14 +61,6 @@ body {
     right: 20px;
 }
 
-#embed-content {
-    clear: both;
-    width: 320px;
-    color: #fff !important;
-    background: #000;
-    padding: 10px;
-}
-
 #feedback {
     top: -20px;
 }
