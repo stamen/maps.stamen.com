@@ -74,24 +74,6 @@
             parts.unshift(providerName);
         });
 
-        var embedLink = document.getElementById("embed-toggle"),
-            embedToggle;
-        if (embedLink) {
-            var embed = document.getElementById("embed-content"),
-                textarea = document.getElementById("embed-code"),
-                template = textarea.value;
-            embedToggle = createToggle(embedLink, embed, function(showing) {
-                if (showing) {
-                    var url = location.href.split("#");
-                    url.splice(1, 0, "embed#");
-                    textarea.value = template.replace("{url}", url.join(""));
-                    textarea.focus();
-                    textarea.select();
-                } else {
-                }
-            });
-        }
-
         var imgLink = document.getElementById("make-image");
         if (imgLink) {
             var round = function(n) {

@@ -448,14 +448,6 @@ a#toggle-feedback.active {
     display: none;
 }
 
-#embed-content {
-    clear: both;
-    width: 320px;
-    color: #fff !important;
-    background: #000;
-    padding: 10px;
-}
-
 #embed.controls a {
     float: right;
 }
