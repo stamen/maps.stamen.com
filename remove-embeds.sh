@@ -9,5 +9,4 @@
 # Remove embed code toggler.
 find . -type f -name '*.html' -print0 | xargs -0 sed -i'' -e 's/<a id="embed-toggle" class="toggler" title="embed this map">&lt;embed&gt;<\/a>//g'
 
-# Remove embed code content
-#find . -type f -name '*.html' -print0 | xargs -0 sed -i'' -e 's/<div id="embed-content"//g'
+# embed-content removed manually
