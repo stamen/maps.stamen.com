@@ -448,6 +448,7 @@ a#toggle-feedback.active {
     display: none;
 }
 
+
 #embed-content {
     clear: both;
     width: 320px;
@@ -458,4 +459,12 @@ a#toggle-feedback.active {
 
 #embed.controls a {
     float: right;
+}
+
+/* Remove all embed buttons
+ * by styling them as invisible.
+ * -- Curran May 2021
+ */
+#embed-toggle {
+    display: none;
 }
