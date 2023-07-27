@@ -96,7 +96,7 @@ a:link, a:visited, a:active {
 }
 
 #hero #map-main {
-    position: absolute;
+    position: absolute !important;
     width: 100%;
     height: 100%;
 }
@@ -105,7 +105,7 @@ a:link, a:visited, a:active {
     position: absolute;
     bottom: 25px;
     width: 100%;
-    z-index: 99;
+    z-index: 1000;
 }
 
 #map-main h2 {
@@ -150,7 +150,7 @@ a:link, a:visited, a:active {
     margin: 0;
     padding: 0;
     text-align: center;
-    z-index: 100;
+    z-index: 1000;
     line-height: 28px;
     height: 28px;
 }
@@ -277,13 +277,6 @@ h2#main-title {
     padding-top: 2px;
 }
 
-#toner-attr,
-#attr {
-    display: inline-block;
-    background-color: #ffc;
-    padding: 2px 8px 3px 8px;
-}
-
 #toner-attr-html,
 #attr-html {
     display: none;
@@ -359,6 +352,11 @@ ol.linenums li {
 /* if you use Bootstrap, you need this for ModestMaps */
 img.tile {
     max-width: auto !important;
+}
+
+#search {
+    position: relative;
+    z-index: 1000;
 }
 
 .controls a,
@@ -450,4 +448,64 @@ a#toggle-feedback.active {
 
 #embed.controls a {
     float: right;
+}
+
+.announce {
+    font-size: 1.75rem;
+    background: #FFFF00;
+    line-height: 2rem;
+    padding: 1rem 2rem;
+    margin: 2rem 0;
+    font-weight: bold;
+}
+
+#howto {
+    margin-top: 5rem;
+}
+
+#attribution {
+    margin-top: 2rem;
+}
+
+#license .license-link {
+    display: block;
+    margin: 2rem 0;
+}
+
+.attributions {
+    margin: 1rem 0;
+}
+
+.attribution-row {
+    display: flex;
+    flex-direction: row;
+    font-size: 15px;
+    align-items: center;
+}
+
+.attribution-title {
+    width: 10rem;
+}
+
+.faq .header-image {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.faqs {
+    margin-top: 3rem;
+    margin-bottom: 10rem;
+}
+
+.faq {
+    margin-top: 2rem;
+}
+
+.faq .question {
+    font-weight: bold;
+}
+
+.faq li {
+    font-size: 15px;
 }

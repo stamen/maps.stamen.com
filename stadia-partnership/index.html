@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>maps.stamen.com</title>
+        <meta name="description" content="We are pleased to announce that we are partnering with Stadia Maps to provide tile hosting for Stamen map tiles.">
+
+        <meta property="og:title" content="Stamen Maps">
+        <meta property="og:type" content="website">
+        <meta property="og:url" content="http://maps.stamen.com/">
+        <meta property="og:description" content="We are pleased to announce that we are partnering with Stadia Maps to provide tile hosting for Stamen map tiles.">
+        <meta property="og:image" content="http://maps.stamen.com/stadia-partnership/stamenXstadia.png">
+
+        <style type="text/css">
+            @import url(../css/bootstrap/bootstrap.css);
+            @import url(../css/screen.css?white-maps);
+        </style>
+
+        <!--[if IE 9]>
+        <style>
+
+        </style>
+        <![endif]-->
+
+    </head>
+    <body>
+        <div id="header" class="navbar">
+            <div class="navbar-inner">
+                <div class="container">
+                    <h1 id="tiles" class="brand"><a id="home-link" href="../">maps.stamen.com</a> / <span id="current-provider">Stamen x Stadia</span></h1>
+                    <a id="stamen" class="brand" href="http://stamen.com">stamen</a>
+                </div>
+            </div>
+        </div>
+
+        <div id="content" class="faq container content">
+            <div class="header-image">
+                <img src="stamenXstadia.png" />
+            </div>
+
+            <div class="preamble">
+                <p>
+                    We are pleased to announce that we are partnering with Stadia Maps to provide tile hosting for Stamen map tiles. We think Stadia Maps is the best match for existing users of Stamen map tiles&mdash;they are in the business of hosting map tiles based on OpenStreetMap for customers who value all the zany things we do: affordability, flexibility, customizability, autonomy, and of course, great design. We also appreciate the investments they are making in open source communities.
+                </p>
+                <p>
+                    In the first phase of our partnership, we're redirecting all traffic from our legacy tiles.stamen.com services and through URLs associated with our Fastly CDN account to Stadia's servers. This is to prevent any unnecessary service disruptions during the transition&mdash;please <a href="https://github.com/stamen/maps.stamen.com">let us know</a> if you see anything strange. For those who choose to sign up, you will be able to do so right away. We are relieved to be able to offer you the back-end and customer support you deserve.
+                </p>
+                <p>
+                    Meanwhile we are recreating and updating the Terrain and Toner styles as native vector styles that work with our tools and workflows. The redeveloped styles will replace the legacy tiles for all redirected traffic in early August, and both raster and vector versions will be available through Stadia.
+                </p>
+                <p>
+                    Later this year, we plan to offer these styles alongside the tools and workflows we've used and developed as part of our <a href="https://stamen.com/full-stack-cartography/">Full Stack Cartography</a> and other service offerings under appropriate open source licensing models.
+                </p>
+                <p>
+                You can find out more about Stadia Maps at <a href="https://stadiamaps.com/">https://stadiamaps.com/</a>. We encourage you to opt in by creating an account as soon as possible; we expect the redirects to stop working after August 31, 2023.
+                </p>
+            </div>
+
+            <div class="faqs">
+                <h2>Frequently Asked Questions</h2>
+                <div class="faq">
+                    <div class="question">
+                        <p>Why can't Stamen continue to host tiles?</p>
+                    </div>
+                    <div class="answer">
+                        <p>
+                            The Stamen map tiles were originally supported by a two year <a href="https://www.fastcompany.com/1660760/stamen-design-wins-400000-grant-new-user-generated-data-viz-project">grant from the Knight Foundation</a> to provide an open mapping platform for journalism, back in 2010, when there were no such offerings available. Since then the landscape has changed: there are many more options for hosting tiles, plus there is a rich network of accessible services for displaying, building, editing and embedding maps on the web and in mobile apps. We are proud of how iconic the Stamen map tiles have become, and <a href="https://stamen.com/30daymapchallenge-2022/">love seeing the places they pop up</a>.
+                        </p>
+                        <p>
+                            Unfortunately, running this free tiling service costs money, upwards of $100,000 - $200,000 a year, too much for the operating budget of a small agency that is fundamentally not in the business of serving tiles. Since Stamen is not a nonprofit, we don't qualify for grants that would allow us to keep maintaining this service in the public interest, and since serving tiles is not our core business, we haven't had the resources to maintain it the way we would like. The maps you have been getting from our tile servers are incomplete and out of date. The maps we are migrating our services to are current, complete, performant, and well supported.
+                        </p>
+                        <p>
+                            Fundamentally, we provide <a href="https://stamen.com/work/">custom data visualization design and cartography solutions to our customers</a>. We can do this better by outsourcing the tile serving piece to Stadia Maps. As a parting gift, we have lovingly recrafted Toner and Terrain to work with more current mapping stacks and Stadia's tiles, and we will continue to upgrade and update these services for as long as there is sufficient demand.
+                        </p>
+                    </div>
+                </div>
+                <div class="faq">
+                    <div class="question">
+                        <p>Can I continue to use Stamen Map Tiles I have downloaded or cached?</p>
+                    </div>
+                    <div class="answer">
+                        <p>
+                            Stamen map tiles have always been free to use, governed by <a href="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution</a>&mdash;that isn't changing. If you have the resources to cache and host our existing tiles, you are welcome to host, share, modify, and use the original tiles we have been serving up for over ten years. If you are exclusively interested in Watercolor, the <a href="https://watercolormaps.collection.cooperhewitt.org/#12/40.7847/-73.9574">tiles will continue to be available through the Smithsonian catalog</a>, and other enthusiasts may pop up with caches and renderers you can use for original recipe Toner and Terrain. Let us know if this interests you, we will save your information and let you know when additional solutions and options emerge.
+                        </p>
+                    </div>
+                <div class="faq">
+                    <div class="question">
+                        <p>When should I expect to lose service and how will I know?</p>
+                    </div>
+                    <div class="answer">
+                        <p>
+                            If you do nothing, you may see disruptions in early August, depending on which tile set you are using, however most will initially see an improvement in coverage, data quality and performance through August and early September as services will have shifted to Stadia Maps. After August 2023, the redirects could stop working and those still pointing to stamen.com or fastly.com URLs will see a blank map.
+                        </p>
+                    </div>
+                <div class="faq">
+                    <div class="question">
+                        <p>What do I need to do in order to keep getting tiles after this date?</p>
+                    </div>
+                    <div class="answer">
+                        <p>
+                            As part of the onboarding process with Stadia Maps, you'll receive simple instructions for how to point to the new service, and full customer support to ensure you won't experience any disruption in service.
+                        </p>
+                    </div>
+                <div class="faq">
+                    <div class="question">
+                        <p>How much does it cost?</p>
+                    </div>
+                    <div class="answer">
+                        <p>
+                            Once you have signed up for an account with Stadia, your cost is based on tile usage, meaning how many map tiles are requested through your app or website.
+                        </p>
+                        <p>
+                            <ul>
+                                <li>If your current usage is less than 200,000 tiles / month&mdash;FREE for non-commercial use</li>
+                                <li>If your usage goes above 200,000 tiles / month or you are a commercial user&mdash;plans start at $20/month. The full pricing is <a href="https://stadiamaps.com/pricing/">here</a>.</li>
+                            </ul>
+                        </p>
+                        <p>
+You can reduce costs by upgrading to vector tiles. An in-depth guide to switching is available <a href="https://docs.stadiamaps.com/guides/switching-your-maps-from-raster-to-vector-tiles/">here</a>.
+                        </p>
+                    </div>
+                <div class="faq">
+                    <div class="question">
+                        <p>Are there restrictions on how I can use the Stamen Map Tiles hosted by Stadia Maps?</p>
+                    </div>
+                    <div class="answer">
+                        <p>
+                            Nope, not really! As noted above, high volume and commercial users may fall into a paid service tier. Otherwise, you can use these maps anywhere, we just ask that you attribute the work appropriately. Guidelines for how you should attribute Stamen Map Tiles are listed on <a href="https://docs.stadiamaps.com/attribution/">Stadia's attribution page</a>&mdash;these match industry standards and are not significantly different from how we have been asking folks to carry forward attribution and licensure all along.
+                        </p>
+                    </div>
+                </div>
+                <div class="faq">
+                    <div class="question">
+                        <p>What other advantages do I get from becoming a Stadia customer?</p>
+                    </div>
+                    <div class="answer">
+                        <p>
+                            Signing up for a Stadia account gives you access to all that Stadia Maps provides.
+                        </p>
+                        <p>
+                            <ul>
+                                <li>Support&mdash;all of Stadia's services are backed by real human support and can better support commercial use cases that need SLAs</li>
+                                <li>Privacy&mdash;Stadia is fully GDPR and CCPA compliant, and does not track your users around the internet or build data sets derived from their behavior</li>
+                                <li>Customizability&mdash;if you upgrade to vector tiles, you can easily customize and remix the styles, even dynamically, as permitted in the license for Stamen styles</li>
+                                <li>Open source ethos&mdash;the team at Stadia consistently publish and contribute back to upstream open-source projects, and were instrumental in creating the <a href="https://maplibre.org/">MapLibre</a> organization</li>
+                            </ul>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

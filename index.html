@@ -12,15 +12,15 @@
         <meta property="og:image" content="http://maps.stamen.com/images/fb-toner.png">
         <meta property="og:image" content="http://maps.stamen.com/images/fb-terrain.png">
 
-        <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+
+        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
         <script src="//cdn.maptiks.com/maptiks-leaflet.min.js"></script>
         <script type="text/javascript" src="js/polyfills.js"></script>
         <script type="text/javascript" src="js/vendor/reqwest.min.js"></script>
         <script type="text/javascript" src="js/tile.stamen.js?v1.3.0"></script>
         <script type="text/javascript" src="js/common.js?recaptcha"></script>
-        <script type="text/javascript" src="js/vendor/google-code-prettify/prettify.js"></script>
 
-        <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
         <style type="text/css">
             @import url(css/bootstrap/bootstrap.css);
             @import url(css/screen.css?white-maps);
@@ -108,13 +108,9 @@
         </div>
 
         <div id="content" class="container content">
-            <p id="desc">For over a decade, Stamen has been exploring
-            cartography
-            with our <a href="http://stamen.com/work">clients</a>
-            and in research.
-            These maps are presented here for your enjoyment and use wherever
-            you display <a href="http://openstreetmap.org">OpenStreetMap</a>
-            data.</p>
+            <div class="announce">
+                As of July 31, 2023, Stamen Map Tiles are served by Stadia Maps. <a href="/stadia-partnership/">Click here</a> to learn more.
+            </div>
 
             <div id="tiles-toner" class="tiles row">
                 <a href="toner/#14/37.8024/-122.2645" class="map span3"
@@ -124,24 +120,15 @@
                 <div class="span6">
                     <h3><a class="hashish" href="toner/">Toner</a></h3>
 
-                    <p>These high-contrast B+W (black and white) maps are
-                    featured in our Dotspotting project. They are perfect for data
-                    mashups and exploring river meanders and coastal zones.
+                    <p>
+                    These high-contrast B+W (black and white) maps are the perfect backdrop for your colorful and eye-catching map content and have been our most popular map style to date. 
                     Available in six flavors:
                     <a class="hashish" href="toner/">standard toner</a>,
-                    <a class="hashish" href="toner-hybrid/">hybrid</a>,
                     <a class="hashish" href="toner-labels/">labels</a>,
                     <a class="hashish" href="toner-lines/">lines</a>,
+                    <a class="hashish" href="toner-hybrid/">labels & lines</a>,
                     <a class="hashish" href="toner-background/">background</a>,
                     and <a class="hashish" href="toner-lite/">lite</a>.</p>
-
-                    <p><strong>Available worldwide.</strong></p>
-                </div>
-                <div class="span3">
-                    <ul>
-                        <li><a href="https://github.com/stamen/toner-carto">Fork on GitHub</a></li>
-                        <li><a href="https://hi.stamen.com/a-new-knight-grant-new-toner-new-infrastructure-8869fc74af39">Read about it</a></li>
-                    </ul>
                 </div>
             </div>
 
@@ -154,22 +141,10 @@
                     <h3><a class="hashish" href="terrain/">Terrain</a></h3>
 
                     <p>Orient yourself with our terrain maps, featuring hill shading
-                    and natural vegetation colors. These maps showcase advanced
-                    labeling and linework generalization of dual-carriageway roads.
-                    Terrain was developed in collaboration with Gem Spear and Nelson Minar.
-                    Available in four flavors:
+                    and natural vegetation colors. Available in three flavors:
                     <a class="hashish" href="terrain/">standard terrain</a>,
                     <a class="hashish" href="terrain-labels/">labels</a>,
-                    <a class="hashish" href="terrain-lines/">lines</a>,
                     and <a class="hashish" href="terrain-background/">background</a>.</p>
-
-                    <p><strong>Available worldwide.</strong></p>
-                </div>
-                <div class="span3">
-                    <ul>
-                        <li><a href="https://github.com/stamen/terrain-classic">Fork on Github</a></li>
-                        <li><a href="https://hi.stamen.com/say-hello-to-global-stamen-terrain-maps-c195b3bb71e0">Read about it</a></li>
-                    </ul>
                 </div>
             </div>
 
@@ -182,194 +157,53 @@
                     <h3><a class="hashish" href="watercolor/">Watercolor</a></h3>
                     <p>Reminiscent of hand drawn maps, our watercolor maps apply
                     raster effect area washes and organic edges over a paper texture
-                    to add warm pop to any map. Watercolor was inspired by the
-                    <a href="http://www.kickstarter.com/projects/bicycleportraits/bicycle-portraits-a-photographic-book-part-iii-fin">Bicycle Portraits project</a>.
-                    Thanks to <a href="http://otherthings.com/blog/">Cassidy Curtis</a> for his early advice.</p>
-
-                    <p><strong>Available worldwide.</strong></p>
-                </div>
-                <div class="span3">
-                    <ul>
-                        <li><a href="https://hi.stamen.com/watercolor-process-3dd5135861fe">Read about it</a></li>
-                    </ul>
+                    to add warm pop to any map.</p>
                 </div>
             </div>
 
             <div id="howto">
-                <h2>How to Use These Tiles Elsewhere</h2>
+                <h3>Copyright Information</h3>
 
-                <div id="license" class="row">
-                    <h4 class="span2"><a
-                            href="http://creativecommons.org/licenses/by/3.0"><img
-                        src="https://licensebuttons.net/l/by/3.0/88x31.png"
-                        alt="CC-BY License"></a></h4>
-                    <div class="span10">
-                        <p><em>Except otherwise noted, each of these map tile sets are &copy; Stamen Design, under a <a href="http://creativecommons.org/licenses/by/3.0">Creative Commons Attribution (CC BY 3.0)</a> license.</em></p>
+                <div id="license">
+                    <a href="http://creativecommons.org/licenses/by/4.0" class="license-link">
+                        <img src="images/cc.svg" alt="CC License">
+                    </a>
+                    <div>
+                        <p>Except otherwise noted, each of these map tile sets are &copy; Stamen Design, under a <a href="http://creativecommons.org/licenses/by/4.0">Creative Commons Attribution (CC BY 4.0)</a> license.</p>
                         <p>We&rsquo;d love to see these maps used around the web, so we&rsquo;ve included some brief instructions to help you use them in the mapping system of your choice.
                         These maps are available free of charge. If you use these tiles, you must use this attribution:</p>
                     </div>
                 </div>
 
-                <div id="attribution" class="row">
-                    <h4 class="span2">Attribution:</h4>
-                    <div class="span10">
-                        <p>
-                        For Toner and Terrain:
-                            <span id="toner-attr">Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://www.openstreetmap.org/copyright">ODbL</a>.</span>
-                            <small><a href="#" id="toner-attr-show-html" >&lt;<span>COPY HTML</span>&gt;</a></small>
-                        </p>
-                        <textarea rows="3" class="row span10" id="toner-attr-html"></textarea>
-                        <script type="text/javascript">
-                        (function() {
-                            var link = document.getElementById("toner-attr-show-html"),
-                                source = document.getElementById("toner-attr"),
-                                target = document.getElementById("toner-attr-html"),
-                                showing = false;
-
-
-                            link.addEventListener("click", function(e){
-                                e.preventDefault();
-
-                                showing = !showing;
-                                if (showing) {
-                                    target.value = source.innerHTML;
-                                    target.style.display = "block";
-                                    target.focus();
-                                    target.select();
-                                } else {
-                                    target.style.display = "none";
-                                }
-
-                                return false;
-                            });
-                        })();
-                        </script>
-                        <p>
-                        For Watercolor:
-                            <span id="attr">Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://creativecommons.org/licenses/by-sa/3.0">CC BY SA</a>.</span>
-                            <small><a href="#" id="attr-show-html" >&lt;<span>COPY HTML</span>&gt;</a></small>
-                        </p>
-                        <textarea rows="3" class="row span10" id="attr-html"></textarea>
-                        <script type="text/javascript">
-                        (function() {
-                            var link = document.getElementById("attr-show-html"),
-                                source = document.getElementById("attr"),
-                                target = document.getElementById("attr-html"),
-                                showing = false;
-
-                            link.addEventListener("click", function(e){
-                                e.preventDefault();
-
-                                showing = !showing;
-                                if (showing) {
-                                    target.value = source.innerHTML;
-                                    target.style.display = "block";
-                                    target.focus();
-                                    target.select();
-                                } else {
-                                    target.style.display = "none";
-                                }
-
-                                return false;
-                            });
-
-                        })();
-                        </script>
-			<p>And if you <em>do</em> use these maps elsewhere, please post a tweet to <a href="http://twitter.com/stamen">@stamen</a>!</p>
+                <div id="attribution">
+                    <h3>Attribution</h3>
+                    <div>
+                        <div class="attributions">
+                            <div class="attribution-row">
+                                <div class="attribution-title">For Toner and Terrain:</div>
+                                <div class="attribution-details">
+                                    <span id="toner-attr">Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/4.0">CC BY 4.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://www.openstreetmap.org/copyright">ODbL</a>.</span>
+                                </div>
+                            </div>
+                            <div class="attribution-row">
+                                <div class="attribution-title">For Watercolor:</div>
+                                <div class="attribution-details">
+                                    <span id="attr">Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/4.0">CC BY 4.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://creativecommons.org/licenses/by-sa/3.0">CC BY SA</a>.</span>
+                                </div>
+                            </div>
+                        </div>
+			<p>And if you do use these maps elsewhere, please post a tweet to <a href="http://twitter.com/stamen">@stamen</a>!</p>
                         <p>"<a href="http://www.openstreetmap.org/copyright">Isn't OSM data provided under the ODbL now?</a>" Yes, but the data used in our Watercolor map tiles pre-dates the license change, so it remains CC BY SA for that tileset until it's refreshed.</p>
                     </div>
                 </div>
-
-                <div class="usage" id="usage-js">
-                    <h3>JavaScript Libraries</h3>
-                    <div id="usage-intro" class="row">
-                        <div class="span12">
-                            <p>To use these tiles, just include
-                            <a href="js/tile.stamen.js?v1.3.0">our JavaScript</a>
-                            alongside your favorite mapping library:</p>
-                            <pre class="prettyprint">&lt;script type="text/javascript" src="https://stamen-maps.a.ssl.fastly.net/js/tile.stamen.js?v1.3.0"&gt;&lt;/script&gt;</pre>
-                            <p>Then, follow the instructions below for your preferred library:</p>
-                        </div>
-                    </div>
-
-                    <div id="usage-leaflet">
-                        <h4><a href="http://leafletjs.com/">Leaflet</a></h4>
-                        <div class="row">
-                            <p class="span4">Leaflet is a lightweight and easy-to-use mapping library</a>.
-                                View the <a href="test/leaflet.html">example</a>.
-                                <br /><br />
-                                Or you can use the built-in Stamen layers in the <a href="https://github.com/leaflet-extras/leaflet-providers">Leaflet-providers</a> library.
-				View the <a href="https://leaflet-extras.github.io/leaflet-providers/preview/">demo</a>.</p>
-                            <div class="span8">
-                                <pre class="prettyprint">// Leaflet sample code
-
-// replace "toner" here with "terrain" or "watercolor"
-var layer = new L.StamenTileLayer("toner");
-var map = new L.Map("element_id", {
-    center: new L.LatLng(37.7, -122.4),
-    zoom: 12
-});
-map.addLayer(layer);</pre>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div id="usage-openlayers">
-                        <h4><a href="http://openlayers.org/">OpenLayers</a></h4>
-                        <div class="row">
-                            <p class="span4">OpenLayers is a hefty and featureful mapping library for use with a variety of GIS applications. Our JavaScript library is useful for older version of OpenLayers (version 2 or earlier).
-                                View the <a href="test/openlayers.html">example</a>.
-			    <br><br>For newer versions of OpenLayers, use the built-in <a href="https://openlayers.org/en/latest/apidoc/module-ol_source_Stamen-Stamen.html">Stamen layer source</a>.
-				View the <a href="https://openlayers.org/en/latest/examples/stamen.html">demo</a>.</p>
-                            <div class="span8">
-                                <pre class="prettyprint">// OpenLayers v2 sample code
-
-// replace "toner" here with "terrain" or "watercolor"
-var layer = new OpenLayers.Layer.Stamen("toner");
-var map = new OpenLayers.Map("element_id");
-map.addLayer(layer);</pre>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-
-                <div class="usage" id="usage-elsehwere">
-                    <h3>Elsewhere</h3>
-		    <p>Instead of using our JavaScript library, you can refer to the tile URLs directly.</p>
-		    <p>Many applications and libraries understand the notion of map URL templates.
-                    These are ours:</p>
-                    <ul>
-                        <li><tt>https://stamen-tiles.a.ssl.fastly.net/toner/{z}/{x}/{y}.png</tt></li>
-                        <li><tt>https://stamen-tiles.a.ssl.fastly.net/terrain/{z}/{x}/{y}.jpg</tt></li>
-                        <li><tt>https://stamen-tiles.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.jpg</tt></li>
-                    </ul>
-		    <p>Multiple subdomains can be also be used:
-                    <code>https://stamen-tiles-{S}.a.ssl.fastly.net</code></p>
-                    <p>JavaScript can be loaded from
-                    <code>https://stamen-maps.a.ssl.fastly.net/js/tile.stamen.js</code>.</p>
-                    <p>If you need protocol-agnostic URLs, use <code>//stamen-tiles-{s}.a.ssl.fastly.net/</code>, as that endpoint will work for both SSL and non-SSL connections.</p>
-                </div>
-
             </div>
 
             <div id="footer" class="row light">
                 <p class="span9 light">Thank you to <a href="https://geocode.earth">geocode.earth</a> for powering our search box.</p>
-		<p id="credit" class="span9 light">These tiles were developed by Stamen
-		as part of the <a href="http://github.com/Citytracking">CityTracking</a> project,
-		supported by the <a href="http://www.knightfoundation.org/">Knight Foundation</a>.
-		Stamen continues to offer and support these map tiles
-		and other <a href="https://github.com/stamen">open source tools</a>
-		in support of map makers everywhere.</p>
-                <div id="logo" class="span3">
-                    <a href="http://github.com/Citytracking"><img src="images/citytracking-logo.png" alt="CityTracking"></a>
-                </div>
             </div>
 
         </div>
 
         <script type="text/javascript" src="js/index.js?20130425" defer></script>
-        <!-- google code prettify -->
-        <script type="text/javascript" defer>prettyPrint();</script>
     </body>
 </html>
