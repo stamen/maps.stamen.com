@@ -1,6 +1,6 @@
 Hello, you found it! This is the place to file issues or ask questions about the Stamen map tiles.
 
-As of July 2023, Stamen is partnering with [Stadia Maps](https://stadiamaps.com/). Stamen will continue to design and maintain the iconic designs behind Toner, Terrain, and Watercolor, while Stadia will manage and run the tile service you use to get our maps. Please [set up an account](https://client.stadiamaps.com/signup/) and [follow these instructions](https://docs.stadiamaps.com/guides/migrating-from-stamen-map-tiles/#create-a-stadia-maps-account) to continue using Stamen map tiles. 
+As of July 2023, [Stamen is partnering with Stadia maps](http://maps.stamen.com/stadia-partnership/). Stamen will continue to design and maintain the iconic designs behind Toner, Terrain, and Watercolor, while [Stadia Maps](https://stadiamaps.com/) will manage and run the tile service you use to get our maps. Please [set up an account](https://client.stadiamaps.com/signup/) and [follow these instructions](https://docs.stadiamaps.com/guides/migrating-from-stamen-map-tiles/#create-a-stadia-maps-account) to continue using Stamen map tiles. 
 
 If you are writing to tell us about missing tiles or information that is missing our out of date on our maps, we have good news! You can expect to see all of these issues resolved in the next couple of weeks, as part of the migration of our tile services to Stadia Maps.
 
