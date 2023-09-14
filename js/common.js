@@ -540,7 +540,6 @@ L.Hash.prototype = {
 
     movingMap: false,
     update: function() {
-        console.log("update")
         var hash = location.hash;
         if (hash === this.lastHash) {
             // console.info("(no change)");
@@ -548,7 +547,6 @@ L.Hash.prototype = {
         }
         var sansHash = hash.substr(1),
             parsed = this.parseHash(sansHash);
-        console.log(parsed)
         if (parsed) {
             // console.log("parsed:", parsed.zoom, parsed.center.toString());
             this.movingMap = true;
