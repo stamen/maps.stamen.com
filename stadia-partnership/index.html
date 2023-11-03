@@ -18,6 +18,18 @@
                 max-width: 700px;
                 margin: 2rem 0;
             }
+
+            .tile-download-buckets {
+                margin: 1rem 0;
+            }
+
+            .tile-download-buckets th {
+                text-align: left;
+                padding: 0.2rem 1rem;
+            }
+            .tile-download-buckets td {
+                padding: 0.2rem 1rem;
+            }
         </style>
 
         <!--[if IE 9]>
@@ -78,52 +90,169 @@
                     </div>
                     <div class="answer">
                         <p>
-                            Stamen map tiles have always been free to use, governed by <a href="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution</a>&mdash;that isn't changing. If you have the resources to cache and host our existing tiles, you are welcome to host, share, modify, and use the original tiles we have been serving up for over ten years. If you are exclusively interested in Watercolor, the <a href="https://watercolormaps.collection.cooperhewitt.org/#12/40.7847/-73.9574">tiles will continue to be available through the Smithsonian catalog</a>, and other enthusiasts may pop up with caches and renderers you can use for original recipe Toner and Terrain. Let us know if this interests you, we will save your information and let you know when additional solutions and options emerge.
+                            Stamen map tiles have always been free to use, governed by <a href="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution</a>&mdash;that isn't changing. If you have the resources to cache and host our existing tiles, you are welcome to host, share, modify, and use the original tiles we have been serving up for over ten years. If you are exclusively interested in Watercolor, the <a href="https://watercolormaps.collection.cooperhewitt.org/#12/40.7847/-73.9574">tiles will continue to be available through the Smithsonian catalog</a>, and other enthusiasts may pop up with caches and renderers you can use for original recipe Toner and Terrain. There are more details about this in the answer to the next question.
                         </p>
                     </div>
+                </div>
+                <div class="faq">
+                    <div class="question">
+                        <p>Can I download legacy Stamen Map Tiles?</p>
+                    </div>
+                    <div class="answer">
+                        <p>
+                            Yes, but please note that&mdash;as described above&mdash;these tiles are outdated and incomplete. They are provided to be accessed and used at your own risk. It has been nearly a decade since the data behind the tiles was updated and the archived tiles do not cover the entire globe at all zoom levels. While we're providing these tiles as a historical snapshot, for most uses you're better off using our updated and complete map styles available through Stadia.
+                        </p>
+                        <p>
+                            That said, we are providing the tiles in AWS S3 buckets that are set to requester pays. What that means is AWS will charge you for accessing and downloading a copy of the tiles and will not charge Stamen.
+                        </p>
+                        <p>
+                            We cannot provide support for downloading tiles. You will need an AWS account and will want to follow the directions in the <a href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/ObjectsinRequesterPaysBuckets.html">AWS documentation for downloading objects from requester pays S3 buckets</a>.
+                        </p>
+                        <p>
+                            We also cannot help you calculate the costs of downloading the tiles. Please see AWS <a href="https://aws.amazon.com/s3/pricing/">S3 pricing</a> for information here and note that each tile will include some bandwidth costs and will count as a separate request. This could be expensive if you download every tile.
+                        </p>
+                        <p>
+                            Please note that these tiles are under the <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a> license. If you use any of these we ask for the following attribution:
+                        </p>
+                        <p>
+                            For Toner and Terrain:
+                            <pre>Map tiles by <a href="https://stamen.com/">Stamen Design</a>, under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>. Data by <a href="https://www.openstreetmap.org/">OpenStreetMap</a>, under <a href="https://www.openstreetmap.org/copyright">ODbL</a>.</pre>
+                        </p>
+                        <p>
+                            For Watercolor:
+                            <pre>Map tiles by <a href="https://stamen.com/">Stamen Design</a>, under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>. Data by <a href="https://www.openstreetmap.org/">OpenStreetMap</a>, under <a href="https://creativecommons.org/licenses/by-sa/3.0/">CC BY SA</a>.</pre>
+                        </p>
+                        <p>
+                            The tiles can be found in a few different S3 buckets:
+                        </p>
+                        <table class="tile-download-buckets">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Bucket</th>
+                                    <th>Prefix</th>
+                                    <th>Extension</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Terrain</td>
+                                    <td>tile.stamen.com</td>
+                                    <td>/terrain</td>
+                                    <td>png</td>
+                                </tr>
+                                <tr>
+                                    <td>Terrain Background</td>
+                                    <td>tile.stamen.com</td>
+                                    <td>/terrain-background</td>
+                                    <td>png</td>
+                                </tr>
+                                <tr>
+                                    <td>Terrain Labels</td>
+                                    <td>tile.stamen.com</td>
+                                    <td>/terrain-labels</td>
+                                    <td>png</td>
+                                </tr>
+                                <tr>
+                                    <td>Terrain Lines</td>
+                                    <td>tile.stamen.com</td>
+                                    <td>/terrain-lines</td>
+                                    <td>png</td>
+                                </tr>
+                                <tr>
+                                    <td>Toner</td>
+                                    <td>long-term.cache.maps.stamen.com</td>
+                                    <td>/toner</td>
+                                    <td>png</td>
+                                </tr>
+                                <tr>
+                                    <td>Toner Background</td>
+                                    <td>long-term.cache.maps.stamen.com</td>
+                                    <td>/toner-background</td>
+                                    <td>png</td>
+                                </tr>
+                                <tr>
+                                    <td>Toner Labels</td>
+                                    <td>long-term.cache.maps.stamen.com</td>
+                                    <td>/toner-labels</td>
+                                    <td>png</td>
+                                </tr>
+                                <tr>
+                                    <td>Toner Lines</td>
+                                    <td>long-term.cache.maps.stamen.com</td>
+                                    <td>/toner-lines</td>
+                                    <td>png</td>
+                                </tr>
+                                <tr>
+                                    <td>Toner Lite</td>
+                                    <td>long-term.cache.maps.stamen.com</td>
+                                    <td>/toner-lite</td>
+                                    <td>png</td>
+                                </tr>
+                                <tr>
+                                    <td>Watercolor</td>
+                                    <td>long-term.cache.maps.stamen.com</td>
+                                    <td>/watercolor</td>
+                                    <td>jpg</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <p>
+                            Each tile is accessible at an S3 URL with the following format:
+                            <pre>s3://{bucket}{prefix}/{z}/{x}/{y}.{extension}</pre>
+                        </p>
+                        <p>
+                            For example, to get the watercolor tile for zoom 2, x 3, and y 1 you would use:
+                            <pre>s3://long-term.cache.maps.stamen.com/watercolor/2/3/1.jpg</pre>
+                        </p>
+                    </div>
+                </div>
                 <div class="faq">
                     <div class="question">
                         <p>When should I expect to lose service and how will I know?</p>
                     </div>
                     <div class="answer">
                         <p>
-                            If you do nothing, you may see disruptions in early August, depending on which tile set you are using, however most will initially see an improvement in coverage, data quality and performance through August and early September as services will have shifted to Stadia Maps. After October 2023, the redirects could stop working and those still pointing to stamen.com or fastly.com URLs will see a blank map.
+                        If you do nothing, you may see disruptions in early August, depending on which tile set you are using, however most will initially see an improvement in coverage, data quality and performance through August and early September as services will have shifted to Stadia Maps. After October 2023, the redirects could stop working and those still pointing to stamen.com or fastly.com URLs will see a blank map.
                         </p>
                     </div>
+                </div>
                 <div class="faq">
                     <div class="question">
                         <p>What do I need to do in order to keep getting tiles after this date?</p>
                     </div>
                     <div class="answer">
                         <p>
-                            You can start the migration process at <a href="https://stadiamaps.com/stamen/onboarding/">stadiamaps.com/stamen/onboarding/</a>. You'll receive simple instructions for how to point to the new service, and full <a href="mailto:support@stadiamaps.com">customer support</a> to ensure you won't experience any disruption in service.
+                        You can start the migration process at <a href="https://stadiamaps.com/stamen/onboarding/">stadiamaps.com/stamen/onboarding/</a>. You'll receive simple instructions for how to point to the new service, and full <a href="mailto:support@stadiamaps.com">customer support</a> to ensure you won't experience any disruption in service.
                         </p>
                     </div>
+                </div>
                 <div class="faq">
                     <div class="question">
                         <p>How much does it cost?</p>
                     </div>
                     <div class="answer">
                         <p>
-                            Once you have signed up for an account with Stadia, your cost is based on tile usage, meaning how many map tiles are requested through your app or website.
+                        Once you have signed up for an account with Stadia, your cost is based on tile usage, meaning how many map tiles are requested through your app or website.
                         </p>
                         <p>
-                            <ul>
-                                <li>If your current usage is less than 200,000 tiles / month&mdash;FREE for non-commercial use</li>
-                                <li>If your usage goes above 200,000 tiles / month or you are a commercial user&mdash;plans start at $20/month. The full pricing is <a href="https://stadiamaps.com/pricing/">here</a>.</li>
-                            </ul>
+                        <ul>
+                            <li>If your current usage is less than 200,000 tiles / month&mdash;FREE for non-commercial use</li>
+                            <li>If your usage goes above 200,000 tiles / month or you are a commercial user&mdash;plans start at $20/month. The full pricing is <a href="https://stadiamaps.com/pricing/">here</a>.</li>
+                        </ul>
                         </p>
                         <p>
-You can reduce costs by upgrading to vector tiles. An in-depth guide to switching is available <a href="https://docs.stadiamaps.com/guides/switching-your-maps-from-raster-to-vector-tiles/">here</a>.
+                        You can reduce costs by upgrading to vector tiles. An in-depth guide to switching is available <a href="https://docs.stadiamaps.com/guides/switching-your-maps-from-raster-to-vector-tiles/">here</a>.
                         </p>
                     </div>
+                </div>
                 <div class="faq">
                     <div class="question">
                         <p>Are there restrictions on how I can use the Stamen Map Tiles hosted by Stadia Maps?</p>
                     </div>
                     <div class="answer">
                         <p>
-                            Nope, not really! As noted above, high volume and commercial users may fall into a paid service tier. Otherwise, you can use these maps anywhere, we just ask that you attribute the work appropriately. Guidelines for how you should attribute Stamen Map Tiles are listed on <a href="https://docs.stadiamaps.com/attribution/">Stadia's attribution page</a>&mdash;these match industry standards and are not significantly different from how we have been asking folks to carry forward attribution and licensure all along.
+                        Nope, not really! As noted above, high volume and commercial users may fall into a paid service tier. Otherwise, you can use these maps anywhere, we just ask that you attribute the work appropriately. Guidelines for how you should attribute Stamen Map Tiles are listed on <a href="https://docs.stadiamaps.com/attribution/">Stadia's attribution page</a>&mdash;these match industry standards and are not significantly different from how we have been asking folks to carry forward attribution and licensure all along.
                         </p>
                     </div>
                 </div>
@@ -133,15 +262,15 @@ You can reduce costs by upgrading to vector tiles. An in-depth guide to switchin
                     </div>
                     <div class="answer">
                         <p>
-                            Signing up for a Stadia account gives you access to all that Stadia Maps provides.
+                        Signing up for a Stadia account gives you access to all that Stadia Maps provides.
                         </p>
                         <p>
-                            <ul>
-                                <li>Support&mdash;all of Stadia's services are backed by real human support and can better support commercial use cases that need SLAs</li>
-                                <li>Privacy&mdash;Stadia is fully GDPR and CCPA compliant, and does not track your users around the internet or build data sets derived from their behavior</li>
-                                <li>Customizability&mdash;if you upgrade to vector tiles, you can easily customize and remix the styles, even dynamically, as permitted in the license for Stamen styles</li>
-                                <li>Open source ethos&mdash;the team at Stadia consistently publish and contribute back to upstream open-source projects, and were instrumental in creating the <a href="https://maplibre.org/">MapLibre</a> organization</li>
-                            </ul>
+                        <ul>
+                            <li>Support&mdash;all of Stadia's services are backed by real human support and can better support commercial use cases that need SLAs</li>
+                            <li>Privacy&mdash;Stadia is fully GDPR and CCPA compliant, and does not track your users around the internet or build data sets derived from their behavior</li>
+                            <li>Customizability&mdash;if you upgrade to vector tiles, you can easily customize and remix the styles, even dynamically, as permitted in the license for Stamen styles</li>
+                            <li>Open source ethos&mdash;the team at Stadia consistently publish and contribute back to upstream open-source projects, and were instrumental in creating the <a href="https://maplibre.org/">MapLibre</a> organization</li>
+                        </ul>
                         </p>
                     </div>
                 </div>
