@@ -375,7 +375,7 @@ img.tile {
     background: black;
     padding: 3px 5px 2px;
     margin: 0;
-    z-index: 100;
+    z-index: 1000;
 }
 
 textarea {

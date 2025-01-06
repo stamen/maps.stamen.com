@@ -96,6 +96,7 @@ var MAPS = {};
                 if (provider === currentProvider) {
                     provider = "toner";
                     updateTitle(map, provider);
+                    updateAttribution(provider);
                 }
 
                 map.addLayer(getProvider(provider));
@@ -194,6 +195,19 @@ var MAPS = {};
                 : "#" + provider;
         }
 
+        function updateAttribution(provider) {
+            var defaultAttribution = document.querySelector(".attribution-default");
+            var watercolorAttribution = document.querySelector(".attribution-watercolor");
+            if (provider === 'watercolor') {
+                defaultAttribution.style.display = 'none';
+                watercolorAttribution.style.display = 'block';
+            }
+            else {
+                watercolorAttribution.style.display = 'none';
+                defaultAttribution.style.display = 'block';
+            }
+        }
+
         syncMapLinks(main, [
             document.getElementById("main-permalink")
         ]);
@@ -236,6 +250,7 @@ var MAPS = {};
         embedAndImage();
 
         updateTitle(main, currentProvider);
+        updateAttribution(currentProvider);
 
         // and set up listening for the browser's location hash
         var hasher = new ProviderHash(main, currentProvider, function(provider) {
@@ -261,6 +276,7 @@ var MAPS = {};
 
                 updateTitle(source, currentProvider);
                 updateTitle(target, provider);
+                updateAttribution(provider);
 
                 // update the selected provider label text
                 if (providerLabel) {
