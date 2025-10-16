@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>maps.stamen.com / toner-dark</title>
+        <meta name="description" content="Stamen's toner-dark map style is lovingly crafted and free for the taking.">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet-src.min.js"></script>
+        <script type="text/javascript" src="../js/vendor/reqwest.min.js"></script>
+        <script type="text/javascript" src="../js/tile.stamen.js?v1.4.0"></script>
+        <script type="text/javascript" src="../js/common.js?recaptcha"></script>
+
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.css" />
+        <style type="text/css">
+            @import url(../css/bootstrap/bootstrap.css);
+            @import url(../css/screen.css);
+            @import url(../css/layer.css);
+        </style>
+    </head>
+    <body>
+        <div id="header" class="navbar">
+            <div class="navbar-inner">
+                <h1 id="tiles" class="brand"><a id="home-link" href="../">maps.stamen.com</a> / <span id="current-provider">toner-dark</span></h1>
+                <a id="stamen" class="brand" href="http://stamen.com">stamen</a>
+                <a id="toggle-feedback" class="brand toggler">report a bug</a>
+            </div>
+        </div>
+
+        <div id="map-main" class="map" data-provider="toner-dark">
+            <p class="attribution">
+                &copy; <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a>
+                &copy; <a href="https://stamen.com/" target="_blank">Stamen Design</a>
+                &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a>
+                &copy; <a href="https://www.openstreetmap.org/about/" target="_blank">OpenStreetMap contributors</a>
+            </p>
+        </div>
+
+        <div id="overlay">
+            <form id="search">
+                <p>
+                <input id="search-location" class="span3" type="text" placeholder="Type a location">
+                <input id="search-submit" class="btn" type="submit" value="Find">
+                </p>
+            </form>
+            <div id="controls" class="controls">
+                <a id="zoom-in" title="zoom in">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                        <path d="M19 13h-6v6h-2v-6h-6v-2h6v-6h2v6h6v2z"/>
+                        <path d="M0 0h24v24h-24z" fill="none"/>
+                    </svg>
+                </a>
+                <a id="zoom-out" title="zoom out">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                        <path d="M19 13h-14v-2h14v2z"/>
+                        <path d="M0 0h24v24h-24z" fill="none"/>
+                    </svg>
+                </a>
+            </div>
+            <div id="embed" class="toggle controls">
+                <a id="make-image" title="make an image of this map">&lt;image&gt;</a>
+                <a id="donate-link" title="hire us!" href="https://stamen.com/contact/" target="_blank">hire us!</a>
+            </div>
+            <div id="feedback" class="toggle" style="display: none;">
+                <div>
+                    <p><strong>Not looking right?</strong></p>
+                    <p>You can help us track down problems by creating an <a href="https://github.com/stamen/toner-carto/issues/new">issue</a> in the <a href="https://github.com/stamen/toner-carto">toner-carto</a> repo.</a></p>
+
+                    <h4>When submitting a new issue, please:</h4>
+                    <ul>
+                        <li>Make sure there isn't an issue already submitted.</li>
+                        <li>Include in the description:
+                            <ol>
+                            <li>Current maps.stamen.com URL</li>
+                            <li>A detailed description of the problem</li>
+                            <li>Screenshots would be great too!</li>
+                            </ol>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <script type="text/javascript" src="../js/layer.js?20130425" defer></script>
+    </body>
+</html>
+

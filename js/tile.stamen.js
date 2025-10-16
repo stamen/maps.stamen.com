@@ -54,7 +54,7 @@ var SUBDOMAINS = "a. b. c. d.".split(" "),
 PROVIDERS["terrain-classic"].url = "//stamen-tiles-{S}a.ssl.fastly.net/terrain/{Z}/{X}/{Y}.png";
 
 // set up toner and terrain flavors
-setupFlavors("toner", ["hybrid", "labels", "lines", "background", "lite"]);
+setupFlavors("toner", ["hybrid", "labels", "lines", "background", "lite", "dark", "blacklite"]);
 setupFlavors("terrain", ["background", "labels", "lines"]);
 
 // toner 2010
