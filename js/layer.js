@@ -80,15 +80,11 @@
                 return Math.ceil(n / 500) * 500;
             };
             imgLink.addEventListener("mouseover", function() {
-                var size = main.getSize();
-                var hash = location.hash.substr(1),
-                    width = round(size.x),
-                    height = round(size.y);
+                var hash = location.hash.substr(1);
                 this.href = [
-                    "http://maps.stamen.com/m2i/",
-                    "#" + providerName, "/",
-                    width, ":", height, "/",
-                    hash
+                    "https://stadiamaps.com/build-a-map/",
+                    "#style=stamen_" + providerName.replaceAll("-", "_"),
+                    "&map=" + hash
                 ].join("");
             });
         }
