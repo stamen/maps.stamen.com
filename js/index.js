@@ -375,6 +375,5 @@ var MAPS = {};
     }
 
     init();
-    track();
 
 })();
